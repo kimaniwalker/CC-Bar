@@ -11,6 +11,7 @@ type CartContextType = {
   clearCart: () => void;
   getCartProductQuantity: (id: number) => number | undefined;
   getCartSubtotal: () => number;
+  getTotalCartQuantity: () => number;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -85,11 +86,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       .filter((item: CartProduct) => item.id === id)
       .reduce((total, item) => total + (item.quantity || 1), 0);
 
-  const getCartSubtotal = (): number => {
-    return cart.reduce((total, item) => {
-      return total + item.price * item.quantity;
-    }, 0);
-  };
+      const getCartSubtotal = (): number => {
+        const rawTotal = cart.reduce((total, item) => {
+          return total + item.price * item.quantity;
+        }, 0);
+      
+        // round to 2 decimal places
+        return Math.round(rawTotal * 100) / 100;
+      };
+  const getTotalCartQuantity = (): number => {
+    return cart.reduce((total, item) => total + (item.quantity || 1), 0);
+  }
   return (
     <CartContext.Provider
       value={{
@@ -100,6 +107,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         clearCart,
         getCartProductQuantity,
         getCartSubtotal,
+        getTotalCartQuantity
       }}
     >
       {children}

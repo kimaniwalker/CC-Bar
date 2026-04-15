@@ -7,7 +7,6 @@ import Modal from "../Modal";
 import { useModal } from "../ModalContext";
 import ProductVariationsModal from "./ProductVariationsModal";
 import { generateSKU } from "@/utils/generateSku";
-import { it } from "node:test";
 
 type QuickAddProps = {
   hideQuickAdd: boolean;

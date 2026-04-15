@@ -4,6 +4,7 @@ import { Suspense } from "react";
 async function ProductsData() {
   const supabase = useSupabase()
   const { data: products } = await supabase.from("products").select();
+  console.log(products)
   return <pre>{JSON.stringify(products, null, 2)}</pre>;
 }
 

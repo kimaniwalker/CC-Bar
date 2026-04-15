@@ -12,10 +12,10 @@ export default function Welcome() {
           <motion.h2
             initial={{
               opacity: 0,
-              y: 50,
+              y: -25,
             }}
             whileInView={{
-              scale: [0.75, 1.5],
+              scale: [0.75, 1],
               opacity: 1,
               y: 0,
             }}
@@ -26,7 +26,7 @@ export default function Welcome() {
             }}
             viewport={{ once: true, amount: 0.5 }}
           >
-            CHARMÈUR
+            CANDLE COW BAR
           </motion.h2>
         </Text>
       </Stack>
