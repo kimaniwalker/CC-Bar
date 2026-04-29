@@ -1,6 +1,9 @@
 // tailwind.config.js
 module.exports = {
-  content: ["./src/**/*.{js,ts,jsx,tsx}"],
+  content: ["./src/**/*.{js,ts,jsx,tsx}",
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}"
+  ],
   theme: {
     extend: {
       backgroundImage: {
@@ -139,5 +142,9 @@ module.exports = {
     "xl:gap-4",
     "xl:gap-6",
     "xl:gap-8",
+
+    // fonts
+    "font-heading",
+    "font-body"
   ],
-};
+} 

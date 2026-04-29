@@ -1,22 +1,8 @@
 "use client";
-import { Averia_Libre, Montserrat, Josefin_Sans } from "next/font/google";
+
 import React, { JSX } from "react";
 import clsx from "clsx";
-
-export const averia_libre = Averia_Libre({
-  weight: "700",
-  style: "normal",
-});
-
-export const montserrat = Montserrat({
-  weight: "400",
-  style: "normal",
-});
-
-export const josefin = Josefin_Sans({
-  weight: "700",
-  style: "normal",
-});
+import { averia_libre, josefin, montserrat } from "./Fonts";
 
 type HeadingSize = "sm" | "md" | "lg" | "xl" | "xxl";
 

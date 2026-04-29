@@ -59,7 +59,7 @@ function calculateTotal(cart: Cart) {
     return round(total, 2);
 }
 
-function formatBody(cart: Cart, shipping_total: number, user?: User | null) {
+function formatBody(cart: Cart, shipping_total: number, redirect_url: string, user?: User | null, ) {
     const metadata = formatMetadata(cart)
     const line_items = formatLineItems(cart)
     let body: Stripe.Checkout.SessionCreateParams = {
@@ -69,7 +69,7 @@ function formatBody(cart: Cart, shipping_total: number, user?: User | null) {
         metadata,
         submit_type: "pay",
         success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}cart?canceled=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
         allow_promotion_codes: true,
         payment_method_types: ['card', 'cashapp', 'klarna', 'link', 'afterpay_clearpay',],
         phone_number_collection: {
