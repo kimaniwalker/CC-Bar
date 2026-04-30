@@ -14,6 +14,7 @@ export const TimeslotSelector = ({ available_timeslots, }: { available_timeslots
     useEffect(() => {
         if (available_timeslots.length > 0 && !available_timeslots.some(slot => slot.label === selected)) {
             setValue("time", available_timeslots[0].label);
+            setValue("dateTime", available_timeslots[0].value);
         }
     }, [available_timeslots, selected, setValue]);
 
@@ -27,7 +28,9 @@ export const TimeslotSelector = ({ available_timeslots, }: { available_timeslots
             {available_timeslots.map((slot) => (
                 <li
                     key={slot.value}
-                    onClick={() => setValue("time", slot.label)}
+                    onClick={() => {
+                        setValue("time", slot.label)
+                        setValue("dateTime", slot.value)}}
                     className={selected === slot.label ? selectedSlot : unselectedSlot}
                 >
                     {slot.label}

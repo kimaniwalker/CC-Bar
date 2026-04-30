@@ -3,29 +3,37 @@ import { inter, montserrat } from "@/components/ds/Fonts";
 import { Input } from "@/components/ds/Input";
 import { MultiSelectField } from "@/components/ds/MultiSelect";
 import { Text } from "@/components/ds/Text";
+import useHandlePayment from "@/hooks/useHandleCheckout";
+import useStripe from "@/hooks/useStripe";
+import { ReservationsFormInputs } from "@/types/Reservations";
+import Stripe from "stripe";
+import { form } from "motion/react-client";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { SubmitHandler, useForm, FormProvider } from "react-hook-form";
 
 
-type FormInputs = {
-  name: string
-  email: string
-  date: string
-  time: string
-  guests: number
-  activities: string[]
-  phone: string
-}
 
 export const ReservationsForm = ({ date, available_timeslots }: { date?: string, available_timeslots: ReactNode }) => {
-  const methods = useForm<FormInputs>({mode: "onBlur", reValidateMode: "onChange"});
+  const methods = useForm<ReservationsFormInputs>({mode: "onBlur", reValidateMode: "onChange"});
   const { register, handleSubmit, watch, formState:{
     isValid,errors, 
   } } = methods;
   const router = useRouter();
+  const {formatReservationsData} = useHandlePayment()
+  const {checkout} = useStripe()
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => console.log(data)
+   const handleCheckout = async (body:Stripe.Checkout.SessionCreateParams) => {
+      const session = await checkout(body)
+      if (session.url) router.push(session.url);
+    }
+
+  const onSubmit: SubmitHandler<ReservationsFormInputs> = (data) => {
+    const reservationsData = formatReservationsData({redirect_url: '/',ReservationsFormData: data});
+    console.log({reservationsData})
+    handleCheckout(reservationsData)
+
+  }
 
   const handleSelectDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value;

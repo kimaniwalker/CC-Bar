@@ -3,7 +3,7 @@ export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!)
 
 
 export default function useStripe() {
-    return { createAccountLink, affiliateLoginLink, stripeBillingPortal, getAcctData, getCustomerData, hasActiveSubscription, isAffiliateReady, checkout }
+    return { retreiveCheckoutSession, createAccountLink, affiliateLoginLink, stripeBillingPortal, getAcctData, getCustomerData, hasActiveSubscription, isAffiliateReady, checkout }
 }
 export function isAffiliateReady(account: Stripe.Account) {
     const accountReady = account.charges_enabled && account.payouts_enabled
