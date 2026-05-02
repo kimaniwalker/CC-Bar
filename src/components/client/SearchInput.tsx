@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import React from "react";
+import { montserrat } from "../ds/Fonts";
 
 export const SearchInput = () => {
 
@@ -20,7 +21,7 @@ export const SearchInput = () => {
         type="text"
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search for products..."
-        className="w-full px-4 py-2 border border-gray-300 rounded-4xl focus:outline-none focus:ring-2 focus:ring-black bg-white"
+        className={`w-full px-4 py-2 border border-gray-300 rounded-4xl focus:outline-none focus:ring-2 focus:ring-black bg-white ${montserrat.className}`}
       />
         </form>
     </div>

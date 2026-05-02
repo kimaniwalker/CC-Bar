@@ -6,36 +6,83 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 
- 
-export const TimeslotSelector = ({ available_timeslots, }: { available_timeslots: Timeslot[] }) => {
-    const { setValue, watch, } = useFormContext();
-    const selected = watch("time");
+export const TimeslotSelector = ({ available_timeslots }: { available_timeslots: Timeslot[] }) => {
+  const {
+    setValue,
+    watch,
+    register,
+    formState: { errors },
+    trigger,
+  } = useFormContext();
 
-    useEffect(() => {
-        if (available_timeslots.length > 0 && !available_timeslots.some(slot => slot.label === selected)) {
-            setValue("time", available_timeslots[0].label);
-            setValue("dateTime", available_timeslots[0].value);
+  const selected = watch("time");
+
+  // ✅ Register field with validation
+  useEffect(() => {
+    register("time", {
+      validate: () => {
+        if (available_timeslots.length === 0) {
+          return "Please select a date with available time slots.";
         }
-    }, [available_timeslots, selected, setValue]);
+        return true;
+      },
+    });
+  }, [register, available_timeslots]);
 
-    const unselectedSlot = `px-4 py-2 border rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer text-center ${montserrat.className}`;
-    const selectedSlot = `px-4 py-2 border rounded-md bg-black text-white cursor-pointer text-center #${montserrat.className}`;
-    if (available_timeslots.length === 0) {
-        return <p className="text-sm text-gray-500">No available time slots for the selected date.</p>;
+  // ✅ Auto-select first slot
+  useEffect(() => {
+    if (
+      available_timeslots.length > 0 &&
+      !available_timeslots.some((slot) => slot.label === selected)
+    ) {
+      setValue("time", available_timeslots[0].label, { shouldValidate: true });
+      setValue("dateTime", available_timeslots[0].value);
     }
-    return (<div className="mb-4">
-        <ul className="grid grid-cols-2 gap-2">
-            {available_timeslots.map((slot) => (
-                <li
-                    key={slot.value}
-                    onClick={() => {
-                        setValue("time", slot.label)
-                        setValue("dateTime", slot.value)}}
-                    className={selected === slot.label ? selectedSlot : unselectedSlot}
-                >
-                    {slot.label}
-                </li>
-            ))}
-        </ul>
-    </div>);
-}
+
+    // 🔥 revalidate when slots change
+    trigger("time");
+  }, [available_timeslots, selected, setValue, trigger]);
+
+  const unselectedSlot = `px-4 py-2 border rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer text-center ${montserrat.className}`;
+  const selectedSlot = `px-4 py-2 border rounded-md bg-black text-white cursor-pointer text-center ${montserrat.className}`;
+
+  if (available_timeslots.length === 0) {
+    return (
+      <div>
+        <p className="text-sm text-gray-500">
+          No available time slots for the selected date.
+        </p>
+        {errors.time && (
+          <p className="text-xs text-red-600 mt-1">
+            {errors.time.message as string}
+          </p>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-4">
+      <ul className="grid grid-cols-2 gap-2">
+        {available_timeslots.map((slot) => (
+          <li
+            key={slot.value}
+            onClick={() => {
+              setValue("time", slot.label, { shouldValidate: true });
+              setValue("dateTime", slot.value);
+            }}
+            className={selected === slot.label ? selectedSlot : unselectedSlot}
+          >
+            {slot.label}
+          </li>
+        ))}
+      </ul>
+
+      {errors.time && (
+        <p className="text-xs text-red-600 mt-1">
+          {errors.time.message as string}
+        </p>
+      )}
+    </div>
+  );
+};

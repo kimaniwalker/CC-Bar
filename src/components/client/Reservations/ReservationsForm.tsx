@@ -1,5 +1,5 @@
 "use client"
-import { inter, montserrat } from "@/components/ds/Fonts";
+import {  montserrat } from "@/components/ds/Fonts";
 import { Input } from "@/components/ds/Input";
 import { MultiSelectField } from "@/components/ds/MultiSelect";
 import { Text } from "@/components/ds/Text";
@@ -7,7 +7,6 @@ import useHandlePayment from "@/hooks/useHandleCheckout";
 import useStripe from "@/hooks/useStripe";
 import { ReservationsFormInputs } from "@/types/Reservations";
 import Stripe from "stripe";
-import { form } from "motion/react-client";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { SubmitHandler, useForm, FormProvider } from "react-hook-form";
