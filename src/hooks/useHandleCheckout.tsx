@@ -3,8 +3,6 @@ import { Cart } from '@/types/Cart'
 import { ReservationsFormInputs } from '@/types/Reservations'
 import { User } from '@/types/User'
 import { round } from 'lodash'
-import { form } from 'motion/react-client'
-
 import Stripe from 'stripe'
 
 export default function useHandlePayment() {

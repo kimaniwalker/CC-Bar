@@ -2,7 +2,7 @@
 import { Stack } from "@/components/ds/Stack";
 import { Text } from "@/components/ds/Text";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ProductCardQuickAdd from "./ProductCardQuickAdd";
 import { useMediaQuery } from "react-responsive";
 import ProductCount from "./ProductCount";

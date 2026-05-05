@@ -5,7 +5,7 @@ import { getCategories } from "@/utils/server/getCategories";
 export const CategoryBanner = async({ selectedCategory, product_count }: { selectedCategory: string, product_count: number }) => {
     const categories = await getCategories();
     const categoryData = categories.find(c => c.name.toLowerCase() === selectedCategory.toLowerCase());
-    const fallBackDescription = `Explore our collection of ${selectedCategory} products, crafted with care to elevate your everyday rituals. From soothing candles to invigorating essential oils, discover the perfect blend of luxury and wellness in every item.`;
+    const fallBackDescription = `Explore our collection of products crafted with care to elevate your everyday rituals. From soothing candles to invigorating essential oils, discover the perfect blend of luxury and wellness in every item.`;
     const description = categoryData?.description || fallBackDescription;
     
     return (

@@ -15,7 +15,7 @@ import { SubmitHandler, useForm, FormProvider } from "react-hook-form";
 
 export const ReservationsForm = ({ date, available_timeslots }: { date?: string, available_timeslots: ReactNode }) => {
   const methods = useForm<ReservationsFormInputs>({mode: "onBlur", reValidateMode: "onChange"});
-  const { register, handleSubmit, watch, formState:{
+  const { register, handleSubmit, formState:{
     isValid,errors, 
   } } = methods;
   const router = useRouter();

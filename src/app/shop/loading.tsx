@@ -1,6 +1,13 @@
+import { CategorySkeleton } from "@/components/client/Shop/Categories";
+import { CategoryBannerSkeleton } from "@/components/client/Shop/CategoryBanner";
 import ProductGridSkeleton from "@/components/client/Shop/ProductGridSkeleton";
-import React from "react";
 
 export default function Loading() {
-  return <ProductGridSkeleton />;
+  return (<>
+  <CategorySkeleton />
+  <CategoryBannerSkeleton />
+  <ProductGridSkeleton />
+  
+  </>
+  );
 }

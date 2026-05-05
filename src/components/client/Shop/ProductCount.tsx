@@ -1,6 +1,5 @@
 "use client";
 import { Text } from "@/components/ds/Text";
-import React from "react";
 import { useCart } from "../Cart/CartContext";
 
 export default function ProductCount({ id }: { id: number }) {

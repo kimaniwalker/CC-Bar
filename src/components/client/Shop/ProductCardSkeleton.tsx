@@ -1,5 +1,4 @@
 import { Stack } from "@/components/ds/Stack";
-import React from "react";
 
 export default function ProductCardSkeleton() {
   return (

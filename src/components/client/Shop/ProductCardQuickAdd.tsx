@@ -1,5 +1,5 @@
 import { Stack } from "@/components/ds/Stack";
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { useCart } from "../Cart/CartContext";
 import { Product } from "@/types/Product";
@@ -16,7 +16,7 @@ export default function ProductCardQuickAdd({
   hideQuickAdd,
   product,
 }: QuickAddProps) {
-  const { addToCart, cart, removeProductById, removeFromCart } = useCart();
+  const { addToCart, cart, removeFromCart } = useCart();
   const { isOpen, close, open } = useModal();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");

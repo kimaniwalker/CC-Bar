@@ -21,7 +21,7 @@ export default async function Page({
       <Categories selectedCategory={selectedCategory} />
     </Suspense>
     <Suspense fallback={<CategoryBannerSkeleton/>}>
-      <CategoryBanner product_count={products.length} selectedCategory={selectedCategory ?? query ?? "All Products"}/>
+      <CategoryBanner product_count={products.length} selectedCategory={selectedCategory || query || 'All Products'}/>
     </Suspense>
     <ProductGrid products={products} />
     </>

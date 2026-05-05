@@ -1,6 +1,6 @@
 import { Stack } from "@/components/ds/Stack";
 import { Text } from "@/components/ds/Text";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 type ProductVariationsModal = {
   available_sizes?: string[];
   available_colors?: string[];
