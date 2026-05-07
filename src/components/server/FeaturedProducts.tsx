@@ -1,7 +1,7 @@
 import ProductGrid from "../client/Shop/ProductGrid";
 import { createClient } from "@/hooks/supabase/server";
 
-export default async function FeaturedProducts() {
+export default async function FeaturedProducts({heading}: {heading?: string}) {
 
   const supabase = await createClient()
   const { data: products, error } = await supabase
@@ -13,5 +13,5 @@ export default async function FeaturedProducts() {
       return null;
     }
 
-  return <ProductGrid products={products ?? []} />;
+  return <ProductGrid products={products ?? []} heading={heading} />;
 }

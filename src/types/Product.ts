@@ -15,21 +15,12 @@ export type Product = {
   tags?: string[];
   brand?: string;
   dimensions?: {
-    width: number;
-    height: number;
-    weight: number;
+    width: string;
+    height: string;
+    weight: string;
   };
   warrantyInformation?: string;
   shippingInformation?: string;
-  reviews?: [
-    {
-      rating: number;
-      comment: string;
-      date: string;
-      reviewerName: string;
-      reviewerEmail?: string;
-    }
-  ];
   returnPolicy?: "30 days return policy" | "no returns";
   minimumOrderQuantity?: number;
   meta?: Record<string, string>;
@@ -47,7 +38,7 @@ export type CartProduct = Pick<
   custom_messsage?: string;
 };
 
-type ProductVariation = {
+export type ProductVariation = {
   sku: string;
   size?: string;
   color?: string;
