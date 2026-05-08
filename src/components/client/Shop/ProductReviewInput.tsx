@@ -9,7 +9,7 @@ export const ProductReviewInput = ({ product_id }: { product_id: number }) => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isValid },
         reset
     } = useForm<ProductReviewFormInputs>()
 
@@ -53,7 +53,7 @@ export const ProductReviewInput = ({ product_id }: { product_id: number }) => {
                     <Text size="sm" className="block text-sm font-medium text-gray-700">Comment</Text>
                     <textarea {...register('comment', { required: true })} id="comment" rows={4} className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm p-2 ${montserrat.className}`} placeholder="Write your review here..."></textarea>
                 </div>
-                <button type="submit" className={`inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 ${montserrat.className}`}>
+                <button disabled={!isValid} type="submit" className={`inline-flex items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 disabled:bg-gray-200 disabled:text-black uppercase ${montserrat.className}`}>
                     Submit Review
                 </button>
             </form>

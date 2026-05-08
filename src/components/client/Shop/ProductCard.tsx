@@ -7,6 +7,7 @@ import ProductCardQuickAdd from "./ProductCardQuickAdd";
 import { useMediaQuery } from "react-responsive";
 import ProductCount from "./ProductCount";
 import { Product } from "@/types/Product";
+import { useRouter } from "next/navigation";
 
 export default function ProductCard(product: Product) {
   const isMobile = useMediaQuery({
@@ -14,6 +15,7 @@ export default function ProductCard(product: Product) {
   });
   const [hideQuickAdd, setHideQuickAdd] = useState(true);
   const { id, name, price, thumbnail } = product;
+  const router = useRouter();
 
   useEffect(() => {
     if (isMobile) {
@@ -26,7 +28,7 @@ export default function ProductCard(product: Product) {
         onMouseEnter={() => setHideQuickAdd(false)}
         onMouseLeave={() => setHideQuickAdd(true)}
       >
-        <a key={id} className="group">
+        <a key={id} className="group" onClick={() => router.push(`/shop/${id}`)}>
           <Stack className="relative h-35 w-35 sm:h-50 sm:w-50 md:h-60 md:w-60 aspect-square bg-gray-200 group-hover:opacity-75 rounded-xl overflow-hidden">
             <Image
               alt={name}
@@ -35,10 +37,12 @@ export default function ProductCard(product: Product) {
               style={{ objectFit: "cover" }}
               sizes="(min-width: 768px) 240px, (min-width: 640px) 200px, 140px"
             />
-            <ProductCardQuickAdd
-              hideQuickAdd={hideQuickAdd}
-              product={product}
-            />
+            <div onClick={(e) => e.stopPropagation()}>
+              <ProductCardQuickAdd
+                hideQuickAdd={hideQuickAdd}
+                product={product}
+              />
++           </div>
             <ProductCount id={id} />
           </Stack>
           <Stack direction="col">

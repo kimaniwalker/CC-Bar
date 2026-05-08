@@ -1,3 +1,4 @@
+import { Categories, CategorySkeleton } from "@/components/client/Shop/Categories"
 import { ImagePicker } from "@/components/client/Shop/ImagePicker"
 import ProductGridSkeleton from "@/components/client/Shop/ProductGridSkeleton"
 import { VariationsPicker } from "@/components/client/Shop/VariationsPicker"
@@ -12,17 +13,23 @@ import { Suspense } from "react"
 
 export default async function ProductDetails({
     params,
+    searchParams
 }: {
     params: Promise<{ id: number }>
+    searchParams: Promise<{ category: string }>
 }) {
     const { id } = await params
+    const { category: selectedCategory } = await searchParams
+
     const productDetails = await getProductDetails(id)
     const { name, description, images, tags, thumbnail, on_sale, price, sale_price, dimensions, available_sizes, available_colors, brand, availabilityStatus, variations } = productDetails[0]
 
 
-
     return (
         <>
+        <Suspense fallback={<CategorySkeleton />}>
+                <Categories selectedCategory={selectedCategory} />
+        </Suspense>
         <div className="p-4 md:p-8 w-full max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* left col — image */}
