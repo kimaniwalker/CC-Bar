@@ -22,28 +22,28 @@ export default function ProductVariationsModal({
 
 
   const { available_colors, available_sizes } = product;
-  const isMissingColor = available_colors?.length && !selectedColor;
-  const isMissingSize = available_sizes?.length && !selectedSize;
-  const isDisabled = !!(isMissingColor || isMissingSize);
+
+  const getModalHeading = () => {
+    if (available_colors && available_sizes) {
+      return "Select Size and Color";
+    } else if (available_sizes) {
+      return "Select Size";
+    } else if (available_colors) {
+      return "Select Color";
+    } else {
+      return "Product Details";
+    }
+  }
     
       return (
-        <Stack direction="col" gap="md" align="center" className={`w-full ${montserrat.className}`}>
-          {available_sizes && (
-            <>
+        <Stack direction="col" gap="md" className={`w-full ${montserrat.className}`}>
               <div className="w-full">
-                <Text size="md" className="font-semibold uppercase tracking-wide">Select A Size</Text>
+                <Text size="lg" className="font-semibold uppercase tracking-wide">{getModalHeading()}</Text>
               </div>
-              <Stack direction="col" gap="md" justify="center">
-               
-
+              <Stack direction="col" gap="md" justify="start" className="w-full">
                     <ProductVariationTag variation={available_sizes ?? []} heading="Available Sizes" selectedVariant={selectedSize} handleOnClick={(value) => setSelectedSize(value)} />
-                    
                     <ProductVariationTag variation={available_colors ?? []} heading="Available Colors" selectedVariant={selectedColor} handleOnClick={(value) => setSelectedColor(value)} />
-                
-              </Stack>
-            </>
-          )}
-    
+              </Stack>        
           <AddToCartButton  product={product} selectedColor={selectedColor} selectedSize={selectedSize}/>
         </Stack>
       );

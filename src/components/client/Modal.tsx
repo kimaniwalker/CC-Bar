@@ -18,14 +18,16 @@ export default function Modal({ isOpen, onClose, children, className }: ModalPro
     return () => setMounted(false);
   }, []);
 
+
+
   if (!mounted || !isOpen) return null;
 
   const modalRoot = document.getElementById("modal-root");
   if (!modalRoot) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50">
- <div className={`bg-white p-6 rounded shadow-xl relative ${className ?? "w-auto"}`}>
+    <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50"  onClick={onClose}>
+      <div className={`bg-white relative rounded-t-2xl md:rounded-xl ${className ?? "w-auto"}`}  onClick={(e) => e.stopPropagation()}>
         {children}
         <button
           type="button"

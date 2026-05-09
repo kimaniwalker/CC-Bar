@@ -13,10 +13,12 @@ import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
 type QuickAddProps = {
   hideQuickAdd: boolean;
   product: Product;
+  onModalOpenChange?: (isOpen: boolean) => void; 
 };
 export default function ProductCardQuickAdd({
   hideQuickAdd,
   product,
+  onModalOpenChange
 }: QuickAddProps) {
   const { addToCart, cart, removeFromCart } = useCart();
   const { isOpen, close, open } = useModal();
@@ -27,6 +29,9 @@ export default function ProductCardQuickAdd({
   const hasVariations = !!(
     product.available_colors?.length || product.available_sizes?.length
   );
+
+  const handleOpen = () => { open(); onModalOpenChange?.(true); }
+  const handleClose = () => { close(); onModalOpenChange?.(false); }
 
   const handleATC = ({
     color,
@@ -42,10 +47,10 @@ export default function ProductCardQuickAdd({
                 }))}
 
   const handleSelectSizeAndColor = () => {
-    open();
+    handleOpen();
   };
   console.log(product.sku)
-  if (hideQuickAdd) return;
+  if (hideQuickAdd) return null;
   return (
     <>
       <Stack
@@ -116,7 +121,7 @@ export default function ProductCardQuickAdd({
           </div>
         </motion.div>
       </Stack>
-      <Modal isOpen={isOpen} onClose={close} className="w-[90vw] max-w-md">
+      <Modal isOpen={isOpen} onClose={handleClose} className="w-full h-full md:w-[90vw] md:h-auto md:max-w-lg md:rounded-xl p-6 md:min-h-96 flex items-center justify-center">
         <ProductVariationsModal
           selectedSize={selectedSize}
           selectedColor={selectedColor}

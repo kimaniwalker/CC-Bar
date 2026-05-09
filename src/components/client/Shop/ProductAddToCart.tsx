@@ -135,7 +135,7 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
           color: selectedColor,
           sku: selectedVariation?.sku ?? product.sku,
         }))}
-        className={`mt-4 bg-black text-white px-4 py-2 rounded-xl disabled:bg-gray-400 ${montserrat.className}`}
+        className={`mt-4 bg-black text-white px-4 py-2 rounded-xl disabled:bg-gray-400 w-full ${montserrat.className}`}
       >
         Add to Cart - {selectedVariation ? `$${selectedVariation.sale_price ?? selectedVariation.price}` : `$${product.sale_price ?? product.price}`}
       </button>
