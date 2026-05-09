@@ -7,11 +7,10 @@ export type Product = {
   price: number;
   on_sale: boolean;
   sale_price?: number;
-  stock?: number;
+  stock: number;
   available_sizes?: string[];
   available_colors?: string[];
   variations?: ProductVariation[];
-  availabilityStatus?: "Low Stock" | "Out Of Stock" | "Available";
   tags?: string[];
   brand?: string;
   dimensions?: {
@@ -19,10 +18,8 @@ export type Product = {
     height: string;
     weight: string;
   };
-  warrantyInformation?: string;
   shippingInformation?: string;
   returnPolicy?: "30 days return policy" | "no returns";
-  minimumOrderQuantity?: number;
   meta?: Record<string, string>;
   thumbnail: string;
   images?: string[];
@@ -44,5 +41,12 @@ export type ProductVariation = {
   color?: string;
   price: number;
   sale_price?: number;
-  stock?: number;
+  stock: number;
 };
+
+export enum ProductAvailabilityStatus {
+  IN_STOCK = "In Stock",
+  OUT_OF_STOCK = "Out Of Stock",
+  PRE_ORDER = "Pre-order",
+  LOW_STOCK = "Low Stock",
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { CartProduct } from "@/types/Product";
+import { CartProduct, Product } from "@/types/Product";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 type CartContextType = {
@@ -12,6 +12,7 @@ type CartContextType = {
   getCartProductQuantity: (id: number) => number | undefined;
   getCartSubtotal: () => number;
   getTotalCartQuantity: () => number;
+  getSelectedVariationQuantity: ({product, selectedColor, selectedSize}:{product:Product, selectedColor: string, selectedSize: string}) => number;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -97,6 +98,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const getTotalCartQuantity = (): number => {
     return cart.reduce((total, item) => total + (item.quantity || 1), 0);
   }
+
+  const getSelectedVariationQuantity = ({product, selectedColor, selectedSize}:{product:Product, selectedColor: string, selectedSize: string}) => {
+    return cart
+      .filter(item => {
+        if (item.id !== product.id) return false;
+        if (selectedColor && item.color !== selectedColor) return false;
+        if (selectedSize && item.size !== selectedSize) return false;
+        return true;
+      })
+      .reduce((total, item) => total + item.quantity, 0);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -107,7 +120,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         clearCart,
         getCartProductQuantity,
         getCartSubtotal,
-        getTotalCartQuantity
+        getTotalCartQuantity,
+        getSelectedVariationQuantity
       }}
     >
       {children}
