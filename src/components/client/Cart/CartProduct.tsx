@@ -3,6 +3,8 @@ import { Text } from "@/components/ds/Text";
 import { type CartProduct } from "@/types/Product";
 import Image from "next/image";
 import { useCart } from "./CartContext";
+import { normalize } from "path";
+import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
 
 export default function CartProduct(product: CartProduct) {
   const hasVariation = product.color || product.size;
@@ -45,7 +47,7 @@ dark:hover:bg-gray-700 my-4">
 
                 <div className="inline-flex rounded-md shadow-xs" role="group">
                   <button
-                    onClick={() => removeFromCart(product.id, product.color, product.size)}
+                    onClick={() => removeFromCart(product.sku)}
                     type="button"
                     className="group inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"
                   >
@@ -69,7 +71,7 @@ dark:hover:bg-gray-700 my-4">
                   </button>
 
                   <button
-                    onClick={() => addToCart(product)}
+                    onClick={() => addToCart(normalizeCartProduct(product))}
                     type="button"
                     className="group inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"
                   >

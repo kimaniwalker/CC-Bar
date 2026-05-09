@@ -6,7 +6,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 type CartContextType = {
   cart: CartProduct[];
   addToCart: (item: CartProduct) => void;
-  removeFromCart: (id: number, color?: string, size?: string) => void;
+  removeFromCart: (sku: string) => void;
   removeProductById: (id: number) => void;
   clearCart: () => void;
   getCartProductQuantity: (id: number) => number | undefined;
@@ -17,7 +17,7 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const CART_KEY = "charmeur_cart";
+const CART_KEY = "cc_bar_cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartProduct[]>([]);
@@ -41,16 +41,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const addToCart = (item: CartProduct) => {
     setCart((prev) => {
-      const existing = prev.find(
-        (p) =>
-          p.id === item.id && p.color === item.color && p.size === item.size
-      );
+      const existing = prev.find((p) => p.sku === item.sku); // 👈 match on sku
 
       if (existing) {
         return prev.map((p) =>
-          p.id === item.id && p.color === item.color && p.size === item.size
-            ? { ...p, quantity: p.quantity + 1 }
-            : p
+          p.sku === item.sku ? { ...p, quantity: p.quantity + 1 } : p
         );
       }
 
@@ -58,19 +53,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  
-  const removeFromCart = (id: number, color?: string, size?: string) => {
+  const removeFromCart = (sku: string) => {  // 👈 just sku now
     setCart((prev) =>
       prev.flatMap((item) => {
-        const isSameVariant =
-          item.id === id &&
-          (color ? item.color === color : true) &&
-          (size ? item.size === size : true);
-
-        if (!isSameVariant) return [item];
-        if (item.quantity > 1) {
-          return [{ ...item, quantity: item.quantity - 1 }];
-        }
+        if (item.sku !== sku) return [item];
+        if (item.quantity > 1) return [{ ...item, quantity: item.quantity - 1 }];
         return [];
       })
     );
@@ -99,14 +86,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     return cart.reduce((total, item) => total + (item.quantity || 1), 0);
   }
 
-  const getSelectedVariationQuantity = ({product, selectedColor, selectedSize}:{product:Product, selectedColor: string, selectedSize: string}) => {
+  const getSelectedVariationQuantity = ({ product, selectedColor, selectedSize }: { product: Product, selectedColor: string, selectedSize: string }) => {
+    const variation = product.variations?.find((v) => {
+      const sizeMatch = v.size ? v.size === selectedSize : true;
+      const colorMatch = v.color ? v.color === selectedColor : true;
+      return sizeMatch && colorMatch;
+    });
+
+    if (!variation?.sku) return 0;
+
     return cart
-      .filter(item => {
-        if (item.id !== product.id) return false;
-        if (selectedColor && item.color !== selectedColor) return false;
-        if (selectedSize && item.size !== selectedSize) return false;
-        return true;
-      })
+      .filter(item => item.sku === variation.sku)
       .reduce((total, item) => total + item.quantity, 0);
   };
 

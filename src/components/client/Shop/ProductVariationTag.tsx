@@ -1,5 +1,5 @@
 export const ProductVariationTag = ({ variation, selectedVariant, heading, handleOnClick }: { variation: string[],heading: string,  handleOnClick: (value: string) => void , selectedVariant: string}) => {
-  if (!variation) return null;
+  if (!variation.length) return null;
   return (
     <div>
           <p className="font-semibold mb-2">{heading}</p>

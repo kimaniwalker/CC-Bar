@@ -7,9 +7,10 @@ type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  className?: string
 };
 
-export default function Modal({ isOpen, onClose, children }: ModalProps) {
+export default function Modal({ isOpen, onClose, children, className }: ModalProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
 
   return createPortal(
     <div className="fixed inset-0 z-100 flex items-center justify-center bg-black/50">
-      <div className="bg-white p-6 rounded shadow-xl w-auto h-auto relative">
+ <div className={`bg-white p-6 rounded shadow-xl relative ${className ?? "w-auto"}`}>
         {children}
         <button
           type="button"
