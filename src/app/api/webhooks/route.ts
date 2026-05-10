@@ -2,6 +2,8 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@/hooks/supabase/server";
+import { retreiveCheckoutSession } from "@/hooks/useStripe";
+import { CheckoutType } from "@/types/Reservations";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!);
 
@@ -61,27 +63,39 @@ export async function POST(req: Request) {
                     break;
                 }
 
-                if (type === "shop_purchase") {
-                    // retrieve line items to sync stock
-                    const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
-
-                    for (const item of lineItems.data) {
-                        const productId = item.price?.metadata?.product_id;
-                        const quantity = item.quantity ?? 0;
-
-                        if (!productId) {
+                if (type === CheckoutType.SHOP) {
+                    const { lineItems } = await retreiveCheckoutSession(session.id);
+                
+                    // 👇 collect all updates first
+                    const stockUpdates = lineItems.reduce((acc, item) => {
+                        const product = item.price?.product as Stripe.Product;
+                        const { product_id, sku, isVariationProduct } = product?.metadata || {};
+                
+                        if (!product_id) {
                             console.warn("⚠️ Missing product_id on line item:", item.id);
-                            continue; // skip but at least log it
+                            return acc;
                         }
-
-                        // decrement stock in supabase
-                        await supabase.rpc("decrement_stock", {
-                            p_product_id: Number(productId),
-                            p_quantity: quantity,
+                
+                        acc.push({
+                            product_id,
+                            sku,
+                            quantity: item.quantity ?? 0,
+                            is_variation: isVariationProduct === "true",
                         });
+                
+                        return acc;
+                    }, [] as { product_id: string; sku: string; quantity: number; is_variation: boolean }[]);
+                    console.log("stockUpdates:", JSON.stringify(stockUpdates, null, 2)); 
+                
+                    // 👇 one RPC call for all updates
+                    const { error } = await supabase.rpc("sync_stock", { updates: stockUpdates });
+                
+                    if (error) {
+                        console.error("❌ Failed to sync stock:", error.message);
+                        return new NextResponse("Stock sync failed", { status: 500 });
                     }
-
-                    console.log("✅ Stock synced for shop purchase");
+                
+                    console.log(`✅ Stock synced for ${stockUpdates.length} items`);
                     break;
                 }
 
