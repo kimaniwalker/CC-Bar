@@ -7,12 +7,13 @@ type CartContextType = {
   cart: CartProduct[];
   addToCart: (item: CartProduct) => void;
   removeFromCart: (sku: string) => void;
-  removeProductById: (id: number) => void;
+  removeProductBySku: (sku: string) => void;
   clearCart: () => void;
   getCartProductQuantity: (id: number) => number | undefined;
   getCartSubtotal: () => number;
   getTotalCartQuantity: () => number;
   getSelectedVariationQuantity: ({product, selectedColor, selectedSize}:{product:Product, selectedColor: string, selectedSize: string}) => number;
+  handleAdjustProductQuantity: (sku: string, newQuantity: number) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -63,8 +64,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     );
   };
 
-  const removeProductById = (id: number) => {
-    setCart((prev) => prev.filter((item: CartProduct) => item.id !== id));
+  const removeProductBySku = (sku: string) => {
+    setCart((prev) => prev.filter((item: CartProduct) => item.sku !== sku));
   };
 
   const clearCart = () => setCart([]);
@@ -100,18 +101,27 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       .reduce((total, item) => total + item.quantity, 0);
   };
 
+  const handleAdjustProductQuantity = (sku: string, newQuantity: number) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.sku === sku ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  }
+
   return (
     <CartContext.Provider
       value={{
         cart,
         addToCart,
         removeFromCart,
-        removeProductById,
+        removeProductBySku,
         clearCart,
         getCartProductQuantity,
         getCartSubtotal,
         getTotalCartQuantity,
-        getSelectedVariationQuantity
+        getSelectedVariationQuantity,
+        handleAdjustProductQuantity,
       }}
     >
       {children}

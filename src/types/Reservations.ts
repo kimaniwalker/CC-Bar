@@ -17,5 +17,5 @@ export type Timeslot = {
 
   export enum CheckoutType {
     RESERVATION = "reservation",
-    PRODUCT = "Product Purchase"
+    SHOP = "shop"
   }

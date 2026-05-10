@@ -22,5 +22,6 @@ export const normalizeCartProduct = (
     custom_messsage: options?.custom_message,
     ...(options?.size && { size: options.size }),
     ...(options?.color && { color: options.color }),
+    isVariationProduct: Boolean(options?.size || options?.color),
   };
 };

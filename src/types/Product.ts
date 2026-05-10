@@ -30,6 +30,7 @@ export type CartProduct = Pick<
   "id" | "name" | "on_sale" | "sale_price" | "price" | "thumbnail" | "sku"
 > & {
   quantity: number;
+  isVariationProduct: boolean;
   size?: string;
   color?: string;
   custom_messsage?: string;
@@ -49,4 +50,11 @@ export enum ProductAvailabilityStatus {
   OUT_OF_STOCK = "Out Of Stock",
   PRE_ORDER = "Pre-order",
   LOW_STOCK = "Low Stock",
+}
+
+export type StockError = {
+  sku: string;
+  errorMessage: string;
+  availableStock: number; 
+  isDbError?: boolean;  // 👈 flag for supabase errors
 }

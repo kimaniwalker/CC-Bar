@@ -102,14 +102,12 @@ export async function createNewUser(id: string, email?: string, phone?: string) 
 
 export async function retreiveCheckoutSession(sessionId: string) {
 
-    const session = await stripe.checkout.sessions.retrieve(
-        sessionId
-    );
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+        expand: ["line_items", "line_items.data.price.product"]  // 👈 one call
+    });
 
 
-    const lineItems = await stripe.checkout.sessions.listLineItems(
-        sessionId
-    );
+    
 
-    return { session, lineItems }
+    return { session, lineItems: session.line_items?.data ?? [] } 
 }

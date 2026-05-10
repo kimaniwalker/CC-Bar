@@ -1,29 +1,19 @@
 "use client"
 import { Cart } from '@/types/Cart'
-import { ReservationsFormInputs } from '@/types/Reservations'
+import { CheckoutType, ReservationsFormInputs } from '@/types/Reservations'
 import { User } from '@/types/User'
 import { round } from 'lodash'
 import Stripe from 'stripe'
 
 export default function useHandlePayment() {
-    return { formatMetadata, calculateTotal, formatBody, formatReservationsData }
+    return { calculateTotal, formatBody, formatReservationsData }
 }
 
-function formatMetadata(cart: Cart) {
-    let metaData: Record<string, string> = {}
-    for (let i = 0; i < cart.length; i++) {
-        const item = cart[i]
-        metaData[item.name] = `${item.size} - x ${item.quantity}`
-        metaData[`${item.name}-Custom message`] = `${item.custom_messsage}`
-    }
 
-
-    return metaData
-}
 
 function formatReservationsMetadata(data: ReservationsFormInputs) {
     let metaData: Record<string, string> = {}
-    metaData['type'] = 'CC BAR Creative Experience Reservation'
+    metaData['type'] = CheckoutType.RESERVATION
     metaData['name'] = data.name
     metaData['email'] = data.email
     metaData['phone'] = data.phone
@@ -39,26 +29,27 @@ function formatReservationsMetadata(data: ReservationsFormInputs) {
     return metaData
 }
 function formatLineItems(cart: Cart) {
-    let lineItems = []
-    for (let i = 0; i < cart.length; i++) {
-        const item = cart[i]
-        let body = {
-            price_data: {
-                currency: 'usd',
-                unit_amount: Math.round(item.price * 100),
-                product_data: {
-                    name: item.name,
-                    description: item.size,
-                    images: [`${item.thumbnail}`]
-                },
+    return cart.map((item) => ({
+        price_data: {
+            currency: 'usd',
+            unit_amount: Math.round((item.price) * 100),
+            product_data: {
+                name: item.name,
+                description: [item.size, item.color].filter(Boolean).join(' | ') || undefined,
+                images: [item.thumbnail],
+                metadata: {
+                    product_id: String(item.id),   // 👈 must be string
+                    sku: item.sku,
+                    quantity: String(item.quantity),
+                    isVariationProduct: String(item.isVariationProduct),
+                    ...(item.color && { color: item.color }),
+                    ...(item.size && { size: item.size }),
+                    ...(item.custom_messsage && { custom_message: item.custom_messsage }),
+                }
             },
-            quantity: item.quantity,
-        }
-
-        lineItems.push(body)
-    }
-    console.log(lineItems)
-    return lineItems
+        },
+        quantity: item.quantity,
+    }));
 }
 
 function calculateTotal(cart: Cart) {
@@ -78,15 +69,14 @@ function calculateTotal(cart: Cart) {
 }
 
 function formatBody(cart: Cart, shipping_total: number, redirect_url: string, user?: User | null, ) {
-    const metadata = formatMetadata(cart)
-    const line_items = formatLineItems(cart)
+    
     let body: Stripe.Checkout.SessionCreateParams = {
-        line_items,
+        line_items: formatLineItems(cart),
         mode: "payment",
         client_reference_id: user?.id,
-        metadata,
+        metadata: { type: CheckoutType.SHOP },
         submit_type: "pay",
-        success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
         cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
         allow_promotion_codes: true,
         payment_method_types: ['card', 'cashapp', 'klarna', 'link', 'afterpay_clearpay',],
@@ -159,7 +149,7 @@ function formatReservationsData({redirect_url, ReservationsFormData}:{redirect_u
         mode: "payment",
         metadata,
         submit_type: "pay",
-        success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=reservation`,
+        success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.RESERVATION}`,
         cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
         allow_promotion_codes: true,
         payment_method_types: ['card', 'cashapp', 'klarna', 'link', 'afterpay_clearpay',],

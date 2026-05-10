@@ -1,15 +1,33 @@
 import { Stack } from "@/components/ds/Stack";
 import { Text } from "@/components/ds/Text";
-import { type CartProduct } from "@/types/Product";
+import { StockError, type CartProduct } from "@/types/Product";
 import Image from "next/image";
 import { useCart } from "./CartContext";
-import { normalize } from "path";
 import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
+import { montserrat } from "@/components/ds/Fonts";
+import { useMediaQuery } from "react-responsive";
 
-export default function CartProduct(product: CartProduct) {
+export default function CartProduct({ product, errors, onHandleUpdateProductQuantity }: { product: CartProduct, errors?: StockError[], onHandleUpdateProductQuantity?: (sku: string) => void }) {
   const hasVariation = product.color || product.size;
-  const productName = hasVariation? `${product.name} - ${[product.color, product.size].filter(Boolean).join(" - ")}` : product.name;
-  const { addToCart, removeFromCart } = useCart();
+  const productName = hasVariation ? `${product.name} - ${[product.color, product.size].filter(Boolean).join(" - ")}` : product.name;
+  const { addToCart, removeFromCart, handleAdjustProductQuantity, removeProductBySku } = useCart();
+  const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
+
+  const error = errors?.find((e) => e.sku === product.sku);
+  const isDbError = error?.isDbError ?? false;
+  const isOutOfStock = error?.availableStock === 0 && !isDbError; // only consider out of stock if it's not a DB error (which we can't verify stock for)
+  const cartButtonText = !isMobile ? `${product.quantity} ${product.quantity === 1 ? 'item' : 'items'} in cart`: `${product.quantity} in cart`;
+  const hasError = Boolean(error);
+  const updateProductQuantity = () => {
+    if (!error) return; // no error, no adjustment needed
+    if (error) handleAdjustProductQuantity(product.sku, error.availableStock); 
+     // 👈 cap to available
+     onHandleUpdateProductQuantity?.(product.sku); // trigger any additional updates needed after adjusting quantity 
+  }
+  const handleRemoveProduct = () => {
+    removeProductBySku(product.sku);
+    onHandleUpdateProductQuantity?.(product.sku); // trigger any additional updates needed after removal
+  }
   return (
     <Stack className="w-full
 lg:max-w-lg
@@ -17,8 +35,8 @@ md:max-w-md
 p-6 bg-white border border-gray-200 rounded-lg shadow-sm
 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700
 dark:hover:bg-gray-700 my-4">
-      <Stack>
-        <Stack gap="md">
+      <Stack className="w-full">
+        <Stack gap="md" className="w-full">
           <div className="h-[100px] w-[100px] bg-gray-200 flex-shrink-0 relative rounded-lg overflow-hidden flex justify-center align-center">
             <Image
               src={product.thumbnail}
@@ -28,75 +46,59 @@ dark:hover:bg-gray-700 my-4">
               sizes="100px"
             />
           </div>
-          <Stack direction="col" justify="between">
+          <Stack direction="col" className="w-full">
             <Text
               size="md"
               className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white"
             >
               {productName}
             </Text>
+            {error && (
+              <Text size="sm" className="text-red-500 font-semibold mb-2">
+                ⚠️ {error.errorMessage}
+                {!isOutOfStock && (  // 👈 only show adjust if not fully OOS
+                  <button onClick={updateProductQuantity} className="ml-2 underline">
+                    Adjust for me
+                  </button>
+                )}
+                {isOutOfStock && (  // 👈 prompt removal if OOS
+                  <button onClick={handleRemoveProduct} className="ml-2 underline">
+                    Remove
+                  </button>
+                )}
+              </Text>
+            )}
             <Text
-                  size="sm"
-                  className="font-bold text-gray-700 dark:text-gray-400 mb-2"
-                >
-                  ${product.price} x {product.quantity}
-                </Text>
-            <div>
-               
-              <div className="flex w-full">
+              size="sm"
+              className="font-bold text-gray-700 dark:text-gray-400 mb-2"
+            >
+              ${product.price} x {product.quantity}
+            </Text>
 
-                <div className="inline-flex rounded-md shadow-xs" role="group">
-                  <button
-                    onClick={() => removeFromCart(product.sku)}
-                    type="button"
-                    className="group inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"
-                  >
-                    <svg
-                      className="w-[18px] h-[18px] text-inherit"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 12h14"
-                      />
-                    </svg>
-                  </button>
 
-                  <button
-                    onClick={() => addToCart(normalizeCartProduct(product))}
-                    type="button"
-                    className="group inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"
-                  >
-                    <svg
-                      className="w-[18px] h-[18px] text-inherit"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M5 12h14m-7 7V5"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
+
+            <div className={`mt-2 flex items-center gap-3 ${montserrat.className} p-2 border-2 rounded-full justify-between w-full`}>
+              <button
+                onClick={() => removeFromCart(product.sku)}
+                className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-lg hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={hasError}
+              >
+                −
+              </button>
+              <span className="text-xs sm:text-sm md:text-lg font-semibold text-center">{cartButtonText}</span>
+              <button
+                onClick={() => addToCart(normalizeCartProduct(product))}
+                className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-lg hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                disabled={hasError}
+              >
+                +
+              </button>
             </div>
+
           </Stack>
+
+
+
         </Stack>
       </Stack>
     </Stack>

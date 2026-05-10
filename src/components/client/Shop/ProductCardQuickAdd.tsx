@@ -29,6 +29,7 @@ export default function ProductCardQuickAdd({
   const hasVariations = !!(
     product.available_colors?.length || product.available_sizes?.length
   );
+  const isOutOfStock = product.stock === 0;
 
   const handleOpen = () => { open(); onModalOpenChange?.(true); }
   const handleClose = () => { close(); onModalOpenChange?.(false); }
@@ -40,6 +41,7 @@ export default function ProductCardQuickAdd({
     color?: string;
     size?: string;
   } = {}) => {
+    //if (isOutOfStock) return;
     addToCart(normalizeCartProduct(product, {
                   ...color && { color },
                   ...size && { size },
