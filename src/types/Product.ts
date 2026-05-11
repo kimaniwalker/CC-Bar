@@ -49,7 +49,8 @@ export enum ProductAvailabilityStatus {
   IN_STOCK = "In Stock",
   OUT_OF_STOCK = "Out Of Stock",
   PRE_ORDER = "Pre-order",
-  LOW_STOCK = "Low Stock",
+  LOW_STOCK = "⚠️ Limited stock",
+  SELLING_FAST = "🔥 Selling fast",
 }
 
 export type StockError = {

@@ -8,6 +8,7 @@ import { useMediaQuery } from "react-responsive";
 import ProductCount from "./ProductCount";
 import { Product } from "@/types/Product";
 import { useRouter } from "next/navigation";
+import { ProductBadge } from "./ProductBadge";
 
 export default function ProductCard(product: Product) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -23,6 +24,7 @@ export default function ProductCard(product: Product) {
   };
 
   const showQuickAdd = !isMobile && (isHovered || isModalOpen); // 👈 never show on mobile
+  const isOutOfStock = product.stock === 0;
 
   return (
     <div
@@ -38,6 +40,11 @@ export default function ProductCard(product: Product) {
             style={{ objectFit: "cover" }}
             sizes="(min-width: 768px) 240px, (min-width: 640px) 200px, 140px"
           />
+          
+          
+            <ProductBadge stock={product.stock} />
+          
+         
           <div onClick={(e) => e.stopPropagation()}>
             <ProductCardQuickAdd hideQuickAdd={!showQuickAdd} product={product} onModalOpenChange={handleModalOpenChange} />
           </div>

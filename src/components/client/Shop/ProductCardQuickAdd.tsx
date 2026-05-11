@@ -41,7 +41,7 @@ export default function ProductCardQuickAdd({
     color?: string;
     size?: string;
   } = {}) => {
-    //if (isOutOfStock) return;
+    if (isOutOfStock) return;
     addToCart(normalizeCartProduct(product, {
                   ...color && { color },
                   ...size && { size },
@@ -71,7 +71,7 @@ export default function ProductCardQuickAdd({
         >
           <div className="flex w-full rounded-md shadow-xs z-10" role="group">
             <button
-              disabled={!hasQuantity}
+              disabled={!hasQuantity || isOutOfStock} 
               type="button"
               onClick={() => removeFromCart(getProductSku({ product, selectedColor, selectedSize }))}
               className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center disabled:bg-gray-200"
@@ -97,7 +97,8 @@ export default function ProductCardQuickAdd({
               onClick={
                 !hasVariations ? () => handleATC() : handleSelectSizeAndColor
               }
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center"
+              disabled={!hasVariations && isOutOfStock}
+              className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center disabled:bg-gray-200"
             >
               <svg
                 className="w-[18px] h-[18px] text-gray-800 dark:text-white"
