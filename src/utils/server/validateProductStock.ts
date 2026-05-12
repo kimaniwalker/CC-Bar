@@ -1,11 +1,11 @@
 "use server"
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import { Cart } from "@/types/Cart";
 import { ProductVariation, StockError } from "@/types/Product";
 
 
 export async function validateStock(cart: Cart) {
-    const supabase = await createClient()
+    const supabase = createClient()
     const errors: StockError[] = [];
 
     const formatStockError = (item: Cart[number], availableStock: number): StockError => {

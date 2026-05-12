@@ -1,9 +1,10 @@
-import { createClient } from "@/utils/supabase/server";
+"use cache"
+import { createClient } from "@/utils/supabase/client";
 import { ProductReview } from "@/types/ProductReview";
 
 
 export const getProductReviews = async (product_id:number): Promise<ProductReview[]> => {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from("product_reviews")

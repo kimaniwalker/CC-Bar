@@ -54,6 +54,13 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
+  // if a logged-in user navigates to the login page, send them to their profile
+if (user && (pathname === '/auth/login' || pathname === '/auth/login/')) {
+      const url = request.nextUrl.clone()
+     url.pathname = '/profile'
+      return NextResponse.redirect(url)
+    }
+
   const isUnauthAllowed = unauthAllowed.some((p) => (p === '/' ? pathname === '/' : pathname.startsWith(p)))
 
   if (!user && !isUnauthAllowed) {
@@ -62,6 +69,8 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)
   }
+
+  
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're
   // creating a new response object with NextResponse.next() make sure to:

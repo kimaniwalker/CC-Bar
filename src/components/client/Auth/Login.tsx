@@ -70,7 +70,7 @@ export const Login = () => {
                         disabled={!isValidEmail(email) || isSubmitting}
                         className={`w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors ${montserrat.className} disabled:bg-gray-400 disabled:cursor-not-allowed`}
                     >
-                        {isSubmitting ? "Sending…" : "Sign In With Email"}
+                        {isSubmitting ? "Creating your magic link ..." : "Sign In With Email"}
                     </button>
                     {isSubmitted ? (
                         <span className={`text-green-600 text-center ${montserrat.className}`}>

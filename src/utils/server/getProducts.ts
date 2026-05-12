@@ -1,7 +1,8 @@
-import { createClient } from "@/utils/supabase/server";
+"use cache"
+import { createClient } from "@/utils/supabase/client";
 
 export async function getProducts(query?: string) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   let queryBuilder = supabase
     .from("products")

@@ -1,10 +1,9 @@
-import { createClient } from "@/utils/supabase/server";
+"use cache"
+import { createClient } from "@/utils/supabase/client";
 import { Category } from "@/types/Category";
-import { cache } from "react";
 
-
-export const getCategories = cache(async (): Promise<Category[]> => {
-  const supabase = await createClient();
+export const getCategories = async (): Promise<Category[]> => {
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from("categories")
@@ -18,4 +17,4 @@ export const getCategories = cache(async (): Promise<Category[]> => {
   }
 
   return data ?? [];
-});
+};

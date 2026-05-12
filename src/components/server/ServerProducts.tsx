@@ -1,8 +1,9 @@
-import { createClient } from "@/utils/supabase/server";
+"use cache"
+import { createClient } from "@/utils/supabase/client";
 
 export default async function ServerProducts() {
 
-const supabase = await createClient()
+const supabase = createClient()
   const { data: products, error } = await supabase
     .from("products")
     .select(); 
@@ -11,7 +12,7 @@ const supabase = await createClient()
       console.error(error);
       return null;
     }
-console.log(products)
+
 return (
     <div>
       {products?.map((product) => (
