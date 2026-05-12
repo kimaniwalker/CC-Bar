@@ -1,4 +1,4 @@
-import { createClient } from "@/hooks/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 import { TimeslotSelector } from "../client/Reservations/TimeslotSelector";
 import { Timeslot } from "@/types/Reservations";
 

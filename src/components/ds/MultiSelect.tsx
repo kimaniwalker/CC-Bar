@@ -19,6 +19,7 @@ export const MultiSelectField = ({options, fieldName}:{options: string[], fieldN
     }
   };
 
+
   return (
     <div className="grid grid-cols-2 gap-2">
       {options.map((option) => {

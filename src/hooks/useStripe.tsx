@@ -70,34 +70,26 @@ export async function checkout(body: Stripe.Checkout.SessionCreateParams) {
     return session
 }
 
-export async function createNewUser(id: string, email?: string, phone?: string) {
+export async function createNewStripeUser({id, email, phone,}: { id: string, email?: string, phone?: string }) {
 
     let customerParams: Stripe.CustomerCreateParams = {
         description: id,
-        metadata: { id }
-    }
-    let accountParams: Stripe.AccountCreateParams = {
-        type: 'express',
-        business_type: 'individual',
-        individual: {
+        metadata: { user_id: id,
+            email: email ?? '',
+            phone: phone ?? '',
         }
     }
+
     if (email) {
         customerParams['email'] = email
     }
     if (phone) {
         customerParams["phone"] = phone
     }
-    if (accountParams.individual && email) {
-        accountParams.individual["email"] = email
-    }
-    if (accountParams.individual && phone) {
-        accountParams.individual["phone"] = phone
-    }
-    const customer = await stripe.customers.create(customerParams);
-    const account = await stripe.accounts.create(accountParams);
 
-    return { customer, account }
+    const customer = await stripe.customers.create(customerParams);
+
+    return { customer }
 }
 
 export async function retreiveCheckoutSession(sessionId: string) {

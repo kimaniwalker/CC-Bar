@@ -1,4 +1,4 @@
-import { createClient } from "@/hooks/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 
 export async function getProducts(query?: string) {
   const supabase = await createClient();

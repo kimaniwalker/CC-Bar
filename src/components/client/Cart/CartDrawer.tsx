@@ -10,6 +10,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { validateStock } from "@/utils/server/validateProductStock";
 import React from "react";
 import { StockError } from "@/types/Product";
+import { montserrat } from "@/components/ds/Fonts";
 
 export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
     const { cart, getTotalCartQuantity, getCartSubtotal } = useCart();
@@ -74,8 +75,8 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
                     <div className="text-2xl font-bold mb-2 py-2">
                         Disclaimer
                     </div>
-                    <div className="text-sm font-bold mb-4">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero, reprehenderit! Dicta impedit reprehenderit voluptas vitae! Nisi dignissimos odit vitae vero recusandae, ut ad quisquam excepturi expedita dolore pariatur blanditiis veniam.
+                    <div className={`text-sm font-bold mb-4 ${montserrat.className}`}>
+                    Free shipping on orders over $75 • Handmade to order • Ships in 3–5 business days
                     </div>
                     <button
                         onClick={handleCheckout}

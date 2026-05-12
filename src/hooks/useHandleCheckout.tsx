@@ -1,7 +1,7 @@
 "use client"
 import { Cart } from '@/types/Cart'
 import { CheckoutType, ReservationsFormInputs } from '@/types/Reservations'
-import { User } from '@/types/User'
+import { UserProfile } from '@/types/User'
 import { round } from 'lodash'
 import Stripe from 'stripe'
 
@@ -21,7 +21,7 @@ function formatReservationsMetadata(data: ReservationsFormInputs) {
     metaData['dateTime'] = data.dateTime
     metaData['time'] = data.time
     metaData['guests'] = data.guests.toString()
-    metaData['activities'] = data.activities.join(', ')
+    metaData['activities'] = data.activities?.join(', ')
     if (data.special_requests) {
         metaData['special requests'] = data.special_requests
     }
@@ -68,7 +68,7 @@ function calculateTotal(cart: Cart) {
     return round(total, 2);
 }
 
-function formatBody(cart: Cart, shipping_total: number, redirect_url: string, user?: User | null, ) {
+function formatBody(cart: Cart, shipping_total: number, redirect_url: string, user?: UserProfile | null, ) {
     
     let body: Stripe.Checkout.SessionCreateParams = {
         line_items: formatLineItems(cart),

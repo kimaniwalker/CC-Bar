@@ -1,4 +1,4 @@
-import { createClient } from "@/hooks/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 import { ProductReview } from "@/types/ProductReview";
 
 

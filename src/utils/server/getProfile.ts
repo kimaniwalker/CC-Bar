@@ -1,18 +1,18 @@
 import { createClient } from "@/utils/supabase/server";
-import { Product } from "@/types/Product";
+import { UserProfile } from "@/types/User";
 
 
-export const getProductDetails = async (id:number): Promise<Product[]> => {
+export const getProfile = async (id:string): Promise<UserProfile[]> => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("products")
+    .from("profiles")
     .select("*")
     .eq("id", id)
-    .overrideTypes<Product[]>();
+    .overrideTypes<UserProfile[]>();
 
   if (error) {
-    console.error("Error fetching categories:", error);
+    console.error("Error fetching profile:", error);
     return [];
   }
 

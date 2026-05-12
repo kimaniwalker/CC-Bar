@@ -2,10 +2,11 @@
 import { useState } from "react"
 import { StarRating } from "./StarRating"
 import { Text } from "@/components/ds/Text"
+import { ProductReview } from "@/types/ProductReview";
 
 const PAGE_SIZE = 4;
 
-export const ProductReviewList = ({ reviews }: { reviews: any[] }) => {
+export const ProductReviewList = ({ reviews }: { reviews: ProductReview[] }) => {
     const [visible, setVisible] = useState(PAGE_SIZE);
     const hasMore = visible < reviews.length;
 
@@ -16,6 +17,7 @@ export const ProductReviewList = ({ reviews }: { reviews: any[] }) => {
                     <Text size="md" className="font-semibold">{review.name}</Text>
                     <StarRating rating={review.rating} />
                     <Text size="sm" className="text-gray-500">{review.comment}</Text>
+                    <span className="text-xs text-gray-400">{new Date(review.created_at).toLocaleDateString()}</span>
                 </div>
             ))}
 
