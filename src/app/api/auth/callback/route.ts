@@ -19,5 +19,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/profile?success=true`)
+  return NextResponse.redirect(`${origin}/profile/overview?success=true`)
 }

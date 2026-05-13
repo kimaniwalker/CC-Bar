@@ -41,7 +41,6 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
 
   const user = data?.claims
-  console.log('User from Supabase auth claims:', user)
 
    // routes that should be allowed to run without an existing claim/session
    const unauthAllowed = [
@@ -57,7 +56,7 @@ export async function updateSession(request: NextRequest) {
   // if a logged-in user navigates to the login page, send them to their profile
 if (user && (pathname === '/auth/login' || pathname === '/auth/login/')) {
       const url = request.nextUrl.clone()
-     url.pathname = '/profile'
+     url.pathname = '/profile/overview'
       return NextResponse.redirect(url)
     }
 

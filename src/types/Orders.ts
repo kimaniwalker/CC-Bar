@@ -1,0 +1,44 @@
+
+
+  export enum ORDER_STATUS {
+    PENDING_PAYMENT = "Pending Payment",
+    CONFIRMED = "Confirmed",
+    PREPARING = "Preparing Shipment",
+    POURING = "Pouring",
+    CURING = "Curing",
+    PACKAGING = "Packing",
+    SHIPPED = "Shipped",
+    DELIVERED   = "Delivered",
+    CANCELLED   = "Cancelled",
+  } 
+
+  export interface Order {
+    id: string;
+    user_id: string;
+    stripe_payment_intent_id: string;
+    stripe_customer_id: string;
+    status: ORDER_STATUS;
+    subtotal: number;
+    shipping_total: number;
+    total: number;
+    shipping_address?: {
+      line1: string;
+      line2?: string;
+      city: string;
+      state: string;
+      postal_code: string;
+      country: string;
+    };
+    created_at: string; 
+    items: OrderItem[];
+  }
+  
+  export interface OrderItem {
+    id: string;
+    order_id: string;
+    product_id: string;
+    quantity: number;
+    price: number; 
+  }
+
+  

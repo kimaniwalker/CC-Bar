@@ -4,6 +4,7 @@ import Header from "@/components/client/Header";
 import { CartProvider } from "@/components/client/Cart/CartContext";
 import { ModalProvider } from "@/components/client/ModalContext";
 import { CartModalProvider } from "@/components/client/CartModalContext";
+import { AuthProvider } from "@/components/client/Auth/AuthContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,12 +20,14 @@ export default function RootLayout({
 <html>
       <body>
         <ModalProvider>
+          <AuthProvider>
           <CartModalProvider>
           <CartProvider>
             <Header />
             {children}
           </CartProvider>
           </CartModalProvider>
+          </AuthProvider>
         </ModalProvider>
         <div id="modal-root"></div>
         <div id="cart-modal-root"></div>

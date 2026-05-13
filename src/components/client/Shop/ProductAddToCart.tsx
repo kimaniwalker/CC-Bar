@@ -47,9 +47,21 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
   const { variations, available_colors, available_sizes, stock } = product;
 
   const getSelectedVariation = () => {
-    if (!variations) return null;
-    return variations.find(v => v.size === selectedSize && v.color === selectedColor);
+    if (!variations || variations.length === 0) return null;
+
+    return (
+      variations.find((v) => {
+        const hasSize = v.size !== undefined && v.size !== null && v.size !== "";
+        const hasColor = v.color !== undefined && v.color !== null && v.color !== "";
+
+        const sizeMatches = hasSize ? v.size === selectedSize : true;
+        const colorMatches = hasColor ? v.color === selectedColor : true;
+
+        return sizeMatches && colorMatches;
+      }) ?? null
+    );
   }
+  
 
   const getStockStatus = (stock: number): ProductAvailabilityStatus => {
     if (stock === null || stock === undefined) return ProductAvailabilityStatus.IN_STOCK; // treat as in stock if no stock info

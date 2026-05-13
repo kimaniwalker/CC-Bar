@@ -74,7 +74,7 @@ function formatBody(cart: Cart, shipping_total: number, redirect_url: string, us
         line_items: formatLineItems(cart),
         mode: "payment",
         client_reference_id: user?.id,
-        metadata: { type: CheckoutType.SHOP },
+        metadata: { type: CheckoutType.SHOP, user_id: user?.id ?? 'guest' },
         submit_type: "pay",
         success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
         cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
@@ -114,9 +114,6 @@ function formatBody(cart: Cart, shipping_total: number, redirect_url: string, us
             type: 'text',
             optional: true,
         }]
-    }
-    if (user?.customer_id) {
-        body['customer'] = user.customer_id
     }
     return body
 }

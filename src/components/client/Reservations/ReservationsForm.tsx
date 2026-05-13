@@ -5,15 +5,17 @@ import { MultiSelectField } from "@/components/ds/MultiSelect";
 import { Text } from "@/components/ds/Text";
 import useHandlePayment from "@/hooks/useHandleCheckout";
 import useStripe from "@/hooks/useStripe";
-import { ReservationsFormInputs } from "@/types/Reservations";
+import { ReservationsFormInputs, Timeslot } from "@/types/Reservations";
 import Stripe from "stripe";
-import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
 import { SubmitHandler, useForm, FormProvider } from "react-hook-form";
+import { TimeslotSelectorLoadingSkeleton } from "./TimeslotSelectorLoadingSkeleton";
+import fetchAvailableTimeSlots from "@/utils/server/fetchAvailableTimeSlots";
+import { TimeslotSelector } from "./TimeslotSelector";
 
-
-
-export const ReservationsForm = ({ date, available_timeslots }: { date?: string, available_timeslots: ReactNode }) => {
+export const ReservationsForm = () => {
+  const date = useSearchParams().get("date") ?? undefined;
   const methods = useForm<ReservationsFormInputs>({mode: "onBlur", reValidateMode: "onChange"});
   const { register, handleSubmit, formState:{
     isValid,errors, 
@@ -21,6 +23,23 @@ export const ReservationsForm = ({ date, available_timeslots }: { date?: string,
   const router = useRouter();
   const {formatReservationsData} = useHandlePayment()
   const {checkout} = useStripe()
+  const [timeSlots, setTimeSlots] = React.useState<Timeslot[]>([]);
+  const [isLoadingSlots, setIsLoadingSlots] = React.useState(false);
+
+  const getAvaialableTimeslots = async (date: string) => {
+    setIsLoadingSlots(true);
+    const slots = await fetchAvailableTimeSlots({date});
+    setTimeSlots(slots ?? []);
+    setIsLoadingSlots(false);
+  }
+
+  useEffect(() => {
+    if(date) getAvaialableTimeslots(date);
+else {
+     setTimeSlots([]);
+     setIsLoadingSlots(false);
+   }
+  }, [date])
 
    const handleCheckout = async (body:Stripe.Checkout.SessionCreateParams) => {
       const session = await checkout(body)
@@ -31,7 +50,6 @@ export const ReservationsForm = ({ date, available_timeslots }: { date?: string,
     const reservationsData = formatReservationsData({redirect_url: '/',ReservationsFormData: data});
     console.log({reservationsData})
     handleCheckout(reservationsData)
-
   }
 
   const handleSelectDate = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +96,13 @@ export const ReservationsForm = ({ date, available_timeslots }: { date?: string,
 
           <div className="mb-4">
             <label className="block mb-2 font-medium text-gray-700">Available timeslots</label>
-            {available_timeslots}
+            {isLoadingSlots ? (
+              <TimeslotSelectorLoadingSkeleton />
+            ) : date ? (
+              <TimeslotSelector available_timeslots={timeSlots}/>
+            ) : (
+              <div className="text-sm text-gray-500">Select a date to view available timeslots.</div>
+            )} 
           </div>
 
           <div className="mb-4">

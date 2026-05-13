@@ -36,7 +36,7 @@
     "scripts/generateSafelist.ts",
     "tailwind.config.ts",
     ".next/dev/types/**/*.ts"
-  ],
+, "src/app/api/webhooks/orders"  ],
   "exclude": [
     "node_modules"
   ]

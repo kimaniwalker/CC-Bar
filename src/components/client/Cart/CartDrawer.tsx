@@ -11,19 +11,21 @@ import { validateStock } from "@/utils/server/validateProductStock";
 import React from "react";
 import { StockError } from "@/types/Product";
 import { montserrat } from "@/components/ds/Fonts";
+import { useUser } from "../Auth/AuthContext";
+
 
 export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
     const { cart, getTotalCartQuantity, getCartSubtotal } = useCart();
     const [errors, setErrors] = React.useState<StockError[]>([]);
     const router = useRouter();
     const pathname = usePathname();
+    const { user } = useUser()
+    console.log({user})
     const { formatBody } = useHandleCheckout()
-    const body = formatBody(
-        cart,
-        900,
-        pathname
-    );
-    console.log(body)
+    const body = formatBody(cart, 900, pathname, user)
+    console.log({body})
+
+       
     const { checkout } = useStripe()
     const cartQuanity = getTotalCartQuantity();
     const cartSubtotal = getCartSubtotal();
@@ -41,7 +43,6 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
             if (session.url) router.push(session.url);
         }
         
-
     }
 
     const handleClearError = (sku: string) => {

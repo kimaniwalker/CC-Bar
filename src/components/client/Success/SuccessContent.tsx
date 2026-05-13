@@ -1,18 +1,32 @@
+"use client"
 import useStripe from "@/hooks/useStripe"
 import { CheckoutType } from "@/types/Reservations";
+import { retreiveCheckoutSession } from "@/utils/server/retrieveCheckoutSession";
+import { useSearchParams } from "next/navigation";
+import React from "react";
+import Stripe from "stripe";
 
-export default async function SuccessContent({
-    searchParams,
-}: {
-    searchParams: { session_id: string, type: CheckoutType }
-}) {
-    const params = searchParams;
+export default function SuccessContent() {
+    const params = useSearchParams()
+    const session_id = params.get("session_id") ?? "";
+    const type = params.get("type") ?? "";
 
-    const session_id = params.session_id ?? "";
-    const type = params.type ?? "";
-    const { retreiveCheckoutSession } = useStripe()
-    const {session, lineItems} = await retreiveCheckoutSession(session_id)
-    console.log({lineItems})
+    
+
+    const [data, setData] = React.useState({})
+
+    const fetchSessionData = async () => {
+        if (!session_id) return;
+        const sessionData = await retreiveCheckoutSession(session_id);
+        setData(sessionData)
+    }
+
+    React.useEffect(() => {
+        fetchSessionData();
+    }, [session_id])
+
+    const session = data as Stripe.Checkout.Session
+    const lineItems = session?.line_items?.data as Stripe.LineItem[]
     const orderInfo = session.metadata
  
     if (type === CheckoutType.RESERVATION) {
