@@ -17,14 +17,14 @@ export default async function ProductDetails({
     params,
     searchParams
 }: {
-    params: Promise<{ id: number }>
+    params: Promise<{ id: string }>
     searchParams: Promise<{ category: string }>
 }) {
-    const { id } = await params
+    const { id: product_id } = await params
     const { category: selectedCategory } = await searchParams
 
-    const productDetails = await getProductDetails(id)
-    const { name, description, images, tags, thumbnail, on_sale, price, sale_price, dimensions, brand, variations } = productDetails[0]
+    const productDetails = await getProductDetails(product_id)
+    const { name, description, images, tags, thumbnail, on_sale, price, sale_price, dimensions, brand, variations, id } = productDetails[0]
 
 
     return (
@@ -35,7 +35,7 @@ export default async function ProductDetails({
         <div className="p-4 md:p-8 w-full max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* left col — image */}
-                <ImagePicker images={images || [thumbnail]} alt={name} />
+                <ImagePicker id={id} images={images || [thumbnail]} alt={name} />
 
                 {/* right col — details */}
                 <div className="flex flex-col gap-4">

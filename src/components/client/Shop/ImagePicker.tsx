@@ -1,8 +1,9 @@
 "use client"
 import Image from "next/image";
 import React from "react";
+import { ProductHeartButton } from "../Favorites/ProductHeartButton";
 
-export const ImagePicker = ({ images, alt }: { images: string[], alt: string }) => {
+export const ImagePicker = ({ images, alt, id }: { images: string[], alt: string,id: string }) => {
     const [selected, setSelected] = React.useState(images[0]);
 
     return (
@@ -10,6 +11,7 @@ export const ImagePicker = ({ images, alt }: { images: string[], alt: string }) 
             {/* main image */}
             <div className="w-full aspect-square relative rounded-xl overflow-hidden">
                 <Image loading="eager" src={selected} alt={alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw"  />
+                <ProductHeartButton product_id={id}/>
             </div>
 
             {/* thumbnails — only show if more than 1 image */}

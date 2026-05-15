@@ -1,4 +1,5 @@
-import { Favorite, FavoritesResponse } from "@/types/Favorites";
+"use server"
+import {  FavoritesResponse } from "@/types/Favorites";
 import { createClient } from "../supabase/server";
 
 export default async function getUserFavorites(userId?: string) {

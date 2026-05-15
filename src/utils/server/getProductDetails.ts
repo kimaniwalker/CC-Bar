@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 import { Product } from "@/types/Product";
 
 // accept a single id or an array of ids
-export const getProductDetails = async (ids: number | number[] | string | string[]): Promise<Product[]> => {
+export const getProductDetails = async (ids: string | string[]): Promise<Product[]> => {
   const supabase = createClient();
 
   // build query depending on whether ids is an array or single value

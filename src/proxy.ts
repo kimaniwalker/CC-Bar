@@ -12,6 +12,8 @@ export const config = {
     '/auth/:path*',
     '/api/auth/:path*',
     '/profile/:path*',
+    '/orders/:path*',
+    '/favorites/:path*',
     /*
      * Match all request paths except for the ones starting with:
      * - _next/static (static files)

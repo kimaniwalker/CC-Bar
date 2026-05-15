@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 import { ProductReview } from "@/types/ProductReview";
 
 
-export const getProductReviews = async (product_id:number): Promise<ProductReview[]> => {
+export const getProductReviews = async (product_id:string): Promise<ProductReview[]> => {
   const supabase = createClient();
 
   const { data, error } = await supabase

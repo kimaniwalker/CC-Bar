@@ -6,6 +6,7 @@ import { useCart } from "./CartContext";
 import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
 import { montserrat } from "@/components/ds/Fonts";
 import { useMediaQuery } from "react-responsive";
+import { ProductHeartButton } from "../Favorites/ProductHeartButton";
 
 export default function CartProduct({ product, errors, onHandleUpdateProductQuantity }: { product: CartProduct, errors?: StockError[], onHandleUpdateProductQuantity?: (sku: string) => void }) {
   const hasVariation = product.color || product.size;
@@ -45,6 +46,7 @@ dark:hover:bg-gray-700 my-4">
               alt="cart image"
               sizes="100px"
             />
+          <ProductHeartButton product_id={product.id} className="-top-1 -right-1"/>
           </div>
           <Stack direction="col" className="w-full">
             <Text

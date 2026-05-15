@@ -5,6 +5,7 @@ import { CartProvider } from "@/components/client/Cart/CartContext";
 import { ModalProvider } from "@/components/client/ModalContext";
 import { CartModalProvider } from "@/components/client/CartModalContext";
 import { AuthProvider } from "@/components/client/Auth/AuthContext";
+import { FavoritesProvider } from "@/components/client/Favorites/FavoritesContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,8 +24,10 @@ export default function RootLayout({
           <CartModalProvider>
             <CartProvider>
               <ModalProvider>
+                <FavoritesProvider>
                 <Header />
                 {children}
+                </FavoritesProvider>
               </ModalProvider>
             </CartProvider>
           </CartModalProvider>

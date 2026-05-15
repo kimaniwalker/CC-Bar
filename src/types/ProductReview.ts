@@ -1,5 +1,5 @@
 export interface ProductReview {
-    id: number;
+    id: string;
     product_id: number;
     rating: 1 | 2 | 3 | 4 | 5;
     comment: string;
@@ -13,5 +13,5 @@ export interface ProductReviewFormInputs {
     comment: string;
     name: string;
     email?: string;
-    product_id: number;
+    product_id: string;
   }

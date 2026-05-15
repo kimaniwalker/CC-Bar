@@ -9,13 +9,13 @@ import ProductCount from "./ProductCount";
 import { Product } from "@/types/Product";
 import { useRouter } from "next/navigation";
 import { ProductBadge } from "./ProductBadge";
+import { ProductHeartButton } from "../Favorites/ProductHeartButton";
 
 export default function ProductCard(product: Product) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const [isHovered, setIsHovered] = useState(false);
   const { id, name, price, thumbnail } = product;
   const router = useRouter();
-
   const showQuickAdd = !isMobile && (isHovered); // 👈 never show on mobile
 
 
@@ -33,6 +33,7 @@ export default function ProductCard(product: Product) {
             style={{ objectFit: "cover" }}
             sizes="(min-width: 768px) 240px, (min-width: 640px) 200px, 140px"
           />
+          <ProductHeartButton product_id={product.id} />
             <ProductBadge stock={product.stock} />
           <div onClick={(e) => e.stopPropagation()}>
             <ProductCardQuickAdd hideQuickAdd={!showQuickAdd} product={product} />

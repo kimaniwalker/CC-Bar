@@ -2,6 +2,7 @@ import { getUser } from "@/utils/server/getUser"
 import getUserFavorites from "@/utils/server/getUserFavorites"
 import Image from "next/image"
 import { AddToCartPillButton } from "../Orders/AddToCartPillButton"
+import { ProductHeartButton } from "../Favorites/ProductHeartButton"
 
 export const Favorites = async () => {
   const user = await getUser()
@@ -30,6 +31,7 @@ export const Favorites = async () => {
             >
               <div className="h-16 w-16 rounded-2xl bg-neutral-100 relative overflow-hidden">
                 <Image fill src={item.products.thumbnail} alt={item.products.name} style={{ objectFit: "cover" }} sizes="64px" />
+                <ProductHeartButton product_id={item.products.id} className="-top-1 -right-1"/>
               </div>
 
               <div className="flex-1">

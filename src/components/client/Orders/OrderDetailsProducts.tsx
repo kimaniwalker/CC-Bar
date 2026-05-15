@@ -3,6 +3,7 @@ import { OrderItem } from "@/types/Orders";
 import { Product } from "@/types/Product";
 import Image from "next/image";
 import { AddToCartPillButton } from "./AddToCartPillButton";
+import { ProductHeartButton } from "../Favorites/ProductHeartButton";
 
 export const OrderDetailsProducts = ({ products, order_items }: { products: Product[], order_items: OrderItem[] }) => {
     return (
@@ -34,7 +35,7 @@ export const OrderDetailsProducts = ({ products, order_items }: { products: Prod
                                     fill
                                     className="object-cover"
                                 />
-                            
+                            <ProductHeartButton product_id={product.id} className="-top-1 -right-1"/>
                            </div>
                            <div className="min-w-0 flex flex-col flex-1 justify-between gap-4">
                             <div>

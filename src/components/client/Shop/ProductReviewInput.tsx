@@ -5,7 +5,7 @@ import { ProductReviewFormInputs } from "@/types/ProductReview"
 import { handleAddProductReview } from "@/utils/server/handleAddProductReview"
 import { SubmitHandler, useForm } from "react-hook-form"
 
-export const ProductReviewInput = ({ product_id }: { product_id: number }) => {
+export const ProductReviewInput = ({ product_id }: { product_id: string }) => {
     const {
         register,
         handleSubmit,

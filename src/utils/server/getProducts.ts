@@ -1,7 +1,9 @@
 "use cache"
 import { createClient } from "@/utils/supabase/client";
+import { cacheTag } from "next/cache";
 
 export async function getProducts(query?: string) {
+  cacheTag("products");
   const supabase = createClient();
 
   let queryBuilder = supabase

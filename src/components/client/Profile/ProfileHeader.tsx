@@ -1,6 +1,7 @@
 import { getUser } from "@/utils/server/getUser"
 import getUserFavorites from "@/utils/server/getUserFavorites"
 import getUserOrders from "@/utils/server/getUserOrders"
+import { FavoritesCount } from "./FavoritesCount"
 
 export const ProfileHeader = async() => {
 
@@ -31,10 +32,7 @@ export const ProfileHeader = async() => {
                     <p className="mt-1 text-xs text-neutral-500">Orders</p>
                   </div>
   
-                  <div className="rounded-2xl border border-neutral-200 bg-[#F8F5F1] px-5 py-4 text-center">
-                    <p className="text-2xl font-semibold">{favorites.length?? 0}</p>
-                    <p className="mt-1 text-xs text-neutral-500">Favorites</p>
-                  </div>
+                  <FavoritesCount count={favorites.length} />
   
                   <div className="rounded-2xl border border-neutral-200 bg-[#F8F5F1] px-5 py-4 text-center">
                     <p className="text-2xl font-semibold">1</p>
