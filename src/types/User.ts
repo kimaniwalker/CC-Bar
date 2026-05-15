@@ -9,3 +9,11 @@ export interface UserProfile {
     created_at?: string;
     updated_at?: string;
   }
+
+  export enum PROFILE_SECTIONS {
+    OVERVIEW = "overview",
+    ORDERS = "orders",
+    FAVORITES = "favorites",
+    SETTINGS = "settings",
+    PROFILE = "profile"
+  }

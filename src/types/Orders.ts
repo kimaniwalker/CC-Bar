@@ -1,3 +1,4 @@
+import { Product } from "./Product";
 
 
   export enum ORDER_STATUS {
@@ -30,7 +31,6 @@
       country: string;
     };
     created_at: string; 
-    items: OrderItem[];
   }
   
   export interface OrderItem {
@@ -41,4 +41,8 @@
     price: number; 
   }
 
-  
+  export type OrdersResponse = Order & { order_items: OrderItem[] };
+
+  export type OrderDetailsResponse = OrderItem & { product: Pick<Product, "id" | "name" | "description" | "thumbnail">}
+
+  export type OrderWithProducts = OrdersResponse & { products: Product[] };

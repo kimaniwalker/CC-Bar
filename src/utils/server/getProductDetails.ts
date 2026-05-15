@@ -2,20 +2,25 @@
 import { createClient } from "@/utils/supabase/client";
 import { Product } from "@/types/Product";
 
-
-export const getProductDetails = async (id:number): Promise<Product[]> => {
+// accept a single id or an array of ids
+export const getProductDetails = async (ids: number | number[] | string | string[]): Promise<Product[]> => {
   const supabase = createClient();
 
-  const { data, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("id", id)
-    .overrideTypes<Product[]>();
+  // build query depending on whether ids is an array or single value
+  let query = supabase.from("products").select("*");
+
+  if (Array.isArray(ids)) {
+    query = query.in("id", ids);
+  } else {
+    query = query.eq("id", ids);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
-    console.error("Error fetching categories:", error);
+    console.error("Error fetching products:", error);
     return [];
   }
 
-  return data ?? [];
+  return (data ?? []) as Product[];
 };

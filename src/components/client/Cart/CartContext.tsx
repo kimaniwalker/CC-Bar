@@ -9,7 +9,7 @@ type CartContextType = {
   removeFromCart: (sku: string) => void;
   removeProductBySku: (sku: string) => void;
   clearCart: () => void;
-  getCartProductQuantity: (id: number) => number | undefined;
+  getCartProductQuantity: (id: string) => number | undefined;
   getCartSubtotal: () => number;
   getTotalCartQuantity: () => number;
   getSelectedVariationQuantity: ({product, selectedColor, selectedSize}:{product:Product, selectedColor: string, selectedSize: string}) => number;
@@ -70,7 +70,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
   const clearCart = () => setCart([]);
 
-  const getCartProductQuantity = (id: number) =>
+  const getCartProductQuantity = (id: string) =>
     cart
       .filter((item: CartProduct) => item.id === id)
       .reduce((total, item) => total + (item.quantity || 1), 0);

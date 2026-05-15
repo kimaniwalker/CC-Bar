@@ -17,22 +17,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-<html>
+    <html>
       <body>
-        <ModalProvider>
-          <AuthProvider>
+        <AuthProvider>
           <CartModalProvider>
-          <CartProvider>
-            <Header />
-            {children}
-          </CartProvider>
+            <CartProvider>
+              <ModalProvider>
+                <Header />
+                {children}
+              </ModalProvider>
+            </CartProvider>
           </CartModalProvider>
-          </AuthProvider>
-        </ModalProvider>
+        </AuthProvider>
         <div id="modal-root"></div>
         <div id="cart-modal-root"></div>
       </body>
-</html>
+    </html>
 
   );
 }

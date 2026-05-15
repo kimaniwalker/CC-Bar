@@ -1,25 +1,24 @@
-import { montserrat } from "@/components/ds/Fonts";
+"use client"
+import { josefin } from "@/components/ds/Fonts";
 import { Stack } from "@/components/ds/Stack";
-import { Text } from "@/components/ds/Text";
-import { Dispatch, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { ProductVariationTag } from "./ProductVariationTag";
 import { AddToCartButton } from "./ProductAddToCart";
 import { Product } from "@/types/Product";
 type ProductVariationsModal = {
   product: Product
-  setSelectedSize: Dispatch<SetStateAction<string>>;
-  setSelectedColor: Dispatch<SetStateAction<string>>;
-  selectedSize: string;
-  selectedColor: string;
 };
 export default function ProductVariationsModal({
-  setSelectedColor,
-  setSelectedSize,
-  selectedSize,
-  selectedColor,
   product
 }: ProductVariationsModal) {
 
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
+
+  useEffect(() => {
+    setSelectedSize("");
+    setSelectedColor("");
+  }, [product.id]);
 
   const { available_colors, available_sizes } = product;
 
@@ -36,9 +35,9 @@ export default function ProductVariationsModal({
   }
     
       return (
-        <Stack direction="col" gap="md" className={`w-full ${montserrat.className}`}>
+        <Stack direction="col" gap="md" className={`w-full`}>
               <div className="w-full">
-                <Text size="lg" className="font-semibold uppercase tracking-wide">{getModalHeading()}</Text>
+                <h2 className={`font-semibold text-lg uppercase tracking-wide ${josefin.className}`}>{getModalHeading()}</h2>
               </div>
               <Stack direction="col" gap="md" justify="start" className="w-full">
                     <ProductVariationTag variation={available_sizes ?? []} heading="Available Sizes" selectedVariant={selectedSize} handleOnClick={(value) => setSelectedSize(value)} />

@@ -2,7 +2,7 @@
 import { Text } from "@/components/ds/Text";
 import { useCart } from "../Cart/CartContext";
 
-export default function ProductCount({ id }: { id: number }) {
+export default function ProductCount({ id }: { id: string }) {
   const { getCartProductQuantity } = useCart();
   if (!getCartProductQuantity(id)) return;
   return (

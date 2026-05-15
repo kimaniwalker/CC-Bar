@@ -3,7 +3,6 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { useCart } from "../Cart/CartContext";
 import { Product } from "@/types/Product";
-import Modal from "../Modal";
 import { useModal } from "../ModalContext";
 import ProductVariationsModal from "./ProductVariationsModal";
 import { getProductSku } from "@/utils/getProductSku";
@@ -13,15 +12,13 @@ import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
 type QuickAddProps = {
   hideQuickAdd: boolean;
   product: Product;
-  onModalOpenChange?: (isOpen: boolean) => void; 
 };
 export default function ProductCardQuickAdd({
   hideQuickAdd,
   product,
-  onModalOpenChange
 }: QuickAddProps) {
   const { addToCart, cart, removeFromCart } = useCart();
-  const { isOpen, close, open } = useModal();
+  const {  open } = useModal();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
 
@@ -31,27 +28,21 @@ export default function ProductCardQuickAdd({
   );
   const isOutOfStock = product.stock === 0;
 
-  const handleOpen = () => { open(); onModalOpenChange?.(true); }
-  const handleClose = () => { close(); onModalOpenChange?.(false); }
 
-  const handleATC = ({
-    color,
-    size,
-  }: {
-    color?: string;
-    size?: string;
-  } = {}) => {
+
+  const handleATC = () => {
     if (isOutOfStock) return;
-    addToCart(normalizeCartProduct(product, {
-                  ...color && { color },
-                  ...size && { size },
-                  sku: getProductSku({ product, selectedColor: color, selectedSize: size })  
-                }))}
+    addToCart(normalizeCartProduct(product))
+  }
 
   const handleSelectSizeAndColor = () => {
-    handleOpen();
+    open(
+    <ProductVariationsModal
+         key={product.id}
+          product={product}
+        />)
   };
-  console.log(product.sku)
+
   if (hideQuickAdd) return null;
   return (
     <>
@@ -124,15 +115,7 @@ export default function ProductCardQuickAdd({
           </div>
         </motion.div>
       </Stack>
-      <Modal isOpen={isOpen} onClose={handleClose} className="w-full h-full md:w-[90vw] md:h-auto md:max-w-lg md:rounded-xl p-6 md:min-h-96 flex items-center justify-center">
-        <ProductVariationsModal
-          selectedSize={selectedSize}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          setSelectedSize={setSelectedSize}
-          product={product}
-        />
-      </Modal>
+
     </>
   );
 }

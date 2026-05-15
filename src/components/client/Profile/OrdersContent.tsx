@@ -1,12 +1,13 @@
 "use client"
-import { Order } from "@/types/Orders"
+import { Text } from "@/components/ds/Text"
+import { Order, OrdersResponse } from "@/types/Orders"
 import { useRouter } from "next/navigation"
 
-export const OrdersContent = ({recentOrders}:{recentOrders:Order[]}) => {
+export const OrdersContent = ({recentOrders}:{recentOrders:OrdersResponse[]}) => {
     const router = useRouter()
     const handleViewOrderDetails = (orderId: string) => {
         // Navigate to the order details page (you can customize the route as needed)
-        router.push("/profile/orders/" + orderId)
+        router.push("/orders/" + orderId)
     }
     const convertToCurrency = (amount: number) => {
         return new Intl.NumberFormat("en-US", {
@@ -30,7 +31,7 @@ export const OrdersContent = ({recentOrders}:{recentOrders:Order[]}) => {
       </div>
 
       <div className="mt-6 space-y-4">
-        {recentOrders.map((order) => (
+        {recentOrders.slice(0,4).map((order) => (
           <div
             key={order.id}
             className="flex flex-col gap-4 rounded-2xl border border-neutral-200 p-5 md:flex-row md:items-center md:justify-between"
@@ -43,6 +44,9 @@ export const OrdersContent = ({recentOrders}:{recentOrders:Order[]}) => {
               <div className="mt-2 inline-flex rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700">
                 {order.status}
               </div>
+              <span className="mt-2 text-xs text-neutral-600">
+               - {new Date(order.created_at).toLocaleDateString()}
+              </span>
             </div>
 
             <div className="flex items-center gap-4">
@@ -50,7 +54,7 @@ export const OrdersContent = ({recentOrders}:{recentOrders:Order[]}) => {
                 {convertToCurrency(order.total)}
               </p>
 
-              <button onClick={() => handleViewOrderDetails(order.id)} className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium transition hover:bg-neutral-100">
+              <button onClick={() => handleViewOrderDetails(order.id)} className="rounded-full border border-neutral-300 px-4 py-2 text-xs font-medium transition hover:bg-neutral-100">
                 View Order
               </button>
             </div>

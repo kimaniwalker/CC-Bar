@@ -2,7 +2,7 @@
 import { Stack } from "@/components/ds/Stack";
 import { Text } from "@/components/ds/Text";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import ProductCardQuickAdd from "./ProductCardQuickAdd";
 import { useMediaQuery } from "react-responsive";
 import ProductCount from "./ProductCount";
@@ -13,23 +13,16 @@ import { ProductBadge } from "./ProductBadge";
 export default function ProductCard(product: Product) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const [isHovered, setIsHovered] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { id, name, price, thumbnail } = product;
   const router = useRouter();
-  const isModalOpenRef = useRef(false);  // 👈 ref to avoid stale closure
 
-  const handleModalOpenChange = (open: boolean) => {
-    isModalOpenRef.current = open;  // 👈 always current
-    setIsModalOpen(open);
-  };
+  const showQuickAdd = !isMobile && (isHovered); // 👈 never show on mobile
 
-  const showQuickAdd = !isMobile && (isHovered || isModalOpen); // 👈 never show on mobile
-  const isOutOfStock = product.stock === 0;
 
   return (
     <div
     onMouseEnter={() => { if (!isMobile) setIsHovered(true); }}   // 👈 ignore on mobile
-    onMouseLeave={() => { if (!isMobile && !isModalOpenRef.current) setIsHovered(false); }}
+    onMouseLeave={() => { if (!isMobile) setIsHovered(false); }}
     >
       <a className="group cursor-pointer" onClick={() => router.push(`/shop/${id}`)}>
         <Stack className="relative h-35 w-35 sm:h-50 sm:w-50 md:h-60 md:w-60 aspect-square bg-gray-200 group-hover:opacity-75 rounded-xl overflow-hidden">
@@ -40,13 +33,9 @@ export default function ProductCard(product: Product) {
             style={{ objectFit: "cover" }}
             sizes="(min-width: 768px) 240px, (min-width: 640px) 200px, 140px"
           />
-          
-          
             <ProductBadge stock={product.stock} />
-          
-         
           <div onClick={(e) => e.stopPropagation()}>
-            <ProductCardQuickAdd hideQuickAdd={!showQuickAdd} product={product} onModalOpenChange={handleModalOpenChange} />
+            <ProductCardQuickAdd hideQuickAdd={!showQuickAdd} product={product} />
           </div>
           <ProductCount id={id} />
         </Stack>

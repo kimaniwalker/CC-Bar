@@ -42,7 +42,8 @@ export const handleAddNewOrder = async ({
         const product = item.price?.product as Stripe.Product;
         return {
             order_id: orderId,
-            product_id: product.metadata?.sku || null,
+            product_id: product.metadata?.product_id || null,
+            sku: product.metadata?.sku || null,
             quantity: item.quantity,
             price: item.price?.unit_amount || 0,
         }
