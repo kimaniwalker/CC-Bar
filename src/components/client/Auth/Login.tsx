@@ -61,7 +61,7 @@ export const Login = () => {
         <div className="min-h-screen flex md:items-center justify-center bg-white md:bg-gray-100">
             <div className="bg-white p-4 md:p-8 rounded shadow-none md:shadow-md w-full max-w-lg flex flex-col">
                 <form onSubmit={handleSubmit} className="space-y-6 m-4 md:m-16">
-                    <Text size="xl" className="text-2xl font-bold mb-6 md:mb-12 text-left md:text-center">
+                    <Text size="xxl" className="font-bold mb-6 md:mb-12 text-left md:text-center md: text-6xl">
                         Sign In
                     </Text>
                     <Input hideLabel disabled={isSubmitted} errorMessage={errorMessage} type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" required />
@@ -70,21 +70,21 @@ export const Login = () => {
                         disabled={!isValidEmail(email) || isSubmitting}
                         className={`w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors ${montserrat.className} disabled:bg-gray-400 disabled:cursor-not-allowed`}
                     >
-                        {isSubmitting ? "Creating your magic link ..." : "Sign In With Email"}
+                     <Text as="span" size="sm" className="text-md"> {isSubmitting ? "Creating your magic link ..." : "Sign In With Email"}  </Text>
                     </button>
                     {isSubmitted ? (
-                        <span className={`text-green-600 text-center ${montserrat.className}`}>
+                        <Text as="span" size="xs" className={`text-green-600 text-center`}>
                             If an account with that email exists, a magic link has been sent. Please check your inbox.
-                        </span>
+                        </Text>
                     ) : (
-                        <span className={`text-xs text-gray-600 text-center ${montserrat.className}`}>
+                        <Text as="span" size="xs" className={` text-gray-600 text-center`}>
                             Enter your email to receive a magic link for signing in. Don't have an account? It will be created for you! By signing in, you agree to our <a href="/terms" className="underline">Terms of Service</a> and <a href="/privacy" className="underline">Privacy Policy</a>.
-                        </span>
+                        </Text>
                     )}
                     {dbError && (
-                        <span className={`text-red-600 text-xs ${montserrat.className} mt-2 block`}>
+                        <Text as="span" size="xs" className={`text-red-600 mt-2 block`}>
                             Whoops, something went wrong - {dbError}. Please try again or contact support.
-                        </span>
+                        </Text>
                     )}
             
                 </form>

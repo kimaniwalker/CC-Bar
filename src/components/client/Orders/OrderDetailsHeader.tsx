@@ -1,4 +1,5 @@
 import { josefin, montserrat } from "@/components/ds/Fonts"
+import { Text } from "@/components/ds/Text";
 const statusStyles: Record<string, string> = {
     pending: "bg-yellow-100 text-yellow-800",
     confirmed: "bg-blue-100 text-blue-800",
@@ -13,21 +14,21 @@ export const OrderDetailsHeader = ({id, date, status}: {id: string, date: string
    
                                 <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between rounded-3xl bg-white p-6 shadow-sm my-4">
                                     <div>
-                                        <h2 className={`text-xl font-medium tracking-wide ${josefin.className}`}>
+                                        <Text size="xl" className={`text-xl font-medium tracking-wide`}>
                                             Order Details
-                                        </h2>
+                                        </Text>
 
-                                        <p className={`mt-2 text-sm font-semibold tracking-tight text-neutral-900 ${montserrat.className}`}>
+                                        <Text size="sm" className={`mt-2 text-sm font-semibold text-neutral-500`}>
                                             Order: {id.slice(0, 8)}
-                                        </p>
+                                        </Text>
 
-                                        <p className="mt-3 text-sm text-neutral-500">
+                                        <Text size="sm" className="mt-3 text-sm text-neutral-500">
                                             Placed on {date}
-                                        </p>
+                                        </Text>
                                         <div>
-                                            <span className={`mt-3 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${statusStyles[status] || "bg-gray-100 text-gray-800 uppercase"}`}>
+                                            <Text as="span" size="sm" className={`mt-3 inline-flex items-center rounded-full px-3 py-1 text-sm font-medium uppercase ${statusStyles[status] || "bg-gray-100 text-gray-800 uppercase"}`}>
                                                 {status}
-                                            </span>
+                                            </Text>
                                         </div>
                                         
                                     </div>
@@ -36,7 +37,7 @@ export const OrderDetailsHeader = ({id, date, status}: {id: string, date: string
 
 
                                         <button className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium transition hover:bg-neutral-100">
-                                            Reorder
+                                            <Text size="sm" as="span">Reorder</Text>
                                         </button>
                                     </div>
                                 </div>

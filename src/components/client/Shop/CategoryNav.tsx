@@ -1,5 +1,6 @@
 "use client"
-import { montserrat } from "@/components/ds/Fonts";
+
+import { Text } from "@/components/ds/Text";
 import { useRouter } from "next/navigation";
 
 export const CategoryNav = ({ categories, selectedCategory }: { categories: string[], selectedCategory: string }) => {
@@ -12,7 +13,7 @@ export const CategoryNav = ({ categories, selectedCategory }: { categories: stri
     <ul className="flex space-x-8 overflow-x-auto px-4 scrollbar-hide">
       {categories.map((category) => (
        <li
-       className={`cursor-pointer text-center text-nowrap text-sm ${montserrat.className} uppercase transition-all duration-200 ${
+       className={`cursor-pointer text-center text-nowrap text-sm uppercase transition-all duration-200 ${
          category === selectedCategory
            ? "font-black underline underline-offset-4 decoration-4 scale-110"
            : "font-normal opacity-60 hover:opacity-100"
@@ -20,7 +21,7 @@ export const CategoryNav = ({ categories, selectedCategory }: { categories: stri
        key={category}
        onClick={() => handleCategoryClick(category)}
      >
-       {category}
+       <Text as="span" size="sm">{category}</Text>
      </li>
       ))}
       </ul>

@@ -16,7 +16,7 @@ export const CategoryBanner = async({ selectedCategory, product_count }: { selec
             <Text size="xl" className="text-4xl font-bold text-black uppercase">{selectedCategory}</Text>
             <p className={`text-md px-4 ${montserrat.className}`}>({product_count} products)</p>
             </div>
-            <p className={`text-lg text-gray-500 mt-2 ${montserrat.className}`}>{description}</p>
+            <Text size="sm" className={`text-gray-500 mt-2 md:text-lg`}>{description}</Text>
             </div>
         </div>
     );

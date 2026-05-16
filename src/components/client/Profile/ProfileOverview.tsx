@@ -5,12 +5,13 @@ import { ProfileMobileTabs } from "./ProfileMobileTabs"
 import { ProfileSideBar } from "./ProfileSideBar"
 import Orders from "./Orders"
 import { PROFILE_SECTIONS } from "@/types/User"
+import ProfileOverviewSkeleton from "./ProfileOverviewSkeleton"
 
 export default function ProfileOverviewPage({ section }: { section?: string }) {
-  console.log({section})
+  console.log({ section })
 
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-lg text-neutral-500">Loading profile...</p></div>}>
+    <Suspense fallback={<ProfileOverviewSkeleton />}>
 
 
       <div className="min-h-screen bg-gray-100 text-neutral-900">

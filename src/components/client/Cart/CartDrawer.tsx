@@ -57,7 +57,7 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
             >
                 <div className="fixed top-0 right-0 w-full sm:w-128 h-full bg-white shadow-lg z-100 p-4">
                     <div className="flex flex-col">
-                        <h2 className="text-2xl font-bold mb-4">Your Cart ({cartQuanity}) - ${cartSubtotal}</h2>
+                        <Text as="h2" size="lg" className="text-2xl font-bold mb-4">Your Cart ({cartQuanity}) - ${cartSubtotal}</Text>
                         <span className="">
                             <CloseIcon onClose={onClose} />
                         </span>
@@ -73,19 +73,19 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
                             ))
                         }
                     </div>
-                    <div className="text-2xl font-bold mb-2 py-2">
+                    <Text size="lg" className="text-2xl font-bold mb-2 py-2">
                         Disclaimer
-                    </div>
-                    <div className={`text-sm font-bold mb-4 ${montserrat.className}`}>
+                    </Text>
+                    <Text size="sm" className={`text-sm font-bold mb-4`}>
                     Free shipping on orders over $75 • Handmade to order • Ships in 3–5 business days
-                    </div>
+                    </Text>
                     <button
                         onClick={handleCheckout}
                         type="button"
                         disabled={errors.length > 0}
                         className="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 mt-4 w-full disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed"
                     >
-                        <Text size="md" className="uppercase">Checkout</Text>
+                        <Text as="span" size="sm" className="uppercase text-lg">Checkout</Text>
                     </button>
                 </div>
             </motion.div>

@@ -2,11 +2,12 @@
 
 import React, { JSX } from "react";
 import clsx from "clsx";
-import { averia_libre, josefin, montserrat } from "./Fonts";
+import { averia_libre, fraunces, inter, josefin, montserrat, outfit } from "./Fonts";
 
-type HeadingSize = "sm" | "md" | "lg" | "xl" | "xxl";
+type HeadingSize = "sm" | "md" | "lg" | "xl" | "xxl" | "xs";
 
 const sizeToTagMap: Record<HeadingSize, keyof JSX.IntrinsicElements> = {
+  xs: "h6",
   sm: "h5",
   md: "h4",
   lg: "h3",
@@ -15,22 +16,24 @@ const sizeToTagMap: Record<HeadingSize, keyof JSX.IntrinsicElements> = {
 };
 
 const sizeStyles: Record<HeadingSize, string> = {
-  sm: "text-base md:text-lg",
-  md: "text-lg md:text-xl",
-  lg: "text-xl md:text-2xl",
-  xl: "xl:text-7xl lg:text-5xl md:text-4xl text-3xl",
-  xxl: "xl:text-9xl lg:text-6xl md:text-5xl text-4xl",
+  xs: "text-xs",
+  sm: "text-sm",
+  md: "text-lg",
+  lg: "text-xl",
+  xl: "text-3xl",
+  xxl: "text-4xl",
 };
 
 const fontStyles: Record<
   HeadingSize,
   typeof montserrat | typeof averia_libre | typeof josefin
 > = {
+  xs: montserrat,
   sm: montserrat,
-  md: montserrat,
-  lg: averia_libre,
+  md: inter,
+  lg: outfit,
   xl: josefin,
-  xxl: josefin,
+  xxl: fraunces,
 };
 
 type HeadingProps = {

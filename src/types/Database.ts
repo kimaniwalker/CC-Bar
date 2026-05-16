@@ -1,0 +1,15 @@
+export enum DB_TABLES {
+  CATEGORIES = "categories",
+  FAVORITES = "favorites",
+  ORDER_ITEMS = "order_items",
+  ORDERS = "orders",
+  PRODUCT_CATEGORIES = "product_categories",
+  PRODUCT_REVIEWS = "product_reviews",
+  PRODUCTS = "products",
+  PROFILES = "profiles",
+  RESERVATIONS = "reservations",
+  REWARD_ACCOUNTS = "reward_accounts",
+  REWARD_TRANSACTIONS = "reward_transactions",
+  REWARD_ACTIONS = "reward_actions",
+  USER_REWARD_ACTIONS = "user_reward_actions",
+}

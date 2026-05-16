@@ -19,10 +19,10 @@ export const OrdersContent = ({recentOrders}:{recentOrders:OrdersResponse[]}) =>
         <section className="rounded-3xl bg-white p-6 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-semibold">Recent Orders</h3>
-          <p className="mt-1 text-sm text-neutral-500">
+          <Text size='lg' className="text-xl font-semibold">Recent Orders</Text>
+          <Text size="sm" className="mt-1 text-sm text-neutral-500">
             View recent purchases and shipment updates.
-          </p>
+          </Text>
         </div>
 
         <button className="text-sm font-medium text-neutral-900 hover:underline">
@@ -36,26 +36,26 @@ export const OrdersContent = ({recentOrders}:{recentOrders:OrdersResponse[]}) =>
             key={order.id}
             className="flex flex-col gap-4 rounded-2xl border border-neutral-200 p-5 md:flex-row md:items-center md:justify-between"
           >
-            <div>
-              <p className="font-medium text-neutral-900">
+            <div className="gap-2">
+              <Text size="md" className="font-medium text-neutral-900">
                 Order - {order.id.substring(0,4)}...{order.id.substring(order.id.length - 4)}
-              </p>
-
-              <div className="mt-2 inline-flex rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700">
-                {order.status}
+              </Text>
+              <Text className="mt-2 text-xs text-neutral-600">
+              {new Date(order.created_at).toLocaleDateString()}
+              </Text>
+              <div className="mt-4 inline-flex rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-700 uppercase">
+                <Text size="xs">{order.status}</Text>
               </div>
-              <span className="mt-2 text-xs text-neutral-600">
-               - {new Date(order.created_at).toLocaleDateString()}
-              </span>
             </div>
+            
 
             <div className="flex items-center gap-4">
-              <p className="text-sm font-medium text-neutral-600">
+              <Text size="md" className="text-sm font-medium text-neutral-600">
                 {convertToCurrency(order.total)}
-              </p>
+              </Text>
 
               <button onClick={() => handleViewOrderDetails(order.id)} className="rounded-full border border-neutral-300 px-4 py-2 text-xs font-medium transition hover:bg-neutral-100">
-                View Order
+                <Text size="xs" as="span">View Order</Text>
               </button>
             </div>
           </div>

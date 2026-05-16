@@ -9,6 +9,7 @@ import { ProductStockStatus } from "./ProductStockStatus";
 import { ProductVariationTag } from "./ProductVariationTag";
 import { normalize } from "path";
 import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
+import { Text } from "@/components/ds/Text";
 
 export const ProductAddToCart = ({
   product
@@ -103,7 +104,7 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
         disabled
         className={`mt-4 bg-gray-400 text-white px-4 py-2 rounded-xl cursor-not-allowed ${montserrat.className}`}
       >
-        Out of Stock
+        <Text size="sm" as="span">Out of Stock</Text>
       </button>
     );
   }
@@ -149,7 +150,7 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
         }))}
         className={`mt-4 bg-black text-white px-4 py-2 rounded-xl disabled:bg-gray-400 w-full ${montserrat.className}`}
       >
-        Add to Cart - {selectedVariation ? `$${selectedVariation.sale_price ?? selectedVariation.price}` : `$${product.sale_price ?? product.price}`}
+        <Text size="sm" as="span">Add to Cart - {selectedVariation ? `$${selectedVariation.sale_price ?? selectedVariation.price}` : `$${product.sale_price ?? product.price}`}</Text>
       </button>
     </>
   );

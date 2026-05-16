@@ -1,40 +1,41 @@
 import { josefin } from "@/components/ds/Fonts";
+import { Text } from "@/components/ds/Text";
 
 export const OrderDetailsSummary = ({ total, shipping_total, subtotal }: { total: number; shipping_total: number; subtotal: number }) => {
   return (
     <section className="rounded-3xl p-6 shadow-sm bg-white">
-    <h2 className={`text-xl font-semibold text-neutral-900 ${josefin.className}`}>
+    <Text size="xl" className={`text-xl font-semibold text-neutral-900`}>
                                                    Order Summary
-                                               </h2>
+                                               </Text>
 
     <div className="mt-6 space-y-4">
         <div className="flex items-center justify-between text-sm">
-            <span className="text-neutral-500">Subtotal</span>
+            <Text size="sm" className="text-neutral-500">Subtotal</Text>
 
-            <span className="font-medium text-neutral-900">
+            <Text size="sm" className="font-medium text-neutral-900">
                 ${(subtotal / 100).toFixed(2)}
-            </span>
+            </Text>
         </div>
 
         <div className="flex items-center justify-between text-sm">
-            <span className="text-neutral-500">Shipping</span>
+            <Text size="sm" className="text-neutral-500">Shipping</Text>
 
-            <span className="font-medium text-neutral-900">
+            <Text size="sm" className="font-medium text-neutral-900">
                 {shipping_total === 0
                     ? "Free"
                     : `$${(shipping_total / 100).toFixed(2)}`}
-            </span>
+            </Text>
         </div>
 
         <div className="border-t border-neutral-200 pt-4">
             <div className="flex items-center justify-between mt-4">
-                <span className="font-medium text-neutral-900">
+                <Text size="lg" className="font-medium text-neutral-900">
                     Total
-                </span>
+                </Text>
 
-                <span className="text-lg font-semibold text-neutral-900">
+                <Text size="lg" className="text-lg font-semibold text-neutral-900">
                     ${(total / 100).toFixed(2)}
-                </span>
+                </Text>
             </div>
         </div>
     </div>

@@ -41,10 +41,10 @@ export default function ProductCard(product: Product) {
           <ProductCount id={id} />
         </Stack>
         <Stack direction="col">
-          <Text size="sm" className="mt-4 text-gray-700 w-35 sm:w-50 md:w-60">
+          <Text size="sm" className="mt-4 text-gray-700 w-35 sm:w-50 md:w-60 line-clamp-1 text-ellipsis text-lg">
             {name}
           </Text>
-          <Text size="lg" className="mt-1 text-gray-900">
+          <Text size="md" className="mt-1 text-gray-900">
             ${price}
           </Text>
         </Stack>

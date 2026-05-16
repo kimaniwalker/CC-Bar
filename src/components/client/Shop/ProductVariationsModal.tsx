@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ProductVariationTag } from "./ProductVariationTag";
 import { AddToCartButton } from "./ProductAddToCart";
 import { Product } from "@/types/Product";
+import { Text } from "@/components/ds/Text";
 type ProductVariationsModal = {
   product: Product
 };
@@ -37,7 +38,8 @@ export default function ProductVariationsModal({
       return (
         <Stack direction="col" gap="md" className={`w-full`}>
               <div className="w-full">
-                <h2 className={`font-semibold text-lg uppercase tracking-wide ${josefin.className}`}>{getModalHeading()}</h2>
+             
+                <Text size="lg" className={`font-semibold uppercase md:text-2xl`}>{getModalHeading()}</Text>
               </div>
               <Stack direction="col" gap="md" justify="start" className="w-full">
                     <ProductVariationTag variation={available_sizes ?? []} heading="Available Sizes" selectedVariant={selectedSize} handleOnClick={(value) => setSelectedSize(value)} />

@@ -4,19 +4,20 @@ import { Product } from "@/types/Product";
 import Image from "next/image";
 import { AddToCartPillButton } from "./AddToCartPillButton";
 import { ProductHeartButton } from "../Favorites/ProductHeartButton";
+import { Text } from "@/components/ds/Text";
 
 export const OrderDetailsProducts = ({ products, order_items }: { products: Product[], order_items: OrderItem[] }) => {
     return (
         <section className="rounded-3xl p-6 shadow-sm bg-white flex flex-col">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className={`text-xl font-semibold text-neutral-900 ${josefin.className}`}>
+                    <Text size="xl" className={`text-xl font-semibold text-neutral-900`}>
                         Purchased Items
-                    </h2>
+                    </Text>
 
-                    <p className="mt-1 text-sm text-neutral-500">
+                    <Text size="sm" className="mt-1 text-sm text-neutral-500">
                         Products included in this order.
-                    </p>
+                    </Text>
                 </div>
             </div>
 
@@ -39,21 +40,21 @@ export const OrderDetailsProducts = ({ products, order_items }: { products: Prod
                            </div>
                            <div className="min-w-0 flex flex-col flex-1 justify-between gap-4">
                             <div>
-                                <p className="font-medium text-neutral-900">
+                                <Text size="md" className="font-medium text-neutral-900 line-clamp-1 text-ellipsis">
                                     {product.name}
-                                </p>
-                                <p className="mt-1 text-sm text-neutral-600">
+                                </Text>
+                                <Text size="sm" className="mt-1 text-sm text-neutral-600">
                                     {product.sku}
-                                </p>
+                                </Text>
                                 <AddToCartPillButton product={product}  />
                             </div>
                             <div className="flex justify-between">
-                                <p className="text-sm font-medium text-neutral-600">
+                                <Text size="sm" className="text-sm font-medium text-neutral-600">
                                     Quantity: {orderItem?.quantity}
-                                </p>
-                                 <p className="text-sm font-medium text-neutral-600">
+                                </Text>
+                                 <Text size="md" className="text-sm font-medium text-neutral-600">
                                      ${(orderItem?.price || 0) / 100}
-                                 </p>   
+                                 </Text>   
                             </div>
                             </div>
                        </div>

@@ -3,6 +3,7 @@ import getUserFavorites from "@/utils/server/getUserFavorites"
 import Image from "next/image"
 import { AddToCartPillButton } from "../Orders/AddToCartPillButton"
 import { ProductHeartButton } from "../Favorites/ProductHeartButton"
+import { Text } from "@/components/ds/Text"
 
 export const Favorites = async () => {
   const user = await getUser()
@@ -12,14 +13,14 @@ export const Favorites = async () => {
         <div className="flex items-center justify-between">
           <div className="w-full">
             <div className="flex justify-between">
-            <h3 className="text-xl font-semibold">Favorites</h3>
+            <Text size="xl" className="text-xl font-semibold">Favorites</Text>
             <button className="text-sm font-medium text-neutral-900 hover:underline">
-              View All
+              <Text as="span" size="sm">View All</Text>
             </button>
             </div>
-            <p className="mt-1 text-sm text-neutral-500">
+            <Text size="sm" className="mt-1 text-sm text-neutral-500">
               Products you’ve saved for later.
-            </p>
+            </Text>
           </div>
         </div>
 
@@ -27,7 +28,7 @@ export const Favorites = async () => {
           {favorites.slice(0,4).map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-4 rounded-2xl border border-neutral-200 p-4"
+              className="flex items-center   gap-4 rounded-2xl border border-neutral-200 p-4"
             >
               <div className="h-16 w-16 rounded-2xl bg-neutral-100 relative overflow-hidden">
                 <Image fill src={item.products.thumbnail} alt={item.products.name} style={{ objectFit: "cover" }} sizes="64px" />
@@ -35,19 +36,22 @@ export const Favorites = async () => {
               </div>
 
               <div className="flex-1">
-                <p className="font-medium text-neutral-900 line-clamp-2 overflow-ellipsis">
+                <Text size="md" className="font-medium text-neutral-900 line-clamp-2 overflow-ellipsis text-sm">
                   {item.products.name}
-                </p>
-
-                <p className="mt-1 text-sm text-neutral-500">
+                </Text>
+              <div className="flex justify-between items-baseline">
+                <Text size="sm" className="mt-1 text-sm text-neutral-500">
                   {item.products.price.toLocaleString("en-US", {
                     style: "currency",
                     currency: "USD",
                   })}
-                </p>
-              </div>
+                </Text>
+
 
              <AddToCartPillButton product={item.products} />
+              </div>
+              </div>
+
           
             </div>
           ))}
