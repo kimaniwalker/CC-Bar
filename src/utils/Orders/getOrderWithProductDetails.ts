@@ -1,3 +1,4 @@
+"use server"
 import { OrderWithProducts } from "@/types/Orders";
 import { getOrderDetails } from "./getOrderDetails";
 import { getProductDetails } from "../Shop/getProductDetails";

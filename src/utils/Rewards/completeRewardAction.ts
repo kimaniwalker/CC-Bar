@@ -1,7 +1,7 @@
 "use server"
 import { RewardActionKey } from "@/types/Rewards";
-import { getUser } from "./getUser";
 import { rewardEngine } from "../Rewards/rewardsEngine";
+import { getUser } from "../User/getUser";
 
 export const completeRewardAction = async (actionKey:RewardActionKey) => { 
     const user = await getUser()
