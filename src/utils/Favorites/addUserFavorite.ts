@@ -1,5 +1,5 @@
 "use server"
-import { createClient } from "../Supabase/server";
+import { createClient } from "../supabase/server";
 
 export const addUserFavorite = async ({ productId, userId }: { productId: string; userId: string }): Promise<void> => {
     const supabase = await createClient();

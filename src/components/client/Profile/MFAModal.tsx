@@ -1,7 +1,7 @@
 "use client"
 import { Input } from "@/components/ds/Input"
 import { Text } from "@/components/ds/Text"
-import { createClient } from "@/utils/Supabase/client"
+import { createClient } from "@/utils/supabase/client"
 import React from "react"
 
 export const MFAModal = () => {

@@ -1,7 +1,7 @@
 "use server"
 
 import { RewardsTransactionInsert } from "@/types/Rewards"
-import { createClient } from "../Supabase/server"
+import { createClient } from "../supabase/server"
 import { DB_TABLES } from "@/types/Database"
 
 export const createRewardsTransaction = async (rewardsData: RewardsTransactionInsert) => {

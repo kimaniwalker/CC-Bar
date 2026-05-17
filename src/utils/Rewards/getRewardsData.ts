@@ -1,7 +1,7 @@
 "use server"
 
 import { RewardAccount, RewardTransaction } from "@/types/Rewards";
-import { createClient } from "../Supabase/server"
+import { createClient } from "../supabase/server"
 
 type RewardsData = RewardAccount & {
     reward_transactions: RewardTransaction[]

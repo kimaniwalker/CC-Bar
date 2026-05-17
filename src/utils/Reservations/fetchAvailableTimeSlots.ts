@@ -1,6 +1,6 @@
 "use server"
 import { Timeslot } from "@/types/Reservations";
-import { createClient } from "../Supabase/client";
+import { createClient } from "../supabase/client";
 
 export default async function fetchAvailableTimeSlots({ date }: { date: string }) {
   const supabase = createClient()

@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/Supabase/server";
+import { createClient } from "@/utils/supabase/server";
 import { retreiveCheckoutSession } from "@/hooks/useStripe";
 import { CheckoutType } from "@/types/Reservations";
 

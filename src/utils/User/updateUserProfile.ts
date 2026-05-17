@@ -1,6 +1,6 @@
 "use server"
 import { UserProfile } from "@/types/User";
-import { createClient } from "../Supabase/server";
+import { createClient } from "../supabase/server";
 
 export const updateUserProfile = async (data: UserProfile) => {
     const supabase = await createClient()

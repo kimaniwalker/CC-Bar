@@ -1,5 +1,5 @@
 "use server"
-import { createClient } from "@/utils/Supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { Cart } from "@/types/Cart";
 import { ProductVariation, StockError } from "@/types/Product";
 

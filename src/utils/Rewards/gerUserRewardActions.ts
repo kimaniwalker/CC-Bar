@@ -1,6 +1,6 @@
 "use server"
 import { DB_TABLES } from "@/types/Database"
-import { createClient } from "../Supabase/server"
+import { createClient } from "../supabase/server"
 import { UserRewardsActionsAndAccount } from "@/types/Rewards"
 
 export default async function getUserRewardActions({ user_id }:

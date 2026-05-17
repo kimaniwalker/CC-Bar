@@ -1,5 +1,5 @@
 "use cache"
-import { createClient } from "@/utils/Supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import { Category } from "@/types/Category";
 
 export const getCategories = async (): Promise<Category[]> => {

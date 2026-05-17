@@ -1,5 +1,5 @@
 import ProductGrid from "../client/Shop/ProductGrid";
-import { createClient } from "@/utils/Supabase/server";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function FeaturedProducts({ heading }: { heading?: string }) {
 

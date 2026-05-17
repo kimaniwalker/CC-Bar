@@ -1,4 +1,4 @@
-import { createClient } from "../Supabase/server"
+import { createClient } from "../supabase/server"
 
 export const rewardEngine = {
    async completeAction({

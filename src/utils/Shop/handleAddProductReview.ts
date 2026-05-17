@@ -1,5 +1,5 @@
 "use server"
-import { createClient } from "@/utils/Supabase/client"
+import { createClient } from "@/utils/supabase/client"
 import { ProductReviewFormInputs } from "@/types/ProductReview";
 
 export const handleAddProductReview = async (data: ProductReviewFormInputs) => {

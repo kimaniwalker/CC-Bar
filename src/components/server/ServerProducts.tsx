@@ -1,5 +1,5 @@
 "use cache"
-import { createClient } from "@/utils/Supabase/client";
+import { createClient } from "@/utils/supabase/client";
 
 export default async function ServerProducts() {
 
