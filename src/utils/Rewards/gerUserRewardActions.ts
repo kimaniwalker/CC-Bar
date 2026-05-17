@@ -1,3 +1,4 @@
+"use server"
 import { DB_TABLES } from "@/types/Database"
 import { createClient } from "../Supabase/server"
 import { UserRewardsActionsAndAccount } from "@/types/Rewards"

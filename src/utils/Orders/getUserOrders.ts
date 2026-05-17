@@ -1,4 +1,5 @@
-import { Order, OrdersResponse } from "@/types/Orders";
+"use server"
+import { OrdersResponse } from "@/types/Orders";
 import { createClient } from "../Supabase/server";
 
 export default async function getUserOrders(userId?: string) {
