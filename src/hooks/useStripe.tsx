@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-export const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!)
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
 
 export default function useStripe() {
@@ -70,11 +70,12 @@ export async function checkout(body: Stripe.Checkout.SessionCreateParams) {
     return session
 }
 
-export async function createNewStripeUser({id, email, phone,}: { id: string, email?: string, phone?: string }) {
+export async function createNewStripeUser({ id, email, phone, }: { id: string, email?: string, phone?: string }) {
 
     let customerParams: Stripe.CustomerCreateParams = {
         description: id,
-        metadata: { user_id: id,
+        metadata: {
+            user_id: id,
             email: email ?? '',
             phone: phone ?? '',
         }
@@ -97,6 +98,6 @@ export async function retreiveCheckoutSession(sessionId: string) {
     const session = await stripe.checkout.sessions.retrieve(sessionId, {
         expand: ["line_items", "line_items.data.price.product"]  // 👈 one call
     });
-    
-    return { session, lineItems: session.line_items?.data ?? [] } 
+
+    return { session, lineItems: session.line_items?.data ?? [] }
 }

@@ -4,11 +4,10 @@ import { NextResponse } from "next/server";
 import { CheckoutType } from "@/types/Reservations";
 import { handleAddNewOrder } from "@/utils/Orders/handleAddNewOrder";
 import { ORDER_STATUS } from "@/types/Orders";
-import { s } from "motion/react-client";
 import { retreiveCheckoutSession } from "@/hooks/useStripe";
 
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
     const body = await req.text();
