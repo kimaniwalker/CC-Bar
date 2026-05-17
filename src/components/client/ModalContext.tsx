@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react"
+import { CircleX } from "lucide-react"
 
 type ModalContextType = {
   isOpen: boolean;
@@ -46,7 +46,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
                   aria-label="Close"
                   className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100"
                 >
-                  <X size={18} />
+                  <CircleX className="z-50" size={24} />
                 </button>
 
                 {content}

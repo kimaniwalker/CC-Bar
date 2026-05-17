@@ -1,5 +1,5 @@
 
-import { getProductReviews } from "@/utils/server/getProductReviews"
+import { getProductReviews } from "@/utils/Shop/getProductReviews"
 import { Text } from "../ds/Text"
 import { ProductReviewInput } from "../client/Shop/ProductReviewInput"
 import { ProductReviewList } from "../client/Shop/ProductReviewList"

@@ -5,8 +5,8 @@ import { Heart } from "lucide-react"
 import { useState } from "react";
 import { useUser } from "../Auth/AuthContext";
 import { useFavorites } from "./FavoritesContext";
-import { removeFavoriteById } from "@/utils/server/removeFavoriteById";
-import { addUserFavorite } from "@/utils/server/addUserFavorite";
+import { removeFavoriteById } from "@/utils/Favorites/removeFavoriteById";
+import { addUserFavorite } from "@/utils/Favorites/addUserFavorite";
 
 
 export const ProductHeartButton = ({ product_id, className }: { product_id: string, className?: string }) => {
@@ -43,7 +43,7 @@ export const ProductHeartButton = ({ product_id, className }: { product_id: stri
     return (
         <button
             type="button"
-            className={`absolute z-10 rounded-full bg-white/90 p-2 shadow-sm backdrop-blur transition hover:scale-105 ${className ? className: "right-3 top-3 "}`}
+            className={`absolute z-10 rounded-full bg-white/90 p-2 shadow-sm backdrop-blur transition hover:scale-105 ${className ? className : "right-3 top-3 "}`}
             onClick={(e) => toggleFavorite(e)}
             aria-pressed={isFavorited}
             aria-label={isFavorited ? "Remove favorite" : "Add favorite"}

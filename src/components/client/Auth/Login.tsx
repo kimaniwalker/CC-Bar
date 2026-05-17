@@ -2,7 +2,7 @@
 import { montserrat } from "@/components/ds/Fonts";
 import { Input } from "@/components/ds/Input";
 import { Text } from "@/components/ds/Text";
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/Supabase/client";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
@@ -15,7 +15,7 @@ export const Login = () => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const searchParams = useSearchParams();
-    
+
     React.useEffect(() => {
         const errorMessage = searchParams.get("errorMessage");
         if (errorMessage) {
@@ -45,7 +45,7 @@ export const Login = () => {
         }
     }
 
-    
+
     const handleSubmit = async (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!isValidEmail(email)) {
@@ -70,7 +70,7 @@ export const Login = () => {
                         disabled={!isValidEmail(email) || isSubmitting}
                         className={`w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors ${montserrat.className} disabled:bg-gray-400 disabled:cursor-not-allowed`}
                     >
-                     <Text as="span" size="sm" className="text-md"> {isSubmitting ? "Creating your magic link ..." : "Sign In With Email"}  </Text>
+                        <Text as="span" size="sm" className="text-md"> {isSubmitting ? "Creating your magic link ..." : "Sign In With Email"}  </Text>
                     </button>
                     {isSubmitted ? (
                         <Text as="span" size="xs" className={`text-green-600 text-center`}>
@@ -86,7 +86,7 @@ export const Login = () => {
                             Whoops, something went wrong - {dbError}. Please try again or contact support.
                         </Text>
                     )}
-            
+
                 </form>
             </div>
         </div>

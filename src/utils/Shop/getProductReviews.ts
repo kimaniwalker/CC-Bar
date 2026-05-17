@@ -1,5 +1,5 @@
 "use cache"
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/Supabase/client";
 import { ProductReview } from "@/types/ProductReview";
 
 

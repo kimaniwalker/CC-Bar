@@ -3,7 +3,7 @@ import { Text } from "@/components/ds/Text";
 import { StockError, type CartProduct } from "@/types/Product";
 import Image from "next/image";
 import { useCart } from "./CartContext";
-import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
+import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 import { montserrat } from "@/components/ds/Fonts";
 import { useMediaQuery } from "react-responsive";
 import { ProductHeartButton } from "../Favorites/ProductHeartButton";
@@ -17,13 +17,13 @@ export default function CartProduct({ product, errors, onHandleUpdateProductQuan
   const error = errors?.find((e) => e.sku === product.sku);
   const isDbError = error?.isDbError ?? false;
   const isOutOfStock = error?.availableStock === 0 && !isDbError; // only consider out of stock if it's not a DB error (which we can't verify stock for)
-  const cartButtonText = !isMobile ? `${product.quantity} ${product.quantity === 1 ? 'item' : 'items'} in cart`: `${product.quantity} in cart`;
+  const cartButtonText = !isMobile ? `${product.quantity} ${product.quantity === 1 ? 'item' : 'items'} in cart` : `${product.quantity} in cart`;
   const hasError = Boolean(error);
   const updateProductQuantity = () => {
     if (!error) return; // no error, no adjustment needed
-    if (error) handleAdjustProductQuantity(product.sku, error.availableStock); 
-     // 👈 cap to available
-     onHandleUpdateProductQuantity?.(product.sku); // trigger any additional updates needed after adjusting quantity 
+    if (error) handleAdjustProductQuantity(product.sku, error.availableStock);
+    // 👈 cap to available
+    onHandleUpdateProductQuantity?.(product.sku); // trigger any additional updates needed after adjusting quantity 
   }
   const handleRemoveProduct = () => {
     removeProductBySku(product.sku);
@@ -46,7 +46,7 @@ dark:hover:bg-gray-700 my-4">
               alt="cart image"
               sizes="100px"
             />
-          <ProductHeartButton product_id={product.id} className="-top-1 -right-1"/>
+            <ProductHeartButton product_id={product.id} className="-top-1 -right-1" />
           </div>
           <Stack direction="col" className="w-full">
             <Text

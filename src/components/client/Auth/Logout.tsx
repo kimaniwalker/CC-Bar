@@ -1,6 +1,6 @@
 "use client"
 
-import { createClient } from "@/utils/supabase/client"
+import { createClient } from "@/utils/Supabase/client"
 import { useRouter } from "next/navigation"
 
 export const Logout = () => {

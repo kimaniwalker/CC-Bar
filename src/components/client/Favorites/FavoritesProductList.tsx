@@ -1,12 +1,12 @@
-import { getUser } from "@/utils/server/getUser";
-import getUserFavorites from "@/utils/server/getUserFavorites";
+import { getUser } from "@/utils/User/getUser";
+import getUserFavorites from "@/utils/Favorites/getUserFavorites";
 import { Suspense } from "react";
 import FavoritesProductGrid from "./FavoritesProductGrid";
 
 export default async function FavoritesProductList() {
     const user = await getUser();
     const favorites = await getUserFavorites(user?.id)
- 
+
 
 
     return (
@@ -15,4 +15,3 @@ export default async function FavoritesProductList() {
         </Suspense>
     )
 }
-       

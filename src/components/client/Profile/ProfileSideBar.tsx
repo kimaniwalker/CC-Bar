@@ -2,7 +2,7 @@
 
 import { ProfileEnableMFA } from "./ProfileEnableMFA"
 import { RewardActionKey } from "@/types/Rewards"
-import { getUser } from "@/utils/server/getUser"
+import { getUser } from "@/utils/User/getUser"
 import { ProfileSideBarContent } from "./ProfileSideBarContent"
 
 

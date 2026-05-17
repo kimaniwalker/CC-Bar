@@ -1,19 +1,19 @@
 "use cache"
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/Supabase/client";
 
 export default async function ServerProducts() {
 
-const supabase = createClient()
+  const supabase = createClient()
   const { data: products, error } = await supabase
     .from("products")
-    .select(); 
-    
-    if (error) {
-      console.error(error);
-      return null;
-    }
+    .select();
 
-return (
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  return (
     <div>
       {products?.map((product) => (
         <div key={product.id}>
@@ -22,5 +22,5 @@ return (
       ))}
     </div>
   );
-  
+
 }

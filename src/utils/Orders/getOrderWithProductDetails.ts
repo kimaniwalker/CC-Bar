@@ -1,6 +1,6 @@
 import { OrderWithProducts } from "@/types/Orders";
 import { getOrderDetails } from "./getOrderDetails";
-import { getProductDetails } from "./getProductDetails";
+import { getProductDetails } from "../Shop/getProductDetails";
 
 export async function getOrderWithProductDetails(id: string): Promise<OrderWithProducts | null> {
   const orderDetails = await getOrderDetails(id);

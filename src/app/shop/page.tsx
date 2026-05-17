@@ -3,7 +3,7 @@ import { Categories, CategorySkeleton } from "@/components/client/Shop/Categorie
 import { CategoryBanner, CategoryBannerSkeleton } from "@/components/client/Shop/CategoryBanner";
 import ProductGrid from "@/components/client/Shop/ProductGrid";
 import ProductGridSkeleton from "@/components/client/Shop/ProductGridSkeleton";
-import { getProducts } from "@/utils/server/getProducts";
+import { getProducts } from "@/utils/Shop/getProducts";
 import { Suspense } from "react";
 
 export default async function Page({

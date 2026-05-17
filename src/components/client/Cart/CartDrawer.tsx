@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "motion/react";
 import useStripe from "@/hooks/useStripe";
 import useHandleCheckout from "@/hooks/useHandleCheckout";
 import { useRouter, usePathname } from "next/navigation";
-import { validateStock } from "@/utils/server/validateProductStock";
+import { validateStock } from "@/utils/Product/validateProductStock";
 import React from "react";
 import { StockError } from "@/types/Product";
 import { montserrat } from "@/components/ds/Fonts";
@@ -20,12 +20,12 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
     const router = useRouter();
     const pathname = usePathname();
     const { user } = useUser()
-    console.log({user})
+    console.log({ user })
     const { formatBody } = useHandleCheckout()
     const body = formatBody(cart, 900, pathname, user)
-    console.log({body})
+    console.log({ body })
 
-       
+
     const { checkout } = useStripe()
     const cartQuanity = getTotalCartQuantity();
     const cartSubtotal = getCartSubtotal();
@@ -42,14 +42,14 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
             const session = await checkout(body)
             if (session.url) router.push(session.url);
         }
-        
+
     }
 
     const handleClearError = (sku: string) => {
         const filteredErrors = errors.filter((e) => e.sku !== sku);
         setErrors(filteredErrors);
     }
-       
+
     return (
         <AnimatePresence>
             <motion.div
@@ -69,7 +69,7 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
                             </div>
                         ) :
                             cart.map((product, index) => (
-                                <CartProduct key={index} product={product} errors={errors} onHandleUpdateProductQuantity={(sku) => handleClearError(sku)}  />
+                                <CartProduct key={index} product={product} errors={errors} onHandleUpdateProductQuantity={(sku) => handleClearError(sku)} />
                             ))
                         }
                     </div>
@@ -77,7 +77,7 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
                         Disclaimer
                     </Text>
                     <Text size="sm" className={`text-sm font-bold mb-4`}>
-                    Free shipping on orders over $75 • Handmade to order • Ships in 3–5 business days
+                        Free shipping on orders over $75 • Handmade to order • Ships in 3–5 business days
                     </Text>
                     <button
                         onClick={handleCheckout}

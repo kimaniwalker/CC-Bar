@@ -1,9 +1,9 @@
 import { Text } from "@/components/ds/Text"
-import getRewardsData from "@/utils/server/getRewardsData"
+import getRewardsData from "@/utils/Rewards/getRewardsData"
 import { BadgeDollarSign } from "lucide-react"
-import { cacheTag } from "next/cache"
 
-export const RewardsTracker = async({user_id}:{ user_id: string | undefined}) => {
+
+export const RewardsTracker = async ({ user_id }: { user_id: string | undefined }) => {
     const rewardsData = await getRewardsData(user_id)
     const balance = rewardsData && (rewardsData[0]?.balance ?? 0)
     return (

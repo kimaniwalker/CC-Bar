@@ -1,5 +1,5 @@
 "use cache"
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/Supabase/client";
 import { Product } from "@/types/Product";
 
 // accept a single id or an array of ids

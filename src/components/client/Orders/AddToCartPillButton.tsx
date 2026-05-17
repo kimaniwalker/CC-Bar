@@ -1,7 +1,7 @@
 "use client"
 
 import { Product } from "@/types/Product"
-import { normalizeCartProduct } from "@/utils/normalizeCartProduct"
+import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct"
 import { useCart } from "../Cart/CartContext"
 import ProductVariationsModal from "../Shop/ProductVariationsModal"
 import { useModal } from "../ModalContext"

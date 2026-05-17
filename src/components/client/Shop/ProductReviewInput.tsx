@@ -2,7 +2,7 @@
 import { montserrat } from "@/components/ds/Fonts"
 import { Text } from "@/components/ds/Text"
 import { ProductReviewFormInputs } from "@/types/ProductReview"
-import { handleAddProductReview } from "@/utils/server/handleAddProductReview"
+import { handleAddProductReview } from "@/utils/Shop/handleAddProductReview"
 import { SubmitHandler, useForm } from "react-hook-form"
 
 export const ProductReviewInput = ({ product_id }: { product_id: string }) => {

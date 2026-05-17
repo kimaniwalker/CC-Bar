@@ -3,6 +3,7 @@ import { BadgeCoin } from "../Rewards/BadgeCoin"
 import { REWARD_ACTIONS, RewardActionKey, UserRewardsActionsAndAccount } from "@/types/Rewards"
 
 import getUserRewardActions from "@/utils/Rewards/gerUserRewardActions";
+import { MFAActionButton } from "./MFAActionButton";
 
 export const ProfileEnableMFA = async ({ action_key, user_id }: { action_key: RewardActionKey, user_id: string | null }) => {
 
@@ -26,8 +27,6 @@ export const ProfileEnableMFA = async ({ action_key, user_id }: { action_key: Re
             Add your phone number for faster sign in and order updates.
         </Text>
 
-        <button className="mt-4 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90">
-            <Text as="span" size="sm">Add phone number</Text>
-        </button>
+        <MFAActionButton />
     </div>)
 }

@@ -1,5 +1,5 @@
 import { UserProfile } from "@/types/User";
-import { createClient } from "../supabase/server";
+import { createClient } from "../Supabase/server";
 
 export const updateUserProfile = async (data: UserProfile) => {
     const supabase = await createClient()

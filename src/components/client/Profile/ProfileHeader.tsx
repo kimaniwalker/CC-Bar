@@ -1,6 +1,6 @@
-import { getUser } from "@/utils/server/getUser"
-import getUserFavorites from "@/utils/server/getUserFavorites"
-import getUserOrders from "@/utils/server/getUserOrders"
+import { getUser } from "@/utils/User/getUser"
+import getUserFavorites from "@/utils/Favorites/getUserFavorites"
+import getUserOrders from "@/utils/Orders/getUserOrders"
 import { FavoritesCount } from "./FavoritesCount"
 import { Text } from "@/components/ds/Text"
 import { BadgeDollarSign } from 'lucide-react';
@@ -19,7 +19,7 @@ export const ProfileHeader = async () => {
           <Text size="lg" className="text-3xl font-semibold tracking-tight">
             Member Perks
           </Text>
-          
+
           <Text size="sm" className=" max-w-lg text-sm leading-7 text-neutral-500">
             Welcome Back {user?.email} As a member, enjoy thoughtfully curated rewards and exclusive offers.
           </Text>

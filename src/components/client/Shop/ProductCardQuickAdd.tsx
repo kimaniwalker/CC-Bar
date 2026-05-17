@@ -5,8 +5,8 @@ import { useCart } from "../Cart/CartContext";
 import { Product } from "@/types/Product";
 import { useModal } from "../ModalContext";
 import ProductVariationsModal from "./ProductVariationsModal";
-import { getProductSku } from "@/utils/getProductSku";
-import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
+import { getProductSku } from "@/utils/Product/getProductSku";
+import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 
 
 type QuickAddProps = {
@@ -18,7 +18,7 @@ export default function ProductCardQuickAdd({
   product,
 }: QuickAddProps) {
   const { addToCart, cart, removeFromCart } = useCart();
-  const {  open } = useModal();
+  const { open } = useModal();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
 
@@ -37,10 +37,10 @@ export default function ProductCardQuickAdd({
 
   const handleSelectSizeAndColor = () => {
     open(
-    <ProductVariationsModal
-         key={product.id}
-          product={product}
-        />)
+      <ProductVariationsModal
+        key={product.id}
+        product={product}
+      />)
   };
 
   if (hideQuickAdd) return null;
@@ -62,7 +62,7 @@ export default function ProductCardQuickAdd({
         >
           <div className="flex w-full rounded-md shadow-xs z-10" role="group">
             <button
-              disabled={!hasQuantity || isOutOfStock} 
+              disabled={!hasQuantity || isOutOfStock}
               type="button"
               onClick={() => removeFromCart(getProductSku({ product, selectedColor, selectedSize }))}
               className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center disabled:bg-gray-200"

@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from "react";
 import { useUser } from "../Auth/AuthContext";
-import getUserFavorites from "@/utils/server/getUserFavorites";
+import getUserFavorites from "@/utils/Favorites/getUserFavorites";
 import { FavoritesResponse } from "@/types/Favorites";
 
 type FavoritesContextType = {
@@ -42,8 +42,8 @@ export const FavoritesProvider = ({ children }: { children: React.ReactNode }) =
         }
     }, []);
 
-       // ✅ Persist only productIds to localStorage
-       useEffect(() => {
+    // ✅ Persist only productIds to localStorage
+    useEffect(() => {
         try {
             localStorage.setItem(FAVORITES_KEY, JSON.stringify(productIds));
         } catch (err) {
@@ -51,53 +51,53 @@ export const FavoritesProvider = ({ children }: { children: React.ReactNode }) =
         }
     }, [productIds]);
 
-     // Fetch user favorites from DB when user changes
-  useEffect(() => {
-    const getFavorites = async () => {
-      if (!user?.id) return;
-      try {
-        const favorites = await getUserFavorites(user.id);
-        const productIds = favorites.map((fav: { product_id: string }) => fav.product_id);
-        setFavorites(favorites);
-        setProductIds(productIds);
-      } catch (error) {
-        console.error("Error fetching user favorites:", error);
-      }
-    };
+    // Fetch user favorites from DB when user changes
+    useEffect(() => {
+        const getFavorites = async () => {
+            if (!user?.id) return;
+            try {
+                const favorites = await getUserFavorites(user.id);
+                const productIds = favorites.map((fav: { product_id: string }) => fav.product_id);
+                setFavorites(favorites);
+                setProductIds(productIds);
+            } catch (error) {
+                console.error("Error fetching user favorites:", error);
+            }
+        };
 
-    getFavorites();
-  }, [user?.id]);
+        getFavorites();
+    }, [user?.id]);
 
-  const toggleFavoriteById = (productId: string) => {
-    const idStr = String(productId);
-    setProductIds((prev) => {
-        if (!prev.includes(idStr)) {
-            return [...prev, idStr];
-        } else {
-            return prev.filter((id) => id !== idStr);
-        }
-    });
+    const toggleFavoriteById = (productId: string) => {
+        const idStr = String(productId);
+        setProductIds((prev) => {
+            if (!prev.includes(idStr)) {
+                return [...prev, idStr];
+            } else {
+                return prev.filter((id) => id !== idStr);
+            }
+        });
 
-    // keep favorites array in sync (best-effort)
-    setFavorites((prev) => {
-        if (prev.find((f) => String(f.product_id) === idStr)) {
-            return prev.filter((f) => String(f.product_id) !== idStr);
-        } else {
-            // minimal placeholder entry (replace if you fetch full favorites later)
-            return [...prev, { product_id: idStr } as unknown as FavoritesResponse];
-        }
-    });
-}
-
-
-
-   
-     return (
-            <FavoritesContext.Provider value={{ favorites, setFavorites, productIds, toggleFavoriteById}}>
-                {children}
-            </FavoritesContext.Provider>
-        )
+        // keep favorites array in sync (best-effort)
+        setFavorites((prev) => {
+            if (prev.find((f) => String(f.product_id) === idStr)) {
+                return prev.filter((f) => String(f.product_id) !== idStr);
+            } else {
+                // minimal placeholder entry (replace if you fetch full favorites later)
+                return [...prev, { product_id: idStr } as unknown as FavoritesResponse];
+            }
+        });
     }
+
+
+
+
+    return (
+        <FavoritesContext.Provider value={{ favorites, setFavorites, productIds, toggleFavoriteById }}>
+            {children}
+        </FavoritesContext.Provider>
+    )
+}
 
 export const useFavorites = () => {
     const context = React.useContext(FavoritesContext);

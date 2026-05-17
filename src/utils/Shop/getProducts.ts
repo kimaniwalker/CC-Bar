@@ -1,5 +1,5 @@
 "use cache"
-import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/Supabase/client";
 import { cacheTag } from "next/cache";
 
 export async function getProducts(query?: string) {

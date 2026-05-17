@@ -4,11 +4,11 @@ import { montserrat } from "@/components/ds/Fonts";
 import { Product, ProductAvailabilityStatus } from "@/types/Product";
 import { useState } from "react";
 import { useCart } from "../Cart/CartContext";
-import { getProductSku } from "@/utils/getProductSku";
+import { getProductSku } from "@/utils/Product/getProductSku";
 import { ProductStockStatus } from "./ProductStockStatus";
 import { ProductVariationTag } from "./ProductVariationTag";
 import { normalize } from "path";
-import { normalizeCartProduct } from "@/utils/normalizeCartProduct";
+import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 import { Text } from "@/components/ds/Text";
 
 export const ProductAddToCart = ({
@@ -62,7 +62,7 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
       }) ?? null
     );
   }
-  
+
 
   const getStockStatus = (stock: number): ProductAvailabilityStatus => {
     if (stock === null || stock === undefined) return ProductAvailabilityStatus.IN_STOCK; // treat as in stock if no stock info
@@ -78,7 +78,7 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
   const hasRequiredSelections =
     (!available_sizes || selectedSize) &&
     (!available_colors || selectedColor);
-  
+
 
   const cartProductQuantity = getCartProductQuantity(product.id) ?? 0;
   const hasCartQuantity = cartProductQuantity > 0;

@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { CheckoutType } from "@/types/Reservations";
-import { handleAddNewOrder } from "@/utils/server/handleAddNewOrder";
+import { handleAddNewOrder } from "@/utils/Orders/handleAddNewOrder";
 import { ORDER_STATUS } from "@/types/Orders";
 import { s } from "motion/react-client";
 import { retreiveCheckoutSession } from "@/hooks/useStripe";
