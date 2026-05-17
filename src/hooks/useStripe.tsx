@@ -1,103 +1,116 @@
-import Stripe from 'stripe'
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY! ?? process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!)
-
+import Stripe from "stripe";
+export const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY! ?? process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!,
+);
 
 export default function useStripe() {
-    return { retreiveCheckoutSession, createAccountLink, affiliateLoginLink, stripeBillingPortal, getAcctData, getCustomerData, hasActiveSubscription, isAffiliateReady, checkout }
+  return {
+    retreiveCheckoutSession,
+    createAccountLink,
+    affiliateLoginLink,
+    stripeBillingPortal,
+    getAcctData,
+    getCustomerData,
+    hasActiveSubscription,
+    isAffiliateReady,
+    checkout,
+  };
 }
 export function isAffiliateReady(account: Stripe.Account) {
-    const accountReady = account.charges_enabled && account.payouts_enabled
-    if (accountReady) return true
-    else return false
+  const accountReady = account.charges_enabled && account.payouts_enabled;
+  if (accountReady) return true;
+  else return false;
 }
 
 export function hasActiveSubscription(customer: Stripe.Customer) {
-    const subscription = customer.subscriptions?.data[0]
+  const subscription = customer.subscriptions?.data[0];
 
-    if (subscription?.status === 'active') return true
-    else return false
+  if (subscription?.status === "active") return true;
+  else return false;
 }
 export async function affiliateLoginLink(account_id: string) {
-    const loginLink: Stripe.LoginLink = await stripe.accounts.createLoginLink(
-        account_id
-    );
-    console.log({ loginLink })
-    return loginLink
+  const loginLink: Stripe.LoginLink =
+    await stripe.accounts.createLoginLink(account_id);
+  console.log({ loginLink });
+  return loginLink;
 }
 
 export async function stripeBillingPortal(customer_id: string) {
-    const session: Stripe.BillingPortal.Session = await stripe.billingPortal.sessions.create({
-        customer: customer_id,
-        return_url: `${process.env.NEXT_PUBLIC_DOMAIN}auth/login`,
+  const session: Stripe.BillingPortal.Session =
+    await stripe.billingPortal.sessions.create({
+      customer: customer_id,
+      return_url: `${process.env.NEXT_PUBLIC_DOMAIN}auth/login`,
     });
-    console.log({ session })
+  console.log({ session });
 
-    return session
+  return session;
 }
 export async function createAccountLink(account_id: string) {
-    const accountLink: Stripe.AccountLink = await stripe.accountLinks.create({
-        account: account_id,
-        refresh_url: `${process.env.NEXT_PUBLIC_DOMAIN}auth/login?affiliate_refresh=true`,
-        return_url: `${process.env.NEXT_PUBLIC_DOMAIN}auth/login`,
-        type: 'account_onboarding',
-    });
-    console.log({ accountLink })
-    return accountLink
+  const accountLink: Stripe.AccountLink = await stripe.accountLinks.create({
+    account: account_id,
+    refresh_url: `${process.env.NEXT_PUBLIC_DOMAIN}auth/login?affiliate_refresh=true`,
+    return_url: `${process.env.NEXT_PUBLIC_DOMAIN}auth/login`,
+    type: "account_onboarding",
+  });
+  console.log({ accountLink });
+  return accountLink;
 }
 
 export async function getAcctData(account_id: string) {
-    const account: Stripe.Account = await stripe.accounts.retrieve(
-        account_id
-    );
+  const account: Stripe.Account = await stripe.accounts.retrieve(account_id);
 
-    return account
+  return account;
 }
 export async function getCustomerData(customer_id: string) {
-    const customer: Stripe.Customer | Stripe.DeletedCustomer = await stripe.customers.retrieve(
-        customer_id, { expand: ['subscriptions'] }
-    );
+  const customer: Stripe.Customer | Stripe.DeletedCustomer =
+    await stripe.customers.retrieve(customer_id, { expand: ["subscriptions"] });
 
-    if (customer.deleted) {
-        return
-    }
-    return customer
+  if (customer.deleted) {
+    return;
+  }
+  return customer;
 }
 
 export async function checkout(body: Stripe.Checkout.SessionCreateParams) {
+  const session = await stripe.checkout.sessions.create(body);
 
-    const session = await stripe.checkout.sessions.create(body);
-
-    return session
+  return session;
 }
 
-export async function createNewStripeUser({ id, email, phone, }: { id: string, email?: string, phone?: string }) {
+export async function createNewStripeUser({
+  id,
+  email,
+  phone,
+}: {
+  id: string;
+  email?: string;
+  phone?: string;
+}) {
+  const customerParams: Stripe.CustomerCreateParams = {
+    description: id,
+    metadata: {
+      user_id: id,
+      email: email ?? "",
+      phone: phone ?? "",
+    },
+  };
 
-    let customerParams: Stripe.CustomerCreateParams = {
-        description: id,
-        metadata: {
-            user_id: id,
-            email: email ?? '',
-            phone: phone ?? '',
-        }
-    }
+  if (email) {
+    customerParams["email"] = email;
+  }
+  if (phone) {
+    customerParams["phone"] = phone;
+  }
 
-    if (email) {
-        customerParams['email'] = email
-    }
-    if (phone) {
-        customerParams["phone"] = phone
-    }
+  const customer = await stripe.customers.create(customerParams);
 
-    const customer = await stripe.customers.create(customerParams);
-
-    return { customer }
+  return { customer };
 }
 
 export async function retreiveCheckoutSession(sessionId: string) {
+  const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items", "line_items.data.price.product"], // 👈 one call
+  });
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-        expand: ["line_items", "line_items.data.price.product"]  // 👈 one call
-    });
-
-    return { session, lineItems: session.line_items?.data ?? [] }
+  return { session, lineItems: session.line_items?.data ?? [] };
 }

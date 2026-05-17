@@ -1,7 +1,6 @@
 "use client";
 import { Stack } from "@/components/ds/Stack";
 import { Text } from "@/components/ds/Text";
-import React from "react";
 import { motion } from "motion/react";
 
 export default function Welcome() {
@@ -54,10 +53,20 @@ export default function Welcome() {
               }}
               viewport={{ once: true, amount: 0.1 }}
             >
-              <p className="mb-4 text-center">Welcome to your new favorite creative escape. Located at 4052 Helena Rd in Helena, AL, our candle bar is a space where scent, creativity, and experience come together.</p>
+              <p className="mb-4 text-center">
+                Welcome to your new favorite creative escape. Located at 4052
+                Helena Rd in Helena, AL, our candle bar is a space where scent,
+                creativity, and experience come together.
+              </p>
 
               <p className="mb-4 text-center">
-                We specialize in handcrafted candles, soaps, and custom fragrance products—but what truly sets us apart is the experience. Step inside and create your own signature candle from a curated selection of premium scents, designed to reflect your mood, style, and story. Whether you're stopping by for a relaxing solo visit, a date night, or a group outing, our space is built to make every moment memorable.
+                We specialize in handcrafted candles, soaps, and custom
+                fragrance products—but what truly sets us apart is the
+                experience. Step inside and create your own signature candle
+                from a curated selection of premium scents, designed to reflect
+                your mood, style, and story. Whether You&apos;re stopping by for
+                a relaxing solo visit, a date night, or a group outing, our
+                space is built to make every moment memorable.
               </p>
 
               <div className="mt-12 w-full flex justify-center">
@@ -65,8 +74,6 @@ export default function Welcome() {
                   Book Your Experience
                 </button>
               </div>
-
-
             </motion.h3>
           </Text>
         </div>

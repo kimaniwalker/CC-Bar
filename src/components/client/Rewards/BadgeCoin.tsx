@@ -1,15 +1,18 @@
 import { Text } from "@/components/ds/Text";
 import { RewardActionKey } from "@/types/Rewards";
-import getUserRewardActions from "@/utils/Rewards/gerUserRewardActions";
 import { BadgeDollarSign } from "lucide-react";
 
-export const BadgeCoin = ({ className = "", worth, user_id, action_key }: { className?: string; worth: number, user_id: string | null, action_key: RewardActionKey }) => {
+export const BadgeCoin = ({
+  className = "",
+  worth,
+  user_id,
+}: {
+  className?: string;
+  worth: number;
+  user_id: string | null;
+  action_key: RewardActionKey;
+}) => {
   if (!user_id) return null; // Don't render if user is not logged in
-
-  const hasCompletedAction = false;
-  if (hasCompletedAction) {
-    return null; // Don't render the badge if the action hasn't been completed
-  }
 
   return (
     <div className={className}>
@@ -30,11 +33,15 @@ export const BadgeCoin = ({ className = "", worth, user_id, action_key }: { clas
 
         {/* numeric badge */}
         <div className="absolute -top-1 -right-6 inline-flex items-center justify-center rounded-full bg-neutral-900 text-white text-xs font-semibold px-2 py-0.5 shadow-sm">
-          <Text as="span" size="md" className="text-xs">+{worth}</Text>
+          <Text as="span" size="md" className="text-xs">
+            +{worth}
+          </Text>
         </div>
 
         {/* accessible description */}
-        <span className="sr-only">This action earns you {worth} reward points.</span>
+        <span className="sr-only">
+          This action earns you {worth} reward points.
+        </span>
       </div>
     </div>
   );

@@ -8,7 +8,6 @@ import ProductVariationsModal from "./ProductVariationsModal";
 import { getProductSku } from "@/utils/Product/getProductSku";
 import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 
-
 type QuickAddProps = {
   hideQuickAdd: boolean;
   product: Product;
@@ -19,8 +18,8 @@ export default function ProductCardQuickAdd({
 }: QuickAddProps) {
   const { addToCart, cart, removeFromCart } = useCart();
   const { open } = useModal();
-  const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, _setSelectedSize] = useState("");
+  const [selectedColor, _setSelectedColor] = useState("");
 
   const hasQuantity = Boolean(cart.find((item) => item.id === product.id));
   const hasVariations = !!(
@@ -28,19 +27,13 @@ export default function ProductCardQuickAdd({
   );
   const isOutOfStock = product.stock === 0;
 
-
-
   const handleATC = () => {
     if (isOutOfStock) return;
-    addToCart(normalizeCartProduct(product))
-  }
+    addToCart(normalizeCartProduct(product));
+  };
 
   const handleSelectSizeAndColor = () => {
-    open(
-      <ProductVariationsModal
-        key={product.id}
-        product={product}
-      />)
+    open(<ProductVariationsModal key={product.id} product={product} />);
   };
 
   if (hideQuickAdd) return null;
@@ -64,7 +57,11 @@ export default function ProductCardQuickAdd({
             <button
               disabled={!hasQuantity || isOutOfStock}
               type="button"
-              onClick={() => removeFromCart(getProductSku({ product, selectedColor, selectedSize }))}
+              onClick={() =>
+                removeFromCart(
+                  getProductSku({ product, selectedColor, selectedSize }),
+                )
+              }
               className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center disabled:bg-gray-200"
             >
               <svg
@@ -115,9 +112,6 @@ export default function ProductCardQuickAdd({
           </div>
         </motion.div>
       </Stack>
-
     </>
   );
 }
-
-

@@ -4,47 +4,67 @@ import { montserrat } from "@/components/ds/Fonts";
 import { Product, ProductAvailabilityStatus } from "@/types/Product";
 import { useState } from "react";
 import { useCart } from "../Cart/CartContext";
-import { getProductSku } from "@/utils/Product/getProductSku";
 import { ProductStockStatus } from "./ProductStockStatus";
 import { ProductVariationTag } from "./ProductVariationTag";
-import { normalize } from "path";
 import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 import { Text } from "@/components/ds/Text";
 
-export const ProductAddToCart = ({
-  product
-}: {
-  product: Product
-}) => {
+export const ProductAddToCart = ({ product }: { product: Product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const { available_sizes, available_colors } = product;
 
   const handleSetSelectedSize = (size: string) => {
     setSelectedSize(size);
-  }
+  };
   const handleSetSelectedColor = (color: string) => {
     setSelectedColor(color);
-  }
-
+  };
 
   return (
     <div className="flex flex-col gap-4">
       {/* Available Sizes */}
 
-      <ProductVariationTag variation={available_sizes ?? []} selectedVariant={selectedSize} handleOnClick={(size) => handleSetSelectedSize(size)} heading={'Available Sizes'} />
+      <ProductVariationTag
+        variation={available_sizes ?? []}
+        selectedVariant={selectedSize}
+        handleOnClick={(size) => handleSetSelectedSize(size)}
+        heading={"Available Sizes"}
+      />
 
       {/* Available Colors */}
-      <ProductVariationTag variation={available_colors ?? []} selectedVariant={selectedColor} handleOnClick={(color) => handleSetSelectedColor(color)} heading={'Available Colors'} />
+      <ProductVariationTag
+        variation={available_colors ?? []}
+        selectedVariant={selectedColor}
+        handleOnClick={(color) => handleSetSelectedColor(color)}
+        heading={"Available Colors"}
+      />
 
       {/* Add to Cart */}
-      <AddToCartButton product={product} selectedColor={selectedColor} selectedSize={selectedSize} />
+      <AddToCartButton
+        product={product}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+      />
     </div>
   );
 };
 
-export const AddToCartButton = ({ product, selectedSize, selectedColor }: { product: Product, selectedSize?: string, selectedColor?: string }) => {
-  const { addToCart, removeFromCart, getCartProductQuantity, getSelectedVariationQuantity } = useCart();
+export const AddToCartButton = ({
+  product,
+  selectedSize,
+  selectedColor,
+}: {
+  product: Product;
+  selectedSize?: string;
+  selectedColor?: string;
+}) => {
+  const {
+    addToCart,
+    removeFromCart,
+    getCartProductQuantity,
+    getSelectedVariationQuantity,
+  } = useCart();
   const { variations, available_colors, available_sizes, stock } = product;
 
   const getSelectedVariation = () => {
@@ -52,8 +72,10 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
 
     return (
       variations.find((v) => {
-        const hasSize = v.size !== undefined && v.size !== null && v.size !== "";
-        const hasColor = v.color !== undefined && v.color !== null && v.color !== "";
+        const hasSize =
+          v.size !== undefined && v.size !== null && v.size !== "";
+        const hasColor =
+          v.color !== undefined && v.color !== null && v.color !== "";
 
         const sizeMatches = hasSize ? v.size === selectedSize : true;
         const colorMatches = hasColor ? v.color === selectedColor : true;
@@ -61,24 +83,26 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
         return sizeMatches && colorMatches;
       }) ?? null
     );
-  }
-
+  };
 
   const getStockStatus = (stock: number): ProductAvailabilityStatus => {
-    if (stock === null || stock === undefined) return ProductAvailabilityStatus.IN_STOCK; // treat as in stock if no stock info
+    if (stock === null || stock === undefined)
+      return ProductAvailabilityStatus.IN_STOCK; // treat as in stock if no stock info
     if (stock <= 0) return ProductAvailabilityStatus.OUT_OF_STOCK;
     if (stock <= 10) return ProductAvailabilityStatus.LOW_STOCK;
     return ProductAvailabilityStatus.IN_STOCK;
   };
 
   const selectedVariation = getSelectedVariation();
-  const selectedVariationQuantityInCart = getSelectedVariationQuantity({ product, selectedColor: selectedColor ?? "", selectedSize: selectedSize ?? "" });
+  const selectedVariationQuantityInCart = getSelectedVariationQuantity({
+    product,
+    selectedColor: selectedColor ?? "",
+    selectedSize: selectedSize ?? "",
+  });
   const isVariationProduct = variations && variations.length > 0;
 
   const hasRequiredSelections =
-    (!available_sizes || selectedSize) &&
-    (!available_colors || selectedColor);
-
+    (!available_sizes || selectedSize) && (!available_colors || selectedColor);
 
   const cartProductQuantity = getCartProductQuantity(product.id) ?? 0;
   const hasCartQuantity = cartProductQuantity > 0;
@@ -98,13 +122,18 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
     product_availability_status !== ProductAvailabilityStatus.OUT_OF_STOCK &&
     canAddMoreToCart;
 
-  if (hasRequiredSelections && product_availability_status === ProductAvailabilityStatus.OUT_OF_STOCK) {
+  if (
+    hasRequiredSelections &&
+    product_availability_status === ProductAvailabilityStatus.OUT_OF_STOCK
+  ) {
     return (
       <button
         disabled
         className={`mt-4 bg-gray-400 text-white px-4 py-2 rounded-xl cursor-not-allowed ${montserrat.className}`}
       >
-        <Text size="sm" as="span">Out of Stock</Text>
+        <Text size="sm" as="span">
+          Out of Stock
+        </Text>
       </button>
     );
   }
@@ -112,22 +141,38 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
   if (cartProductQuantity) {
     return (
       <>
-        <ProductStockStatus stock={activeStock} hideStatus={hasRequiredSelections ? false : true} />
-        <div className={`mt-2 flex items-center gap-3 ${montserrat.className} p-2 border-2 rounded-full justify-between w-full`}>
+        <ProductStockStatus
+          stock={activeStock}
+          hideStatus={hasRequiredSelections ? false : true}
+        />
+        <div
+          className={`mt-2 flex items-center gap-3 ${montserrat.className} p-2 border-2 rounded-full justify-between w-full`}
+        >
           <button
-            onClick={() => removeFromCart(selectedVariation ? selectedVariation.sku : product.sku)}
+            onClick={() =>
+              removeFromCart(
+                selectedVariation ? selectedVariation.sku : product.sku,
+              )
+            }
             className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-lg hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={!hasCartQuantity || isVariationProduct}
           >
             −
           </button>
-          <span className="text-lg font-semibold text-center">{cartProductQuantity} {cartProductQuantity === 1 ? 'item' : 'items'} in cart</span>
+          <span className="text-lg font-semibold text-center">
+            {cartProductQuantity} {cartProductQuantity === 1 ? "item" : "items"}{" "}
+            in cart
+          </span>
           <button
-            onClick={() => addToCart(normalizeCartProduct(product, {
-              size: selectedSize,
-              color: selectedColor,
-              sku: selectedVariation?.sku ?? product.sku,
-            }))}
+            onClick={() =>
+              addToCart(
+                normalizeCartProduct(product, {
+                  size: selectedSize,
+                  color: selectedColor,
+                  sku: selectedVariation?.sku ?? product.sku,
+                }),
+              )
+            }
             className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center text-lg hover:bg-gray-800 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
             disabled={!canAddToCart}
           >
@@ -140,17 +185,29 @@ export const AddToCartButton = ({ product, selectedSize, selectedColor }: { prod
 
   return (
     <>
-      <ProductStockStatus stock={activeStock} hideStatus={hasRequiredSelections ? false : true} />
+      <ProductStockStatus
+        stock={activeStock}
+        hideStatus={hasRequiredSelections ? false : true}
+      />
       <button
         disabled={!canAddToCart}
-        onClick={() => addToCart(normalizeCartProduct(product, {
-          size: selectedSize,
-          color: selectedColor,
-          sku: selectedVariation?.sku ?? product.sku,
-        }))}
+        onClick={() =>
+          addToCart(
+            normalizeCartProduct(product, {
+              size: selectedSize,
+              color: selectedColor,
+              sku: selectedVariation?.sku ?? product.sku,
+            }),
+          )
+        }
         className={`mt-4 bg-black text-white px-4 py-2 rounded-xl disabled:bg-gray-400 w-full ${montserrat.className}`}
       >
-        <Text size="sm" as="span">Add to Cart - {selectedVariation ? `$${selectedVariation.sale_price ?? selectedVariation.price}` : `$${product.sale_price ?? product.price}`}</Text>
+        <Text size="sm" as="span">
+          Add to Cart -{" "}
+          {selectedVariation
+            ? `$${selectedVariation.sale_price ?? selectedVariation.price}`
+            : `$${product.sale_price ?? product.price}`}
+        </Text>
       </button>
     </>
   );
