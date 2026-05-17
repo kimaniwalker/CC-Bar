@@ -32,7 +32,7 @@ export const Login = () => {
                 email: email,
                 options: {
                     shouldCreateUser: true,
-                    emailRedirectTo: process.env.NEXT_PUBLIC_SUPABASE_AUTH_REDIRECT_URL!,
+                    emailRedirectTo: process.env.SUPABASE_AUTH_REDIRECT_URL!,
                 },
             });
             if (error) {
