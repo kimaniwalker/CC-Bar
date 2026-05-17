@@ -38,7 +38,7 @@ hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700
 dark:hover:bg-gray-700 my-4">
       <Stack className="w-full">
         <Stack gap="md" className="w-full">
-          <div className="h-[100px] w-[100px] bg-gray-200 flex-shrink-0 relative rounded-lg overflow-hidden flex justify-center align-center">
+          <div className="h-25 w-25 bg-gray-200 shrink-0 relative rounded-lg overflow-hidden flex justify-center align-center">
             <Image
               src={product.thumbnail}
               fill

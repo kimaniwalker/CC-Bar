@@ -55,7 +55,7 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
             <motion.div
                 transition={{ type: "spring", duration: 1 }}
             >
-                <div className="fixed top-0 right-0 w-full sm:w-128 h-full bg-white shadow-lg z-100 p-4">
+                <div className="fixed top-0 right-0 w-full sm:w-lg h-full bg-white shadow-lg z-100 p-4">
                     <div className="flex flex-col">
                         <Text as="h2" size="lg" className="text-2xl font-bold mb-4">Your Cart ({cartQuanity}) - ${cartSubtotal}</Text>
                         <span className="">

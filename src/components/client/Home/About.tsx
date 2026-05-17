@@ -52,7 +52,7 @@ export default function About() {
           gap="lg"
           className="mt-8 mb-8 w-full absolute bottom-50"
         >
-          <div className="sm:max-w-auto md:max-w-256 p-4">
+          <div className="sm:max-w-auto md:max-w-5xl p-4">
             <Text as="div" size="lg">
               <motion.h3
                 initial={{
