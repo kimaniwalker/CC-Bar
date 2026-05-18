@@ -56,8 +56,15 @@ export async function POST(req: Request) {
               lineItems,
             },
           });
-          console.log({ newOrder });
+
+          if (newOrder.success) {
+            console.log("✅ Order created successfully");
+          } else {
+            console.error("❌ Failed to create order", newOrder.error);
+            return new NextResponse("Stock sync failed", { status: 500 });
+          }
         }
+
         break;
       }
       default:

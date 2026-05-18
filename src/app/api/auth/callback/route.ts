@@ -25,5 +25,7 @@ export async function GET(request: Request) {
     }
   }
 
+  console.log("✅ Auth callback successful");
+  console.log({ origin });
   return NextResponse.redirect(`${origin}/profile/overview?success=true`);
 }

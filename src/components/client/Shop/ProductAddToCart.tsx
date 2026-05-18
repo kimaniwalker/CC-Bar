@@ -8,6 +8,8 @@ import { ProductStockStatus } from "./ProductStockStatus";
 import { ProductVariationTag } from "./ProductVariationTag";
 import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 import { Text } from "@/components/ds/Text";
+import { getProductSku } from "@/utils/Product/getProductSku";
+import { getSelectedVariation } from "@/utils/Product/getSelectedVariation";
 
 export const ProductAddToCart = ({ product }: { product: Product }) => {
   const [selectedSize, setSelectedSize] = useState<string>("");
@@ -67,33 +69,19 @@ export const AddToCartButton = ({
   } = useCart();
   const { variations, available_colors, available_sizes, stock } = product;
 
-  const getSelectedVariation = () => {
-    if (!variations || variations.length === 0) return null;
-
-    return (
-      variations.find((v) => {
-        const hasSize =
-          v.size !== undefined && v.size !== null && v.size !== "";
-        const hasColor =
-          v.color !== undefined && v.color !== null && v.color !== "";
-
-        const sizeMatches = hasSize ? v.size === selectedSize : true;
-        const colorMatches = hasColor ? v.color === selectedColor : true;
-
-        return sizeMatches && colorMatches;
-      }) ?? null
-    );
-  };
-
   const getStockStatus = (stock: number): ProductAvailabilityStatus => {
     if (stock === null || stock === undefined)
-      return ProductAvailabilityStatus.IN_STOCK; // treat as in stock if no stock info
+      return ProductAvailabilityStatus.OUT_OF_STOCK; // treat as in stock if no stock info
     if (stock <= 0) return ProductAvailabilityStatus.OUT_OF_STOCK;
     if (stock <= 10) return ProductAvailabilityStatus.LOW_STOCK;
     return ProductAvailabilityStatus.IN_STOCK;
   };
 
-  const selectedVariation = getSelectedVariation();
+  const selectedVariation = getSelectedVariation({
+    product,
+    selectedSize,
+    selectedColor,
+  });
   const selectedVariationQuantityInCart = getSelectedVariationQuantity({
     product,
     selectedColor: selectedColor ?? "",
@@ -107,7 +95,9 @@ export const AddToCartButton = ({
   const cartProductQuantity = getCartProductQuantity(product.id) ?? 0;
   const hasCartQuantity = cartProductQuantity > 0;
 
-  const activeStock = selectedVariation ? selectedVariation.stock : stock;
+  const activeStock = isVariationProduct
+    ? (selectedVariation?.stock ?? 0)
+    : (stock ?? 0);
 
   const product_availability_status = hasRequiredSelections
     ? getStockStatus(activeStock)
@@ -169,7 +159,7 @@ export const AddToCartButton = ({
                 normalizeCartProduct(product, {
                   size: selectedSize,
                   color: selectedColor,
-                  sku: selectedVariation?.sku ?? product.sku,
+                  sku: getProductSku({ product, selectedSize, selectedColor }),
                 }),
               )
             }
@@ -196,7 +186,7 @@ export const AddToCartButton = ({
             normalizeCartProduct(product, {
               size: selectedSize,
               color: selectedColor,
-              sku: selectedVariation?.sku ?? product.sku,
+              sku: getProductSku({ product, selectedSize, selectedColor }),
             }),
           )
         }

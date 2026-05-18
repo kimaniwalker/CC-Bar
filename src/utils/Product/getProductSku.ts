@@ -1,27 +1,27 @@
 import { Product } from "@/types/Product";
+import { getSelectedVariation } from "./getSelectedVariation";
 
-
-export const getProductSku= ({
-product,
-selectedSize,
-selectedColor,
+// ...existing code...
+export const getProductSku = ({
+  product,
+  selectedSize,
+  selectedColor,
 }: {
-product: Product
-selectedSize?: string;
-selectedColor?: string;
+  product: Product;
+  selectedSize?: string;
+  selectedColor?: string;
 }) => {
-  const isVariationProduct = product.variations && product.variations.length > 0;
-  const selectedVariation = isVariationProduct
-    ? product.variations?.find((variation) => {
-        const sizeMatch = variation.size ? variation.size === selectedSize : true;
-        const colorMatch = variation.color ? variation.color === selectedColor : true;
-        return sizeMatch && colorMatch;
-      })
-    : null;
+  const isVariationProduct =
+    product.variations && product.variations.length > 0;
+  const selectedVariation = getSelectedVariation({
+    product,
+    selectedSize,
+    selectedColor,
+  });
 
   if (isVariationProduct) {
-    return selectedVariation?.sku || product.sku; // fallback to product SKU if no variation match is found
+    return selectedVariation?.sku || product.sku;
   }
 
-  return product.sku
+  return product.sku;
 };
