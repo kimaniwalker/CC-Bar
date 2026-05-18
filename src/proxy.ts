@@ -9,6 +9,7 @@ export async function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     "/auth/login",
+    "/api/auth/callback",
     "/auth/signup",
     "/auth/forgot-password",
     "/profile/:path*",
