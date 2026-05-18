@@ -18,7 +18,6 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useUser();
-  console.log({ user });
   const { formatBody } = useHandleCheckout();
   const body = formatBody(cart, 900, pathname, user);
   console.log({ body });

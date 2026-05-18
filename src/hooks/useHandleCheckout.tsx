@@ -79,7 +79,7 @@ function formatBody(
     client_reference_id: user?.id,
     metadata: { type: CheckoutType.SHOP, user_id: user?.id ?? "guest" },
     submit_type: "pay",
-    success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
+    success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
     cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
     allow_promotion_codes: true,
     payment_method_types: [
