@@ -3,9 +3,9 @@ import { Text } from "@/components/ds/Text";
 import React from "react";
 import { motion } from "motion/react";
 import { Stack } from "@/components/ds/Stack";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 export default function About() {
-
   const router = useRouter();
   const getTodayCST = () => {
     return new Intl.DateTimeFormat("en-CA", {
@@ -14,17 +14,30 @@ export default function About() {
       month: "2-digit",
       day: "2-digit",
     }).format(new Date());
-  }
+  };
   const handleBookClick = () => {
-    router.push('/reservations?date=' + getTodayCST());
-  }
+    router.push("/reservations?date=" + getTodayCST());
+  };
 
   return (
     <div className="h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-cover bg-center bg-fixed bg-[url('/wave.svg')] bg-blend-darken"></div>
+      <div className="absolute inset-0 -z-10">
+        <Image
+          src="/wave.svg"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+          priority
+        />
+      </div>
       <div className="relative z-10 flex flex-col h-full">
         <Stack justify="center">
-          <Text as="div" size="xxl" className="text-center text-white z-10 absolute top-25 xl:text-9xl lg:text-7xl md:text-5xl text-4xl">
+          <Text
+            as="div"
+            size="xxl"
+            className="text-center text-white z-10 absolute top-25 xl:text-9xl lg:text-7xl md:text-5xl text-4xl"
+          >
             <motion.h2
               initial={{
                 opacity: 0,
@@ -50,7 +63,7 @@ export default function About() {
           align="center"
           direction="col"
           gap="lg"
-          className="mt-8 mb-8 w-full absolute bottom-50"
+          className="mt-8 mb-8 w-full absolute bottom-40"
         >
           <div className="sm:max-w-auto md:max-w-5xl p-4">
             <Text as="div" size="lg">
@@ -70,15 +83,20 @@ export default function About() {
                 }}
                 viewport={{ once: true, amount: 0.1 }}
               >
-
-
                 <div className="mt-12 w-full flex justify-center">
-                  <button onClick={handleBookClick} className="px-8 py-4 bg-black text-white rounded-4xl hover:bg-gray-800 transition z-10">
-                    <Text as="span" size="lg" className="text-3xl">Book Your Experience</Text>
+                  <button
+                    onClick={handleBookClick}
+                    className="px-8 py-4 bg-black text-white rounded-4xl hover:bg-gray-800 transition z-10"
+                  >
+                    <Text
+                      as="span"
+                      size="lg"
+                      className="text-3xl sm:text-5xl md:text-5xl"
+                    >
+                      Book Your Experience
+                    </Text>
                   </button>
                 </div>
-
-
               </motion.h3>
             </Text>
           </div>
