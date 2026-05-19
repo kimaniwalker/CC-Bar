@@ -1,4 +1,4 @@
-import About from "@/components/client/Home/About";
+import HomeBanner from "@/components/client/Home/HomeBanner";
 import ProductGridSkeleton from "@/components/client/Shop/ProductGridSkeleton";
 import FeaturedProducts from "@/components/server/FeaturedProducts";
 import { Suspense } from "react";
@@ -6,11 +6,10 @@ import { Suspense } from "react";
 export default function Home() {
   return (
     <>
-      <About />
+      <HomeBanner />
       <Suspense fallback={<ProductGridSkeleton />}>
         <FeaturedProducts />
       </Suspense>
-      <About />
     </>
   );
 }

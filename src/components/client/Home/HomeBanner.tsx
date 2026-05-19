@@ -5,7 +5,8 @@ import { motion } from "motion/react";
 import { Stack } from "@/components/ds/Stack";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-export default function About() {
+import CowLottie from "./CowLottie";
+export default function HomeBanner() {
   const router = useRouter();
   const getTodayCST = () => {
     return new Intl.DateTimeFormat("en-CA", {
@@ -30,13 +31,14 @@ export default function About() {
           className="object-cover object-center"
           priority
         />
+        <CowLottie />
       </div>
       <div className="relative z-10 flex flex-col h-full">
         <Stack justify="center">
           <Text
             as="div"
             size="xxl"
-            className="text-center text-white z-10 absolute top-25 xl:text-9xl lg:text-7xl md:text-5xl text-4xl"
+            className="text-center text-white z-10 absolute top-25 xl:text-9xl text-7xl sm:max-25"
           >
             <motion.h2
               initial={{
