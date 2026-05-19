@@ -6,6 +6,7 @@ import { ModalProvider } from "@/components/client/ModalContext";
 import { CartModalProvider } from "@/components/client/CartModalContext";
 import { AuthProvider } from "@/components/client/Auth/AuthContext";
 import { FavoritesProvider } from "@/components/client/Favorites/FavoritesContext";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,8 +26,15 @@ export default function RootLayout({
             <CartProvider>
               <ModalProvider>
                 <FavoritesProvider>
-                <Header />
-                {children}
+                  <Header />
+                  {children}
+                  <Toaster
+                    position="top-right"
+                    richColors
+                    closeButton
+                    expand
+                    visibleToasts={3}
+                  />
                 </FavoritesProvider>
               </ModalProvider>
             </CartProvider>
@@ -36,6 +44,5 @@ export default function RootLayout({
         <div id="cart-modal-root"></div>
       </body>
     </html>
-
   );
 }

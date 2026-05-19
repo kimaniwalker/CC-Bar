@@ -1,28 +1,39 @@
 "use server";
 import type { User } from "@supabase/supabase-js";
 import { getProfile } from "./getProfile";
-import { createNewStripeUser } from "@/hooks/useStripe";
-import { updateUserProfile } from "./updateUserProfile";
+import { createClient } from "../supabase/server";
+import getRewardsData from "../Rewards/getRewardsData";
 
 export async function syncUserAccount(user: User) {
   const profile = await getProfile(user.id);
+  const rewards = await getRewardsData(user.id);
+  const supabase = await createClient();
 
-  if (!profile) {
-    //profile = await createProfile(user)
-  }
-
-  if (!profile[0].customer_id) {
-    const { customer } = await createNewStripeUser({
+  if (!profile.length) {
+    const { error } = await supabase.from("profiles").insert({
       id: user.id,
       email: user.email ?? undefined,
       phone: user.phone ?? undefined,
     });
 
-    await updateUserProfile({
-      id: user.id,
-      customer_id: customer.id,
-    });
+    if (error) {
+      console.error("Error creating profile:", error);
+      return { profile: [] };
+    }
   }
 
-  return { profile };
+  if (!rewards?.length) {
+    const { data: reward_acct, error: rewardsError } = await supabase
+      .from("reward_accounts")
+      .insert({ user_id: user.id, balance: 600 })
+      .select()
+      .single();
+
+    if (rewardsError) {
+      console.error("Error creating profile:", rewards);
+      return { profile: [] };
+    }
+
+    return { profile, reward_acct };
+  }
 }
