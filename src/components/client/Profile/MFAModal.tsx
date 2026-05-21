@@ -6,6 +6,10 @@ import React from "react";
 import VerifyOTP from "./VerifyOTP";
 import { useModal } from "../ModalContext";
 import { toast } from "sonner";
+import { RewardActionKey } from "@/types/Rewards";
+import { completeRewardAction } from "@/utils/Rewards/completeRewardAction";
+import { redeemRewardsPoints } from "@/utils/Rewards/redeemRewardsPoints";
+import { useRouter } from "next/navigation";
 
 export const MFAModal = () => {
   const [phone, setPhone] = React.useState<string>("");
@@ -14,9 +18,9 @@ export const MFAModal = () => {
     "add_phone",
   );
   const { close } = useModal();
+  const router = useRouter();
 
   const supabase = createClient();
-
   const handleAddPhone = async () => {
     const { data, error } = await supabase.auth.updateUser({ phone });
 
@@ -33,6 +37,31 @@ export const MFAModal = () => {
     toast.promise(handleAddPhone, {
       loading: "Sending verification code...",
       success: "Code sent! Check your phone",
+      error: (err) => `Error: ${err.message || "Failed to send code"}`,
+    });
+  };
+
+  const handleVerificationSuccess = async () => {
+    const data = await completeRewardAction(RewardActionKey.ADD_PHONE);
+    if (data.data.success) {
+      await redeemRewardsPoints({ points_awarded: data.data.reward_amount });
+    }
+    return data;
+  };
+
+  const onHandleVerify = () => {
+    toast.promise(handleVerificationSuccess, {
+      loading: "Awarding points...",
+      success: (data) => {
+        if (data.data.already_completed) {
+          close();
+          router.refresh(); // ✅ Refresh to get updated user data
+          return "Phone number already verified. No additional points awarded.";
+        }
+        close();
+        router.refresh(); // ✅ Refresh to get updated user data
+        return `${data.data.reward_amount} rewards points awarded!`;
+      },
       error: (err) => `Error: ${err.message || "Failed to send code"}`,
     });
   };
@@ -73,7 +102,7 @@ export const MFAModal = () => {
           </button>
         </>
       ) : (
-        <VerifyOTP phone={phone} onHandleVerify={close} />
+        <VerifyOTP phone={phone} onHandleVerify={onHandleVerify} />
       )}
     </div>
   );

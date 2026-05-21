@@ -15,7 +15,19 @@ export const rewardEngine = {
       p_action_key: actionKey,
     });
   },
-  async redeem() {},
+  async redeem({
+    userId,
+    points_awarded,
+  }: {
+    userId: string;
+    points_awarded: number;
+  }) {
+    const supabase = await createClient();
+    return supabase.rpc("increment_reward_balance", {
+      p_user_id: userId,
+      p_amount: points_awarded,
+    });
+  },
   async getBalance() {},
   async getProgress() {},
 };
