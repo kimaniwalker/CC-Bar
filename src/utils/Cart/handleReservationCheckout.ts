@@ -33,7 +33,7 @@ export async function handleReservationCheckout(
             email,
             datetime: dateTime,
             guest: Number(guests),
-            activities: activities.split(",").map((a) => a.trim()),
+            activities: activities?.split(",")?.map((a) => a.trim()),
             phone,
             stripe_session_id: session.id,
             special_requests,
