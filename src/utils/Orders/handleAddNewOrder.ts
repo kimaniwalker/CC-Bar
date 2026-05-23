@@ -11,7 +11,7 @@ export const handleAddNewOrder = async ({ order }: { order: OrderInsert }) => {
   const supabase = createClient();
 
   if (order.user_id === "guest") {
-    return { success: true };
+    return { orderId: null };
   }
 
   // insert the order and return the new id
@@ -30,12 +30,22 @@ export const handleAddNewOrder = async ({ order }: { order: OrderInsert }) => {
     .single();
 
   if (orderError) {
+    // Handle duplicate webhooks gracefully
+    if (
+      orderError.code === "23505" &&
+      orderError.message?.includes("stripe_payment_intent_id")
+    ) {
+      console.log(
+        "⚠️ Duplicate webhook - Order already exists for payment intent:",
+        order.stripe_payment_intent_id,
+      );
+      throw new Error("DUPLICATE_HANDLED");
+    }
     console.error("❌ Failed to insert order", orderError.message);
-    console.log({ order: insertedOrder });
-    return { success: false, error: orderError.message };
+    throw orderError;
   }
 
-  console.log("order created");
+  console.log("✅ Order created:", insertedOrder.id);
 
   const orderId = insertedOrder.id;
 
@@ -56,12 +66,11 @@ export const handleAddNewOrder = async ({ order }: { order: OrderInsert }) => {
     .insert(itemsToInsert);
 
   if (orderItemsError) {
-    console.error("❌ Failed to insert orderItem", orderItemsError.message);
-    console.log({ orderItem: itemsToInsert });
-    return { success: false, error: orderItemsError.message };
+    console.error("❌ Failed to insert order items", orderItemsError.message);
+    throw orderItemsError;
   }
 
-  console.log("order items created");
+  console.log("✅ Order items created");
 
-  return { success: true, orderId };
+  return { orderId };
 };

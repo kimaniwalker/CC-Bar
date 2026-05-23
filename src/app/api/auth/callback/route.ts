@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { syncUserAccount } from "@/utils/User/syncUserAccount";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -9,7 +10,15 @@ export async function GET(request: Request) {
     const supabase = await createClient();
     try {
       const { error } = await supabase.auth.exchangeCodeForSession(code);
-      if (error) {
+
+      if (!error) {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          await syncUserAccount(user); // Sync only on login
+        }
+      } else {
         const msg = encodeURIComponent(error.message ?? "Unknown error");
         return NextResponse.redirect(
           `${origin}/auth/login?success=false&errorMessage=${msg}`,
@@ -19,6 +28,7 @@ export async function GET(request: Request) {
       const msg = encodeURIComponent(
         err instanceof Error ? err.message : "Unknown error",
       );
+
       return NextResponse.redirect(
         `${origin}/auth/login?success=false&errorMessage=${msg}`,
       );

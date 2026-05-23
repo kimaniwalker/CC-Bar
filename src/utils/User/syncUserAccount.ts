@@ -2,38 +2,78 @@
 import type { User } from "@supabase/supabase-js";
 import { getProfile } from "./getProfile";
 import { createClient } from "../supabase/server";
-import getRewardsData from "../Rewards/getRewardsData";
+import getUserRewardActions from "../Rewards/gerUserRewardActions";
+import { RewardActionKey } from "@/types/Rewards";
+import { withRewards } from "../Rewards/withRewards";
+import { DB_TABLES } from "@/types/Database";
 
 export async function syncUserAccount(user: User) {
-  const profile = await getProfile(user.id);
-  const rewards = await getRewardsData(user.id);
   const supabase = await createClient();
 
-  if (!profile.length) {
-    const { error } = await supabase.from("profiles").insert({
-      id: user.id,
-      email: user.email ?? undefined,
-      phone: user.phone ?? undefined,
-    });
+  try {
+    // Only fetch what we need
+    const [profile, userRewardActions] = await Promise.all([
+      getProfile(user.id),
+      getUserRewardActions({ user_id: user.id }),
+    ]);
 
-    if (error) {
-      console.error("Error creating profile:", error);
-      return { profile: [] };
+    const hasSignedUp = userRewardActions.some(
+      (action) => action.reward_actions.key === RewardActionKey.SIGNUP,
+    );
+    console.log({ hasSignedUp });
+
+    // Create or update profile
+    if (!profile.length) {
+      const { error: profileError } = await supabase
+        .from(DB_TABLES.PROFILES)
+        .upsert(
+          {
+            id: user.id,
+            email: user.email ?? undefined,
+            phone: user.phone ?? undefined,
+          },
+          { onConflict: "id" },
+        );
+
+      if (profileError) {
+        console.error("Error creating profile:", profileError);
+        throw profileError;
+      }
+    } else {
+      // Update phone if it changed
+      if (user.phone && profile[0].phone !== user.phone) {
+        const { error: updateError } = await supabase
+          .from(DB_TABLES.PROFILES)
+          .update({ phone: user.phone })
+          .eq("id", user.id);
+
+        if (updateError) {
+          console.error("Error updating phone:", updateError);
+        }
+      }
     }
-  }
 
-  if (!rewards?.length) {
-    const { data: reward_acct, error: rewardsError } = await supabase
-      .from("reward_accounts")
-      .insert({ user_id: user.id, balance: 600 })
-      .select()
-      .single();
-
-    if (rewardsError) {
-      console.error("Error creating profile:", rewards);
-      return { profile: [] };
+    // Award signup bonus for new users
+    if (!hasSignedUp) {
+      await withRewards(
+        RewardActionKey.SIGNUP,
+        async () => {
+          // Profile already created, just award points
+          console.log("✅ New user signup, awarding points");
+        },
+        user.id,
+      );
     }
 
-    return { profile, reward_acct };
+    return {
+      success: true,
+      isNewUser: !hasSignedUp,
+    };
+  } catch (error) {
+    console.error("Error syncing user account:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 }

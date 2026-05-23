@@ -11,7 +11,7 @@ export const ProfileSideBar = async () => {
       <ProfileSideBarContent
         mfaContent={
           <ProfileEnableMFA
-            action_key={RewardActionKey.BIRTHDAY_REWARD}
+            action_key={RewardActionKey.ADD_PHONE}
             user_id={user?.id ?? null}
             hasPhoneAndEmail={hasPhoneAndEmail}
           />

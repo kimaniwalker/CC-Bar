@@ -76,7 +76,7 @@ function formatBody(
   const body: Stripe.Checkout.SessionCreateParams = {
     line_items: formatLineItems(cart),
     mode: "payment",
-    client_reference_id: user?.id,
+    client_reference_id: user?.id ?? "guest",
     metadata: { type: CheckoutType.SHOP, user_id: user?.id ?? "guest" },
     submit_type: "pay",
     success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
@@ -153,9 +153,11 @@ function formatReservationsLineItems(data: ReservationsFormInputs) {
 function formatReservationsData({
   redirect_url,
   ReservationsFormData,
+  user_id,
 }: {
   redirect_url: string;
   ReservationsFormData: ReservationsFormInputs;
+  user_id?: string | null;
 }) {
   const metadata = formatReservationsMetadata(ReservationsFormData);
   const line_items = formatReservationsLineItems(ReservationsFormData);
@@ -163,6 +165,7 @@ function formatReservationsData({
     line_items,
     mode: "payment",
     metadata,
+    client_reference_id: user_id ?? "guest",
     submit_type: "pay",
     success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.RESERVATION}`,
     cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,

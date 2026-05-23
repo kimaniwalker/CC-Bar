@@ -4,12 +4,7 @@ import { Text } from "@/components/ds/Text";
 import { createClient } from "@/utils/supabase/client";
 import React from "react";
 import VerifyOTP from "./VerifyOTP";
-import { useModal } from "../ModalContext";
 import { toast } from "sonner";
-import { RewardActionKey } from "@/types/Rewards";
-import { completeRewardAction } from "@/utils/Rewards/completeRewardAction";
-import { redeemRewardsPoints } from "@/utils/Rewards/redeemRewardsPoints";
-import { useRouter } from "next/navigation";
 
 export const MFAModal = () => {
   const [phone, setPhone] = React.useState<string>("");
@@ -17,10 +12,9 @@ export const MFAModal = () => {
   const [step, setStep] = React.useState<"add_phone" | "verify_otp">(
     "add_phone",
   );
-  const { close } = useModal();
-  const router = useRouter();
 
   const supabase = createClient();
+
   const handleAddPhone = async () => {
     const { data, error } = await supabase.auth.updateUser({ phone });
 
@@ -41,30 +35,6 @@ export const MFAModal = () => {
     });
   };
 
-  const handleVerificationSuccess = async () => {
-    const data = await completeRewardAction(RewardActionKey.ADD_PHONE);
-    if (data.data.success) {
-      await redeemRewardsPoints({ points_awarded: data.data.reward_amount });
-    }
-    return data;
-  };
-
-  const onHandleVerify = () => {
-    toast.promise(handleVerificationSuccess, {
-      loading: "Awarding points...",
-      success: (data) => {
-        if (data.data.already_completed) {
-          close();
-          router.refresh(); // ✅ Refresh to get updated user data
-          return "Phone number already verified. No additional points awarded.";
-        }
-        close();
-        router.refresh(); // ✅ Refresh to get updated user data
-        return `${data.data.reward_amount} rewards points awarded!`;
-      },
-      error: (err) => `Error: ${err.message || "Failed to send code"}`,
-    });
-  };
   return (
     <div className="rounded-3xl border border-neutral-200 bg-[#F8F5F1] p-5 relative flex flex-col items-start">
       <Text className="text-sm font-medium text-neutral-900">
@@ -96,13 +66,13 @@ export const MFAModal = () => {
           />
           <button
             onClick={onAddPhone}
-            className="mt-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 :disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="mt-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
             <span className="text-sm">Continue</span>
           </button>
         </>
       ) : (
-        <VerifyOTP phone={phone} onHandleVerify={onHandleVerify} />
+        <VerifyOTP phone={phone} />
       )}
     </div>
   );
