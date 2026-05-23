@@ -4,7 +4,7 @@ import { Text } from "@/components/ds/Text";
 import { RewardActionKey } from "@/types/Rewards";
 import { withRewards } from "@/utils/Rewards/withRewards";
 import { createClient } from "@/utils/supabase/client";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useUser } from "../Auth/AuthContext";
 import { useRouter } from "next/navigation";
@@ -30,63 +30,66 @@ export default function VerifyOTP({ phone }: { phone: string }) {
   /**
    * Derived values
    */
-  const code = useMemo(() => otp.join(""), [otp]);
-
-  const isComplete = code.length === OTP_LENGTH;
-
+  const isComplete = otp.every(Boolean);
   /**
    * Verify + reward flow
    */
-  const handleVerify = useCallback(async () => {
-    if (isSubmitting) return;
+  const handleVerify = useCallback(
+    async (verification_code: string) => {
+      if (isSubmitting) return;
 
-    try {
-      setIsSubmitting(true);
+      try {
+        setIsSubmitting(true);
 
-      const rewardsData = await withRewards(
-        RewardActionKey.ADD_PHONE,
-        async () => {
-          const { error } = await supabase.auth.verifyOtp({
-            token: code,
-            type: "phone_change",
-            phone,
-          });
+        const rewardsData = await withRewards(
+          RewardActionKey.ADD_PHONE,
+          async () => {
+            const { error } = await supabase.auth.verifyOtp({
+              token: verification_code,
+              type: "phone_change",
+              phone,
+            });
 
-          if (error) {
-            setError(error.message);
-            throw error;
-          }
+            if (error) {
+              setError(error.message);
+              throw error;
+            }
 
-          close();
-          router.refresh();
-        },
-        user?.id ?? "guest",
-      );
+            close();
+            router.refresh();
+          },
+          user?.id ?? "guest",
+        );
 
-      return rewardsData;
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [isSubmitting, supabase, code, phone, close, router, user?.id]);
+        return rewardsData;
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [isSubmitting, supabase, phone, close, router, user?.id],
+  );
 
   /**
    * Single toast layer
    */
-  const verifyWithToast = useCallback(async () => {
-    return toast.promise(handleVerify, {
-      loading: "Verifying phone...",
-      success: (data) => {
-        if (data?.data?.success && !data?.data?.already_completed) {
-          return `🎉 Phone verified! +${data?.data?.reward_amount} points awarded!`;
-        }
+  const verifyWithToast = useCallback(
+    async (verification_code: string) => {
+      return toast.promise(handleVerify(verification_code), {
+        loading: "Verifying phone...",
+        success: (data) => {
+          if (data?.data?.success && !data?.data?.already_completed) {
+            return `🎉 Phone verified! +${data?.data?.reward_amount} points awarded!`;
+          }
 
-        return "✅ Phone verified!";
-      },
+          return "✅ Phone verified!";
+        },
 
-      error: (err) =>
-        err?.message || "Oops something went wrong. Please try again.",
-    });
-  }, [handleVerify]);
+        error: (err) =>
+          err?.message || "Oops something went wrong. Please try again.",
+      });
+    },
+    [handleVerify],
+  );
 
   /**
    * Handles OTP entry
@@ -117,7 +120,7 @@ export default function VerifyOTP({ phone }: { phone: string }) {
     const updatedCode = nextOtp.join("");
 
     if (updatedCode.length === OTP_LENGTH && !isSubmitting) {
-      verifyWithToast();
+      verifyWithToast(updatedCode);
     }
   };
 
@@ -192,7 +195,7 @@ export default function VerifyOTP({ phone }: { phone: string }) {
      * Auto-submit on full paste
      */
     if (updatedCode.length === OTP_LENGTH && !isSubmitting) {
-      verifyWithToast();
+      verifyWithToast(updatedCode);
     }
   };
 
