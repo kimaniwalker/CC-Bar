@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Text } from "../ds/Text";
+import React from "react";
 export function Navbar({
   isOpen,
   onClose,
@@ -8,15 +9,6 @@ export function Navbar({
   isOpen: boolean;
   onClose: () => void;
 }) {
-  const getTodayCST = () => {
-    return new Intl.DateTimeFormat("en-CA", {
-      timeZone: "America/Chicago",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(new Date());
-  };
-
   return (
     <>
       {/* Backdrop */}
@@ -65,7 +57,7 @@ export function Navbar({
             </Link>
 
             <Link
-              href={`/reservations?date=${getTodayCST()}`}
+              href={`/reservations`}
               onClick={onClose}
               className="transition hover:text-black"
             >
@@ -93,6 +85,13 @@ export function Navbar({
               className="transition hover:text-black"
             >
               My Account
+            </Link>
+            <Link
+              href="/privacy"
+              onClick={onClose}
+              className="transition hover:text-black"
+            >
+              Privacy
             </Link>
 
             <Link
