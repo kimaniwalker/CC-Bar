@@ -165,6 +165,7 @@ function formatReservationsData({
     line_items,
     mode: "payment",
     metadata,
+    customer_email: ReservationsFormData.email,
     client_reference_id: user_id ?? "guest",
     submit_type: "pay",
     success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.RESERVATION}`,
