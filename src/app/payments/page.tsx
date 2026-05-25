@@ -67,6 +67,7 @@ export default function Page() {
         amount: 11999,
         terminal,
         options: { email: "kimaniwalker@gmail.com", store_reference: "cc bar" },
+        orderItems: cart,
       });
 
       if (!intent.success) {

@@ -14,12 +14,12 @@ export enum ORDER_STATUS {
 
 export interface Order {
   id: string;
-  user_id: string;
+  user_id?: string;
   stripe_payment_intent_id: string;
-  stripe_customer_id: string;
+  stripe_customer_id?: string;
   status: ORDER_STATUS;
-  subtotal: number;
-  shipping_total: number;
+  subtotal?: number;
+  shipping_total?: number;
   total: number;
   shipping_address?: {
     line1: string;
@@ -30,6 +30,7 @@ export interface Order {
     country: string;
   };
   created_at: string;
+  order_source?: string;
 }
 
 export interface OrderItem {
@@ -38,6 +39,7 @@ export interface OrderItem {
   product_id: string;
   quantity: number;
   price: number;
+  sku: string;
 }
 
 export type OrdersResponse = Order & { order_items: OrderItem[] };
@@ -47,3 +49,5 @@ export type OrderDetailsResponse = OrderItem & {
 };
 
 export type OrderWithProducts = OrdersResponse & { products: Product[] };
+
+export type OrderInsert = Omit<Order, "id" | "created_at">;

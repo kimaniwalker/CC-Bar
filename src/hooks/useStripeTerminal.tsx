@@ -1,6 +1,7 @@
 "use client";
 
 import { CollectPaymentResult, PaymentState } from "@/types/Pos";
+import { CartProduct } from "@/types/Product";
 import { createPaymentIntent } from "@/utils/Pos/createPaymentIntent";
 import { getConnectionToken } from "@/utils/Pos/getConnectionToken";
 import type { PaymentIntent } from "@stripe/stripe-js";
@@ -85,13 +86,19 @@ export function useStripeTerminal() {
     amount,
     terminal,
     options,
+    orderItems,
   }: {
     amount: number;
     terminal: Terminal;
     options?: Record<string, string>;
+    orderItems: CartProduct[];
   }): Promise<CollectPaymentResult> {
     setPaymentStatus("creating_intent");
-    const clientSecret = await createPaymentIntent({ amount, options });
+    const clientSecret = await createPaymentIntent({
+      amount,
+      options,
+      orderItems,
+    });
 
     if (!clientSecret) {
       console.error("Failed to create payment intent: clientSecret is null");

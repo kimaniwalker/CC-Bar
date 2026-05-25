@@ -2,12 +2,12 @@ import { Text } from "@/components/ds/Text";
 
 export const OrderDetailsSummary = ({
   total,
-  shipping_total,
-  subtotal,
+  shipping_total = 0,
+  subtotal = 0,
 }: {
   total: number;
-  shipping_total: number;
-  subtotal: number;
+  shipping_total?: number;
+  subtotal?: number;
 }) => {
   return (
     <section className="rounded-3xl p-6 shadow-sm bg-white">
