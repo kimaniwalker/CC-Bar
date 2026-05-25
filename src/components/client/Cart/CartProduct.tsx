@@ -72,7 +72,7 @@ hover:bg-gray-100 my-4"
           <Stack direction="col" className="w-full">
             <Text
               size="md"
-              className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white"
+              className="mb-2 text-lg font-bold tracking-tight text-gray-900"
             >
               {productName}
             </Text>

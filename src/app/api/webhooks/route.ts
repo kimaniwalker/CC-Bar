@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 import { handleReservationCheckout } from "@/utils/Cart/handleReservationCheckout";
 import { handleShopCheckout } from "@/utils/Cart/handleShopCheckout";
 import { CheckoutType } from "@/types/Reservations";
+import { handleInStoreCheckout } from "@/utils/Pos/handleInStoreCheckout";
 
+// @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: Request) {
@@ -45,6 +47,17 @@ export async function POST(req: Request) {
         }
 
         console.warn("Unknown checkout type:", type);
+        break;
+      }
+
+      case "payment_intent.succeeded": {
+        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+        const { type } = paymentIntent.metadata || {};
+
+        if (type === CheckoutType.IN_STORE) {
+          await handleInStoreCheckout(paymentIntent);
+        }
+        console.log("PaymentIntent succeeded:", paymentIntent.id);
         break;
       }
       default:

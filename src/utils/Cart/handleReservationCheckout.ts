@@ -2,11 +2,14 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { RewardActionKey } from "@/types/Rewards";
-import type Stripe from "stripe";
+
 import { withRewards } from "../Rewards/withRewards";
+import Stripe from "stripe";
 
 export async function handleReservationCheckout(
-  session: Stripe.Checkout.Session,
+  session: Stripe.Checkout.Session & {
+    custom_fields?: { key: string; text?: { value: string } }[];
+  },
 ) {
   const supabase = await createClient();
   const metadata = session.metadata;
@@ -17,9 +20,10 @@ export async function handleReservationCheckout(
 
   const { name, email, guests, activities, phone, dateTime } = metadata;
 
-  const special_requests =
-    session.custom_fields?.find((field) => field.key === "special_request")
-      ?.text?.value || null;
+  // Extract special requests from custom fields, type mismatch in Stripe types, so we need to do some manual parsing
+  const special_requests = session.custom_fields?.find(
+    (field) => field.key === "special_request",
+  )?.text?.value;
 
   try {
     await withRewards(

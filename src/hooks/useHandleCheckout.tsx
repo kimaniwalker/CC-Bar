@@ -73,12 +73,12 @@ function formatBody(
   redirect_url: string,
   user?: UserProfile | null,
 ) {
-  const body: Stripe.Checkout.SessionCreateParams = {
+  const body = {
+    mode: "payment" as Stripe.Checkout.SessionCreateParams.Mode,
     line_items: formatLineItems(cart),
-    mode: "payment",
     client_reference_id: user?.id ?? "guest",
     metadata: { type: CheckoutType.SHOP, user_id: user?.id ?? "guest" },
-    submit_type: "pay",
+    submit_type: "pay" as Stripe.Checkout.SessionCreateParams.SubmitType,
     success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
     cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
     allow_promotion_codes: true,
@@ -88,15 +88,14 @@ function formatBody(
       "klarna",
       "link",
       "afterpay_clearpay",
-    ],
+    ] as Stripe.Checkout.SessionCreateParams.PaymentMethodType[],
     phone_number_collection: {
       enabled: true,
     },
-    consent_collection: {
-      terms_of_service: "none",
-    },
     shipping_address_collection: {
-      allowed_countries: ["US"],
+      allowed_countries: [
+        "US",
+      ] as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
     },
     shipping_options: [
       {
@@ -114,7 +113,7 @@ function formatBody(
             currency: "usd",
           },
         },
-      },
+      } as Stripe.Checkout.SessionCreateParams.ShippingOption,
     ],
     custom_fields: [
       {
@@ -161,13 +160,13 @@ function formatReservationsData({
 }) {
   const metadata = formatReservationsMetadata(ReservationsFormData);
   const line_items = formatReservationsLineItems(ReservationsFormData);
-  const body: Stripe.Checkout.SessionCreateParams = {
+  const body = {
     line_items,
-    mode: "payment",
+    mode: "payment" as Stripe.Checkout.SessionCreateParams.Mode,
     metadata,
     customer_email: ReservationsFormData.email,
     client_reference_id: user_id ?? "guest",
-    submit_type: "pay",
+    submit_type: "pay" as Stripe.Checkout.SessionCreateParams.SubmitType,
     success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.RESERVATION}`,
     cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
     allow_promotion_codes: true,
@@ -177,13 +176,13 @@ function formatReservationsData({
       "klarna",
       "link",
       "afterpay_clearpay",
-    ],
+    ] as Stripe.Checkout.SessionCreateParams.PaymentMethodType[],
     phone_number_collection: {
       enabled: true,
     },
     consent_collection: {
       terms_of_service: "required",
-    },
+    } as Stripe.Checkout.SessionCreateParams.ConsentCollection,
     custom_fields: [
       {
         key: "special_request",

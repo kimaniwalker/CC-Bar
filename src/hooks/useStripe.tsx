@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+//@ts-expect-error - The stripe library expects a config param here which we can ignore.
 export const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY! ?? process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!,
 );
