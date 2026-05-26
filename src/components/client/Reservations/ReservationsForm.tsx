@@ -140,7 +140,14 @@ export const ReservationsForm = () => {
                 type="date"
                 id="date"
                 required
-                {...register("date", { required: "This field is required" })}
+                {...register("date", {
+                  required: "This field is required",
+                  validate: (value) => {
+                    if (value < today) return "Date cannot be in the past";
+                    if (value > maxDate) return "Date must be within 30 days";
+                    return true;
+                  },
+                })}
                 onChange={handleSelectDate}
               />
             </div>
