@@ -9,6 +9,9 @@ import { createPosReader } from "@/utils/Pos/createPosReader";
 import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 import { usePosCart } from "@/hooks/usePosCart";
 import { Terminal } from "@stripe/terminal-js";
+import { Product } from "@/types/Product";
+import { useModal } from "@/components/client/ModalContext";
+import PosVariationsModal from "@/components/client/Pos/PosVariationsModal";
 
 export default function Page() {
   const {
@@ -24,6 +27,7 @@ export default function Page() {
   } = usePosCart();
   const { initialize, discoverReaders, collectPayment, connectReader } =
     useStripeTerminal();
+  const { open } = useModal();
 
   const terminalRef = useRef<Terminal | null>(null);
 
@@ -84,6 +88,25 @@ export default function Page() {
     }
   };
 
+  const handleAddToCart = (product: Product) => {
+    const hasVariants = product.available_colors || product.available_sizes;
+
+    if (hasVariants) {
+      open(
+        <PosVariationsModal
+          product={product}
+          key={product.id}
+          onAddToCart={(product) => addToCart(product)}
+          onDecreaseQuantity={(sku) => decreaseQuantity(sku)}
+          cart={cart}
+        />,
+      );
+      return;
+    }
+
+    addToCart(normalizeCartProduct(product));
+  };
+
   return (
     <>
       <div className="grid min-h-screen grid-cols-1 bg-neutral-100 lg:grid-cols-[1fr_400px]">
@@ -109,7 +132,7 @@ export default function Page() {
                 {Array.from({ length: 8 }).map((_, index) => (
                   <div
                     key={index}
-                    className="h-[220px] animate-pulse rounded-3xl bg-neutral-200"
+                    className="h-55 animate-pulse rounded-3xl bg-neutral-200"
                   />
                 ))}
               </div>
@@ -118,7 +141,7 @@ export default function Page() {
                 {filteredProducts.map((product) => (
                   <button
                     key={product.id}
-                    onClick={() => addToCart(normalizeCartProduct(product))}
+                    onClick={() => handleAddToCart(product)}
                     className="group flex flex-col overflow-hidden rounded-3xl bg-white text-left shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                   >
                     <div className="relative aspect-square bg-neutral-200">
@@ -161,7 +184,7 @@ export default function Page() {
               ) : (
                 cart.map((item) => (
                   <div
-                    key={item.id}
+                    key={item.sku}
                     className="flex items-center justify-between gap-4 rounded-2xl border border-neutral-200 p-4"
                   >
                     <div className="flex flex-col gap-1">

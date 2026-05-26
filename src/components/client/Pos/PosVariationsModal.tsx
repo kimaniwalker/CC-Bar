@@ -1,15 +1,22 @@
 "use client";
 import { Stack } from "@/components/ds/Stack";
 import { useEffect, useState } from "react";
-import { Product } from "@/types/Product";
+import { CartProduct, Product } from "@/types/Product";
 import { Text } from "@/components/ds/Text";
 import { ProductVariationTag } from "../Shop/ProductVariationTag";
+import { PosAddToCartButton } from "./PosAddToCartButton";
 
 type ProductVariationsModal = {
   product: Product;
+  cart: CartProduct[];
+  onAddToCart: (item: CartProduct) => void;
+  onDecreaseQuantity: (sku: string) => void;
 };
 export default function PosVariationsModal({
   product,
+  cart,
+  onAddToCart,
+  onDecreaseQuantity,
 }: ProductVariationsModal) {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -55,6 +62,14 @@ export default function PosVariationsModal({
         />
       </Stack>
       {/* Add to Cart Button can go here, but for POS we might want a different flow, like "Add to Order" */}
+      <PosAddToCartButton
+        product={product}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+        cart={cart}
+        onAddToCart={onAddToCart}
+        onDecreaseQuantity={onDecreaseQuantity}
+      />
     </Stack>
   );
 }
