@@ -9,11 +9,18 @@ import { ReservationsFormInputs, Timeslot } from "@/types/Reservations";
 import Stripe from "stripe";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { SubmitHandler, useForm, FormProvider } from "react-hook-form";
+import {
+  SubmitHandler,
+  useForm,
+  FormProvider,
+  useWatch,
+} from "react-hook-form";
 import { TimeslotSelectorLoadingSkeleton } from "./TimeslotSelectorLoadingSkeleton";
 import fetchAvailableTimeSlots from "@/utils/Reservations/fetchAvailableTimeSlots";
 import { TimeslotSelector } from "./TimeslotSelector";
 import { useUser } from "../Auth/AuthContext";
+import { Activities } from "./Activities";
+import { AddOns } from "./AddOns";
 
 export const ReservationsForm = () => {
   const date = useSearchParams().get("date") ?? undefined;
@@ -26,6 +33,11 @@ export const ReservationsForm = () => {
     handleSubmit,
     formState: { isValid, errors },
   } = methods;
+  // inside your component:
+  const selectedActivities =
+    useWatch({ control: methods.control, name: "activities" }) ?? [];
+  const selectedAddOns =
+    useWatch({ control: methods.control, name: "addOns" }) ?? [];
   const router = useRouter();
   const { formatReservationsData } = useHandlePayment();
   const { checkout } = useStripe();
@@ -81,6 +93,36 @@ export const ReservationsForm = () => {
     month: "2-digit",
     day: "2-digit",
   }).format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000));
+
+  const calculateEstimatedTotal = ({
+    activities,
+    addOns,
+  }: {
+    activities: string[];
+    addOns: string[];
+  }) => {
+    const activityTotal = activities
+      .slice(1) // first activity is always included
+      .reduce((total, activity) => {
+        const activityInfo = Activities.find((a) => a.label === activity);
+        return total + (activityInfo?.price ?? 0);
+      }, 0);
+
+    const addOnTotal = addOns.reduce((total, addOn) => {
+      const addOnInfo = AddOns.find((a) => a.label === addOn);
+      return total + (addOnInfo?.price ?? 0);
+    }, 0);
+
+    return activityTotal + addOnTotal;
+  };
+
+  const estimatedActivitiesAndAddOns = calculateEstimatedTotal({
+    activities: selectedActivities ?? [],
+    addOns: selectedAddOns ?? [],
+  });
+  const basePrice = 25;
+  const estimatedTotal = basePrice + estimatedActivitiesAndAddOns;
+  const remainingBalance = estimatedTotal - 25; // subtract Deposit
 
   return (
     <div className="py-8 flex justify-center w-full">
@@ -175,10 +217,18 @@ export const ReservationsForm = () => {
 
               <MultiSelectField
                 fieldName="activities"
-                options={["Candle Making", "Soap Making", "Bath Bombs"]}
+                options={Activities.map((activity) => activity.label)}
               />
             </div>
-
+            <div className="mb-4">
+              <label className="block mb-2 font-medium text-gray-700">
+                Add-Ons (Optional)
+              </label>
+              <MultiSelectField
+                fieldName="addOns"
+                options={AddOns.map((addOn) => addOn.label)}
+              />
+            </div>
             <div className="mb-4">
               <Input
                 errorMessage={errors.guests?.message}
@@ -191,12 +241,111 @@ export const ReservationsForm = () => {
                 {...register("guests", { required: "This field is required" })}
               />
             </div>
+            <div className="mb-6 rounded-3xl border border-neutral-200 bg-neutral-50 p-5">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <Text size="sm" className="text-neutral-500">
+                    Estimated Experience Total
+                  </Text>
+
+                  <Text size="md" className="font-semibold text-black">
+                    ${estimatedTotal /* base price */}
+                  </Text>
+                </div>
+
+                {selectedActivities.map((activity, index) => {
+                  const activityInfo = Activities.find(
+                    (a) => a.label === activity,
+                  );
+                  return (
+                    <div
+                      key={activity}
+                      className="flex items-center justify-between"
+                    >
+                      <Text size="sm" className="text-neutral-500">
+                        {activity}
+                      </Text>
+
+                      <Text size="sm" className="font-semibold text-black">
+                        {index === 0 ? `Included` : `+ $${activityInfo?.price}`}
+                      </Text>
+                    </div>
+                  );
+                })}
+
+                {selectedAddOns.map((addOn, index) => {
+                  const addOnInfo = AddOns.find((a) => a.label === addOn);
+                  return (
+                    <>
+                      {index === 0 && (
+                        <Text
+                          size="md"
+                          className="text-sm font-semibold text-black mt-4"
+                        >
+                          Add-Ons
+                        </Text>
+                      )}
+                      <div
+                        key={addOn}
+                        className="flex items-center justify-between"
+                      >
+                        <Text size="sm" className="text-neutral-500">
+                          {addOn}
+                        </Text>
+
+                        <Text size="sm" className="font-semibold text-black">
+                          + ${addOnInfo?.price}
+                        </Text>
+                      </div>
+                    </>
+                  );
+                })}
+
+                <div className="flex items-center justify-between">
+                  <Text
+                    size="md"
+                    className="text-sm font-semibold text-black mt-4"
+                  >
+                    Due Today
+                  </Text>
+
+                  <Text size="md" className="font-semibold text-black">
+                    $25 Deposit
+                  </Text>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-neutral-200 pt-4">
+                  <div className="flex flex-col">
+                    <Text size="sm" className="text-neutral-500">
+                      Remaining Balance
+                    </Text>
+
+                    <Text size="sm" className="text-neutral-400">
+                      Paid during your visit
+                    </Text>
+                  </div>
+
+                  <Text size="md" className="font-semibold text-black">
+                    ~${remainingBalance /* base price */} + tax
+                  </Text>
+                </div>
+
+                <div className="rounded-2xl bg-white p-4">
+                  <Text size="sm" className="leading-relaxed text-neutral-600">
+                    Your reservation deposit secures your experience and will be
+                    applied toward your final balance. Additional costs may vary
+                    based on selected activities, add-ons, and in-store
+                    upgrades.
+                  </Text>
+                </div>
+              </div>
+            </div>
             <button
               disabled={!isValid}
               type="submit"
               className={`w-full px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 disabled:bg-gray-500 transition ${montserrat.className}`}
             >
-              Secure Your Reservation
+              Reserve with $25 Deposit
             </button>
           </form>
         </FormProvider>

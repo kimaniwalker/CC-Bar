@@ -20,7 +20,7 @@ export type Product = {
   };
   shippingInformation?: string;
   returnPolicy?: "30 days return policy" | "no returns";
-  meta?: Record<string, string>;
+  type?: ProductType;
   thumbnail: string;
   images?: string[];
 };
@@ -56,6 +56,13 @@ export enum ProductAvailabilityStatus {
 export type StockError = {
   sku: string;
   errorMessage: string;
-  availableStock: number; 
-  isDbError?: boolean;  // 👈 flag for supabase errors
+  availableStock: number;
+  isDbError?: boolean; // 👈 flag for supabase errors
+};
+
+export enum ProductType {
+  EXPERIENCE = "experience",
+  EXPERIENCE_ADD_ON = "experience_add_on",
+  SNACKS_AND_DRINKS = "snacks_and_drinks",
+  MERCHANDISE = "merchandise",
 }

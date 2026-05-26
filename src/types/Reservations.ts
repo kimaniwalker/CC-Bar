@@ -11,6 +11,7 @@ export type ReservationsFormInputs = {
   dateTime: string;
   guests: number;
   activities: string[];
+  addOns: string[];
   phone: string;
   special_requests?: string;
 };

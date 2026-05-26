@@ -20,6 +20,7 @@ function formatReservationsMetadata(data: ReservationsFormInputs) {
   metaData["time"] = data.time;
   metaData["guests"] = data.guests.toString();
   metaData["activities"] = data.activities?.join(", ");
+  metaData["add_ons"] = data.addOns?.join(", ");
   if (data.special_requests) {
     metaData["special requests"] = data.special_requests;
   }

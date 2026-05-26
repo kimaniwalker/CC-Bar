@@ -5,6 +5,9 @@ import { RewardActionKey } from "@/types/Rewards";
 
 import { withRewards } from "../Rewards/withRewards";
 import Stripe from "stripe";
+import { ORDER_STATUS } from "@/types/Orders";
+import { CheckoutType } from "@/types/Reservations";
+import { handleUpdateOrder } from "../Orders/handleUpdateOrder";
 
 export async function handleReservationCheckout(
   session: Stripe.Checkout.Session & {
@@ -18,7 +21,8 @@ export async function handleReservationCheckout(
     throw new Error("No metadata found in session");
   }
 
-  const { name, email, guests, activities, phone, dateTime } = metadata;
+  const { name, email, guests, activities, phone, dateTime, add_ons } =
+    metadata;
 
   // Extract special requests from custom fields, type mismatch in Stripe types, so we need to do some manual parsing
   const special_requests = session.custom_fields?.find(
@@ -29,6 +33,20 @@ export async function handleReservationCheckout(
     await withRewards(
       RewardActionKey.MAKE_RESERVATION,
       async () => {
+        //once user arrives , we can check if they have an order with the same payment intent id, if so we can update that order & order_items to include the reservation details and mark it as confirmed
+        await handleUpdateOrder({
+          order: {
+            stripe_payment_intent_id: session.payment_intent as string,
+            status: ORDER_STATUS.PARTIALLY_PAID,
+            total: session.amount_total ?? 0,
+            ...(session.client_reference_id !== "guest" && {
+              user_id: session.client_reference_id ?? "",
+            }),
+            order_source: CheckoutType.RESERVATION,
+            stripe_customer_id: session.customer as string,
+          },
+        });
+
         // Create reservation record
         const { error: reservationError } = await supabase
           .from("reservations")
@@ -39,7 +57,8 @@ export async function handleReservationCheckout(
             guest: Number(guests),
             activities: activities?.split(",")?.map((a) => a.trim()),
             phone,
-            stripe_session_id: session.id,
+            payment_intent_id: session.payment_intent as string,
+            add_ons: add_ons?.split(",")?.map((a) => a.trim()),
             special_requests,
           });
 
@@ -47,7 +66,7 @@ export async function handleReservationCheckout(
           // Handle duplicate webhooks gracefully
           if (
             reservationError.code === "23505" &&
-            reservationError.message?.includes("stripe_session_id")
+            reservationError.message?.includes("payment_intent_id")
           ) {
             console.log(
               "⚠️ Duplicate webhook - Reservation already exists for session:",

@@ -162,6 +162,11 @@ export default function SuccessContent() {
           <Text size="md" className="text-md mb-2">
             Activities: {orderInfo?.activities}
           </Text>
+          {orderInfo?.add_ons && (
+            <Text size="md" className="text-md mb-2">
+              Add Ons: {orderInfo?.add_ons}
+            </Text>
+          )}
           {orderInfo?.special_requests && (
             <Text size="md" className="text-md mb-2">
               Special Requests: {orderInfo.special_requests}
