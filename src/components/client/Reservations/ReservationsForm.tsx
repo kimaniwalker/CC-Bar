@@ -131,7 +131,7 @@ export const ReservationsForm = () => {
                 {...register("phone", { required: "This field is required" })}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 overflow-hidden">
               <Input
                 errorMessage={errors.date?.message}
                 defaultValue={date}
@@ -140,6 +140,7 @@ export const ReservationsForm = () => {
                 type="date"
                 id="date"
                 required
+                className="appearance-none w-full"
                 {...register("date", {
                   required: "This field is required",
                   validate: (value) => {
