@@ -21,6 +21,7 @@ import { TimeslotSelector } from "./TimeslotSelector";
 import { useUser } from "../Auth/AuthContext";
 import { Activities } from "./Activities";
 import { AddOns } from "./AddOns";
+import { validateAvailableTimeslots } from "@/utils/Reservations/validateAvailableTimeslots";
 
 export const ReservationsForm = () => {
   const date = useSearchParams().get("date") ?? undefined;
@@ -31,6 +32,7 @@ export const ReservationsForm = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { isValid, errors },
   } = methods;
   // inside your component:
@@ -38,6 +40,7 @@ export const ReservationsForm = () => {
     useWatch({ control: methods.control, name: "activities" }) ?? [];
   const selectedAddOns =
     useWatch({ control: methods.control, name: "addOns" }) ?? [];
+
   const router = useRouter();
   const { formatReservationsData } = useHandlePayment();
   const { checkout } = useStripe();
@@ -65,10 +68,24 @@ export const ReservationsForm = () => {
     if (session.url) router.push(session.url);
   };
 
-  const onSubmit: SubmitHandler<ReservationsFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<ReservationsFormInputs> = async (
+    reservation,
+  ) => {
+    const data = await validateAvailableTimeslots({
+      selected_date: reservation.date,
+      selected_slot: reservation.dateTime,
+      guests: Number(reservation.guests),
+    });
+    if (!data.available) {
+      setError("time", {
+        type: "manual",
+        message: data.reason,
+      });
+      return;
+    }
     const reservationsData = formatReservationsData({
       redirect_url: "/",
-      ReservationsFormData: data,
+      ReservationsFormData: reservation,
       user_id: user?.id,
     });
     console.log({ reservationsData });
@@ -276,7 +293,7 @@ export const ReservationsForm = () => {
                 {selectedAddOns.map((addOn, index) => {
                   const addOnInfo = AddOns.find((a) => a.label === addOn);
                   return (
-                    <>
+                    <div key={addOn}>
                       {index === 0 && (
                         <Text
                           size="md"
@@ -285,10 +302,7 @@ export const ReservationsForm = () => {
                           Add-Ons
                         </Text>
                       )}
-                      <div
-                        key={addOn}
-                        className="flex items-center justify-between"
-                      >
+                      <div className="flex items-center justify-between">
                         <Text size="sm" className="text-neutral-500">
                           {addOn}
                         </Text>
@@ -297,7 +311,7 @@ export const ReservationsForm = () => {
                           + ${addOnInfo?.price}
                         </Text>
                       </div>
-                    </>
+                    </div>
                   );
                 })}
 

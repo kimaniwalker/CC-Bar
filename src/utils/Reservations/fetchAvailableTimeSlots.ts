@@ -1,29 +1,24 @@
-"use server"
+"use server";
 import { Timeslot } from "@/types/Reservations";
 import { createClient } from "../supabase/client";
 
-export default async function fetchAvailableTimeSlots({ date }: { date: string }) {
-  const supabase = createClient()
-  
-  const { data, error } = await supabase.rpc(
-    "get_available_timeslots",
-    { selected_date: date }
-  );
-  
-      if (error) {
-        console.error(error);
-        return null;
-      }
-    
-      console.log(data);
-  
-  
-      // Simulate fetching available time slots from an API
-      const timeSlots = await new Promise<Timeslot[]>((resolve) => {
-          setTimeout(() => {
-              resolve([{ label: "10:00 AM", value: "2026-04-28T22:00:00+00:00" }, { label: "2:00 PM", value: "2026-04-28T14:00:00+00:00" }]
-                );;
-          }, 2000);
-      });
+export default async function fetchAvailableTimeSlots({
+  date,
+}: {
+  date: string;
+}) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_available_timeslots", {
+    selected_date: date,
+  });
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
+  console.log(data);
+
   return (data ?? []) as Timeslot[];
 }
