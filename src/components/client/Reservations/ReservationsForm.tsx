@@ -85,7 +85,7 @@ export const ReservationsForm = () => {
   return (
     <div className="py-8 flex justify-center w-full">
       <div className="flex flex-col p-4 w-full max-w-3xl justify-center items-center">
-        <Text size="xl" className="text-2xl font-bold mb-4 text-center">
+        <Text size="xxl" className="text-2xl font-bold mb-4 text-center">
           Your Experience Awaits
         </Text>
         <Text size="md" className="text-lg text-gray-600 text-center">
