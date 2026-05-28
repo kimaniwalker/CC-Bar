@@ -7,7 +7,7 @@ import CartModal from "./CartModal";
 import { useCartModal } from "./CartModalContext";
 import { useCart } from "./Cart/CartContext";
 import { SearchInput } from "./SearchInput";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SearchHeader } from "./SearchHeader";
 import { MenuIcon, Search, ShoppingCart } from "lucide-react";
 import React from "react";
@@ -21,6 +21,11 @@ export default function Header() {
   const router = useRouter();
   const [searchBarVisible, setSearchBarVisible] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const path = usePathname();
+
+  if (path === "/payments") {
+    return null;
+  }
 
   return (
     <>

@@ -1,8 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 import { createPortal } from "react-dom";
-import { CircleX } from "lucide-react"
+import { X } from "lucide-react";
 
 type ModalContextType = {
   isOpen: boolean;
@@ -32,29 +38,29 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       {children}
       {typeof window !== "undefined" && isOpen && content
         ? createPortal(
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 h-full">
-            <div
-              className="absolute inset-0 bg-black/40"
-              onClick={close}
-              aria-hidden
-            />
-            <div className="relative z-10 w-full max-w-xl">
-              <div className="bg-white rounded-3xl p-6 shadow-lg max-h-[95vh] md:max-h-[92vh] overflow-auto relative">
-                {/* close button top-right */}
-                <button
-                  onClick={close}
-                  aria-label="Close"
-                  className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100"
-                >
-                  <CircleX className="z-50" size={24} />
-                </button>
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 h-full">
+              <div
+                className="absolute inset-0 bg-black/40"
+                onClick={close}
+                aria-hidden
+              />
+              <div className="relative z-10 w-full max-w-xl">
+                <div className="bg-white rounded-3xl p-6 shadow-lg max-h-[95vh] md:max-h-[92vh] overflow-auto relative">
+                  {/* close button top-right */}
+                  <button
+                    type="button"
+                    onClick={close}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100 transition hover:bg-neutral-200 absolute top-4 right-4"
+                  >
+                    <X className="h-5 w-5 text-neutral-600" />
+                  </button>
 
-                {content}
+                  {content}
+                </div>
               </div>
-            </div>
-          </div>,
-          document.body
-        )
+            </div>,
+            document.body,
+          )
         : null}
     </ModalContext.Provider>
   );

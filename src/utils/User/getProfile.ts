@@ -1,9 +1,11 @@
-"use server"
+"use server";
 import { createClient } from "@/utils/supabase/server";
 import { UserProfile } from "@/types/User";
 
-
-export const getProfile = async (id:string): Promise<UserProfile[]> => {
+export const getProfile = async (id: string): Promise<UserProfile[]> => {
+  if (id === "guest") {
+    return [];
+  }
   const supabase = await createClient();
 
   const { data, error } = await supabase

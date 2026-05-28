@@ -12,6 +12,8 @@ import { Terminal } from "@stripe/terminal-js";
 import { Product } from "@/types/Product";
 import { useModal } from "@/components/client/ModalContext";
 import PosVariationsModal from "@/components/client/Pos/PosVariationsModal";
+import { useSearchParams } from "next/navigation";
+import { AddressCollectorModal } from "@/components/client/Pos/AddressCollectorModal";
 
 export default function Page() {
   const {
@@ -28,24 +30,22 @@ export default function Page() {
   const { initialize, discoverReaders, collectPayment, connectReader } =
     useStripeTerminal();
   const { open } = useModal();
+  const searchParams = useSearchParams();
+  const user_id = searchParams.get("user_id");
 
   const terminalRef = useRef<Terminal | null>(null);
-
   async function getTerminal() {
     if (terminalRef.current) {
       return terminalRef.current;
     }
-
     const instance = await initialize();
-
     if (!instance) {
       throw new Error("Failed to initialize terminal");
     }
-
     terminalRef.current = instance;
-
     return instance;
   }
+
   const handleCheckout = async () => {
     try {
       await createPosReader();
@@ -68,7 +68,7 @@ export default function Page() {
 
       // 3. Collect payment
       const intent = await collectPayment({
-        amount: 11999,
+        amount: subtotal * 100, // Convert to cents
         terminal,
         options: { email: "kimaniwalker@gmail.com", store_reference: "cc bar" },
         orderItems: cart,
@@ -97,7 +97,6 @@ export default function Page() {
           product={product}
           key={product.id}
           onAddToCart={(product) => addToCart(product)}
-          onDecreaseQuantity={(sku) => decreaseQuantity(sku)}
           cart={cart}
         />,
       );
@@ -107,26 +106,34 @@ export default function Page() {
     addToCart(normalizeCartProduct(product));
   };
 
+  const handleOpenAddressCollector = async () => {
+    open(<AddressCollectorModal user_id={user_id ?? "guest"} />);
+  };
+
   return (
     <>
       <div className="grid min-h-screen grid-cols-1 bg-neutral-100 lg:grid-cols-[1fr_400px]">
-        {/* Products */}
-        <div className="flex flex-col gap-6 p-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <Text size="md">Point of Sale</Text>
-              <Text size="sm">Create and manage in-store orders.</Text>
-            </div>
+        {/* Products Section */}
+        <div className="flex flex-col">
+          {/* Fixed Header */}
+          <div className="sticky top-0 z-10 bg-neutral-100 p-6 pb-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <Text size="md">CANDLE COW BAR</Text>
+                <Text size="sm">Create and manage in-store orders.</Text>
+              </div>
 
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search products"
-              className="max-w-sm bg-white"
-            />
+              <Input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search products"
+                className="max-w-sm bg-white"
+              />
+            </div>
           </div>
 
-          <div className="h-[calc(100vh-140px)]">
+          {/* Scrollable Products Grid */}
+          <div className="overflow-auto p-6 pt-2">
             {loading ? (
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
                 {Array.from({ length: 8 }).map((_, index) => (
@@ -161,8 +168,7 @@ export default function Page() {
 
                     <div className="flex flex-1 flex-col gap-2 p-4">
                       <Text size="sm">{product.name}</Text>
-
-                      <Text size="sm">${(product.price / 100).toFixed(2)}</Text>
+                      <Text size="sm">${product.price.toFixed(2)}</Text>
                     </div>
                   </button>
                 ))}
@@ -171,13 +177,26 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Cart */}
-        <div className="flex h-screen flex-col border-l border-neutral-200 bg-white">
+        {/* Fixed Cart Sidebar */}
+        <div className="z-999 fixed right-0 top-0 h-screen w-full lg:w-[400px] flex flex-col border-l border-neutral-200 bg-white">
+          {/* Cart Header */}
           <div className="border-b border-neutral-200 p-6">
             <Text size="md">Current Order</Text>
+            {user_id && <Text size="sm">Customer - {user_id}</Text>}
+            <div className="mt-4 flex items-center gap-4">
+              <Text size="md" className="ont-semibold text-sm ">
+                <span
+                  className="rounded-2xl bg-gray-50 py-2 px-2 text-sm font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:bg-gray-200"
+                  onClick={handleOpenAddressCollector}
+                >
+                  Verify shipping address
+                </span>
+              </Text>
+            </div>
           </div>
 
-          <div className="flex-1">
+          {/* Scrollable Cart Items */}
+          <div className="flex-1 overflow-auto">
             <div className="flex flex-col gap-4 p-6">
               {cart.length === 0 ? (
                 <Text size="sm">No products selected.</Text>
@@ -188,25 +207,36 @@ export default function Page() {
                     className="flex items-center justify-between gap-4 rounded-2xl border border-neutral-200 p-4"
                   >
                     <div className="flex flex-col gap-1">
-                      <Text size="sm">{item.name}</Text>
-
-                      <Text size="sm">
-                        ${(item.price / 100).toFixed(2)} × {item.quantity}
+                      <Text size="md" className="font-semibold text-sm">
+                        {item.name}
                       </Text>
+                      <Text size="sm">
+                        ${item.price.toFixed(2)} × {item.quantity}
+                      </Text>
+                      {item.color && (
+                        <Text size="sm" className="capitalize">
+                          Color: {item.color}
+                        </Text>
+                      )}
+                      {item.size && (
+                        <Text size="sm" className="capitalize">
+                          Size: {item.size}
+                        </Text>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">
                       <button
-                        className="rounded-full bg-neutral-200 px-2 py-1 text-sm transition hover:bg-neutral-300"
+                        className="rounded-full bg-neutral-200 px-3 py-1 text-sm transition hover:bg-neutral-300"
                         onClick={() => decreaseQuantity(item.sku)}
                       >
                         -
                       </button>
-
-                      <Text size="sm">{item.quantity}</Text>
-
+                      <Text size="md" className="text-sm">
+                        {item.quantity}
+                      </Text>
                       <button
-                        className="rounded-full bg-neutral-200 px-2 py-1 text-sm transition hover:bg-neutral-300"
+                        className="rounded-full bg-neutral-200 px-3 py-1 text-sm transition hover:bg-neutral-300"
                         onClick={() => addToCart(item)}
                       >
                         +
@@ -218,17 +248,19 @@ export default function Page() {
             </div>
           </div>
 
+          {/* Fixed Cart Footer */}
           <div className="flex flex-col gap-4 border-t border-neutral-200 p-6">
             <div className="flex items-center justify-between">
-              <Text size="sm">Subtotal</Text>
-
-              <Text size="sm">${(subtotal / 100).toFixed(2)}</Text>
+              <Text size="md" className="font-semibold">
+                Subtotal
+              </Text>
+              <Text size="xxl">${subtotal.toFixed(2)}</Text>
             </div>
 
             <hr className="border-neutral-200" />
 
             <button
-              className="h-14 rounded-2xl text-base bg-gray-50 font-medium transition hover:bg-gray-100  disabled:cursor-not-allowed disabled:bg-gray-200"
+              className="h-14 rounded-2xl text-base bg-gray-50 font-medium transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:bg-gray-200"
               disabled={cart.length === 0}
               onClick={handleCheckout}
             >

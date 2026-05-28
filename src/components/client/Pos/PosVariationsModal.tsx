@@ -10,13 +10,11 @@ type ProductVariationsModal = {
   product: Product;
   cart: CartProduct[];
   onAddToCart: (item: CartProduct) => void;
-  onDecreaseQuantity: (sku: string) => void;
 };
 export default function PosVariationsModal({
   product,
   cart,
   onAddToCart,
-  onDecreaseQuantity,
 }: ProductVariationsModal) {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -68,7 +66,6 @@ export default function PosVariationsModal({
         selectedSize={selectedSize}
         cart={cart}
         onAddToCart={onAddToCart}
-        onDecreaseQuantity={onDecreaseQuantity}
       />
     </Stack>
   );
