@@ -23,7 +23,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const path = usePathname();
 
-  if (path === "/payments") {
+  if (path === "/pos") {
     return null;
   }
 

@@ -40,6 +40,16 @@ export const createPaymentIntent = async ({
       payment_method_types: ["card_present"],
       capture_method: "automatic",
       statement_descriptor_suffix: "CANDLE COW BAR",
+      shipping: {
+        address: {
+          line1: options?.shipping_address?.address_1,
+          line2: options?.shipping_address?.address_2,
+          city: options?.shipping_address?.city,
+          state: options?.shipping_address?.state,
+          postal_code: options?.shipping_address?.zip_code,
+        },
+        name: `${options?.first_name ?? ""} ${options?.last_name ?? ""}`.trim(),
+      },
     });
 
     const { order_id } = await handleUpdateOrder({

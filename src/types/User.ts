@@ -8,7 +8,13 @@ export interface UserProfile {
   ustomer_id?: string;
   created_at?: string;
   updated_at?: string;
-  shipping_address?: Record<string, string>;
+  shipping_address?: {
+    city: string;
+    state: string;
+    zip_code: string;
+    address_1: string;
+    address_2: string;
+  };
 }
 
 export enum PROFILE_SECTIONS {
