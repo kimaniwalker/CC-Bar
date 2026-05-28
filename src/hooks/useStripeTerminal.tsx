@@ -2,6 +2,7 @@
 
 import { CollectPaymentResult, PaymentState } from "@/types/Pos";
 import { CartProduct } from "@/types/Product";
+import { UserProfile } from "@/types/User";
 import { createPaymentIntent } from "@/utils/Pos/createPaymentIntent";
 import { getConnectionToken } from "@/utils/Pos/getConnectionToken";
 import type { PaymentIntent } from "@stripe/stripe-js";
@@ -90,7 +91,7 @@ export function useStripeTerminal() {
   }: {
     amount: number;
     terminal: Terminal;
-    options?: Record<string, string>;
+    options?: UserProfile & {};
     orderItems: CartProduct[];
   }): Promise<CollectPaymentResult> {
     setPaymentStatus("creating_intent");

@@ -5,6 +5,8 @@ import { handleReservationCheckout } from "@/utils/Cart/handleReservationCheckou
 import { handleShopCheckout } from "@/utils/Cart/handleShopCheckout";
 import { CheckoutType } from "@/types/Reservations";
 import { handleInStoreCheckout } from "@/utils/Pos/handleInStoreCheckout";
+import { withRewards } from "@/utils/Rewards/withRewards";
+import { RewardActionKey } from "@/types/Rewards";
 
 // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -51,11 +53,19 @@ export async function POST(req: Request) {
       }
 
       case "payment_intent.succeeded": {
+        const idempotency_key = event.id;
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        const { type } = paymentIntent.metadata || {};
+        const { type, user_id } = paymentIntent.metadata || {};
 
         if (type === CheckoutType.IN_STORE) {
-          await handleInStoreCheckout(paymentIntent);
+          await withRewards(
+            RewardActionKey.PURCHASE,
+            async () => {
+              await handleInStoreCheckout(paymentIntent);
+            },
+            user_id ?? "guest",
+            idempotency_key,
+          );
         }
         console.log("PaymentIntent succeeded:", paymentIntent.id);
         break;

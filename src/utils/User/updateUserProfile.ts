@@ -19,6 +19,6 @@ export const updateUserProfile = async ({ user }: { user: UserProfile }) => {
     throw new Error("Failed to update order");
   }
 
-  console.log("✅ Order updated:", data);
-  return { order_id: data.id };
+  console.log("✅ User updated:", data);
+  return { user_id: data.id };
 };

@@ -70,6 +70,8 @@ export enum RewardActionKey {
   ORDER_STREAK_3 = "order_streak_3",
   SPEND_THRESHOLD_100 = "spend_threshold_100",
   MAKE_RESERVATION = "make_reservation",
+  PURCHASE = "purchase",
+  ONLINE_PURCHASE = "online_purchase",
 }
 
 export const REWARD_ACTIONS = {
@@ -177,4 +179,12 @@ export const REWARD_ACTIONS = {
     title: "Make A Reservation",
     reward: 200,
   },
+  [RewardActionKey.PURCHASE]: {
+    title: "In Store Purchase",
+    reward: 250, // This could be a dynamic value based on the purchase amount
+  },
+  [RewardActionKey.ONLINE_PURCHASE]: {
+    title: "Online Purchase",
+    reward: 250,
+  }, // This could also be dynamic based on the purchase amount
 } as const;

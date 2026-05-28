@@ -6,6 +6,7 @@ export async function withRewards(
   rewardKey: RewardActionKey,
   operation: () => Promise<void>,
   user_id?: string,
+  idempotency_key?: string,
 ) {
   // Execute main operation first
   await operation();
@@ -18,7 +19,10 @@ export async function withRewards(
 
   // Award points (non-blocking)
   try {
-    const rewardData = await completeRewardAction(rewardKey, { user_id });
+    const rewardData = await completeRewardAction(rewardKey, {
+      user_id,
+      idempotency_key,
+    });
     console.log({ rewardData });
     if (rewardData.data?.success && !rewardData.data?.already_completed) {
       await redeemRewardsPoints({

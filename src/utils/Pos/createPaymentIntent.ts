@@ -5,6 +5,8 @@ import { handleUpdateOrder } from "../Orders/handleUpdateOrder";
 import { ORDER_STATUS, OrderItem } from "@/types/Orders";
 import { CartProduct } from "@/types/Product";
 import { handleUpdateOrderItems } from "../Orders/handleUpdateOrderItems";
+import { UserProfile } from "@/types/User";
+import { convertProfileToStripeMetadata } from "./convertProfileToStripeMetadata";
 
 export const createPaymentIntent = async ({
   amount,
@@ -12,7 +14,7 @@ export const createPaymentIntent = async ({
   orderItems = [],
 }: {
   amount: number;
-  options?: Record<string, string>;
+  options?: UserProfile & {};
   orderItems?: CartProduct[];
 }) => {
   // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
@@ -27,7 +29,10 @@ export const createPaymentIntent = async ({
     const intent = await stripe.paymentIntents.create({
       amount,
       customer: options?.customer_id,
-      metadata: { ...options, type: CheckoutType.IN_STORE },
+      metadata: {
+        ...convertProfileToStripeMetadata(options),
+        type: CheckoutType.IN_STORE,
+      },
       receipt_email: options?.email,
       setup_future_usage: "off_session",
       description: "Payment for CC-BAR",
@@ -42,7 +47,7 @@ export const createPaymentIntent = async ({
         stripe_payment_intent_id: intent.id,
         total: intent.amount,
         status: ORDER_STATUS.PENDING_PAYMENT,
-        user_id: options?.user_id,
+        user_id: options?.id,
         stripe_customer_id: options?.customer_id ?? (intent.customer as string),
         order_source: CheckoutType.IN_STORE,
       },

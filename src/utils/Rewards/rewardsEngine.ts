@@ -5,14 +5,17 @@ export const rewardEngine = {
   async completeAction({
     userId,
     actionKey,
+    idempotency_key,
   }: {
     userId: string;
     actionKey: RewardActionKey;
+    idempotency_key?: string;
   }) {
     const supabase = await createClient();
     return supabase.rpc("complete_reward_action", {
       p_user_id: userId,
       p_action_key: actionKey,
+      p_webhook_event_id: idempotency_key,
     });
   },
   async redeem({

@@ -5,7 +5,7 @@ import { getUser } from "../User/getUser";
 
 export async function completeRewardAction(
   actionKey: RewardActionKey,
-  options?: { user_id?: string },
+  options?: { user_id?: string; idempotency_key?: string },
 ) {
   // Early return if user_id is provided
   if (options?.user_id) {
@@ -15,6 +15,7 @@ export async function completeRewardAction(
     return rewardEngine.completeAction({
       userId: options.user_id,
       actionKey,
+      idempotency_key: options.idempotency_key,
     });
   }
 
@@ -30,5 +31,6 @@ export async function completeRewardAction(
   return rewardEngine.completeAction({
     userId: user.id,
     actionKey,
+    idempotency_key: options?.idempotency_key,
   });
 }
