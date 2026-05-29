@@ -7,7 +7,6 @@ import { CartModalProvider } from "@/components/client/CartModalContext";
 import { AuthProvider } from "@/components/client/Auth/AuthContext";
 import { FavoritesProvider } from "@/components/client/Favorites/FavoritesContext";
 import { Toaster } from "sonner";
-import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,29 +21,27 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <Suspense>
-          <AuthProvider>
-            <CartModalProvider>
-              <CartProvider>
-                <ModalProvider>
-                  <FavoritesProvider>
-                    <Header />
-                    {children}
-                    <Toaster
-                      position="top-right"
-                      richColors
-                      closeButton
-                      expand
-                      visibleToasts={3}
-                    />
-                  </FavoritesProvider>
-                </ModalProvider>
-              </CartProvider>
-            </CartModalProvider>
-          </AuthProvider>
-          <div id="modal-root"></div>
-          <div id="cart-modal-root"></div>
-        </Suspense>
+        <AuthProvider>
+          <CartModalProvider>
+            <CartProvider>
+              <ModalProvider>
+                <FavoritesProvider>
+                  <Header />
+                  {children}
+                  <Toaster
+                    position="top-right"
+                    richColors
+                    closeButton
+                    expand
+                    visibleToasts={3}
+                  />
+                </FavoritesProvider>
+              </ModalProvider>
+            </CartProvider>
+          </CartModalProvider>
+        </AuthProvider>
+        <div id="modal-root"></div>
+        <div id="cart-modal-root"></div>
       </body>
     </html>
   );

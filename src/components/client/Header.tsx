@@ -10,18 +10,18 @@ import { SearchInput } from "./SearchInput";
 import { usePathname, useRouter } from "next/navigation";
 import { SearchHeader } from "./SearchHeader";
 import { MenuIcon, Search, ShoppingCart } from "lucide-react";
-import React from "react";
+import React, { Suspense } from "react";
 import { Navbar } from "./Navbar";
 import { Text } from "../ds/Text";
 
-export default function Header() {
+function HeaderContent() {
   const { open, isOpen, close } = useCartModal();
   const { getTotalCartQuantity } = useCart();
   const cartQuanity = getTotalCartQuantity();
   const router = useRouter();
   const [searchBarVisible, setSearchBarVisible] = React.useState(false);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const path = usePathname();
+  const path = usePathname(); // This is line 18 - the problem
 
   if (path === "/pos") {
     return null;
@@ -78,5 +78,31 @@ export default function Header() {
         <CartDrawer onClose={close} />
       </CartModal>
     </>
+  );
+}
+
+export default function Header() {
+  return (
+    <Suspense
+      fallback={
+        <Stack
+          justify="between"
+          className="bg-black px-4 py-2 sticky top-0 z-99"
+        >
+          <div className="w-20" />
+          <Image
+            src="/logorevamp.png"
+            alt="Logo"
+            width={75}
+            height={75}
+            sizes="150px"
+            priority
+          />
+          <div className="w-8 h-8" />
+        </Stack>
+      }
+    >
+      <HeaderContent />
+    </Suspense>
   );
 }
