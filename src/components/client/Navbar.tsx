@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Text } from "../ds/Text";
 import React from "react";
+import { Logout } from "./Auth/Logout";
 export function Navbar({
   isOpen,
   onClose,
@@ -106,7 +107,10 @@ export function Navbar({
 
         {/* Footer */}
         <div className="border-t border-neutral-200 px-6 py-5 text-sm text-neutral-500">
-          Hand-poured luxury candles & fragrance experiences.
+          <Text size="sm" className="my-2">
+            Hand-poured luxury candles & fragrance experiences.{" "}
+          </Text>
+          <Logout />
         </div>
       </aside>
     </>

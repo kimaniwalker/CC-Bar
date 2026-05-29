@@ -35,7 +35,7 @@ function HeaderContent() {
           <MenuIcon
             color="white"
             size={32}
-            className="md:hidden"
+            className=""
             onClick={() => setIsMenuOpen(true)}
           />
           <Navbar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />

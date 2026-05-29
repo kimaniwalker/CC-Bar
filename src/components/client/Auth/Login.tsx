@@ -60,7 +60,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-50 via-white to-neutral-100 p-4">
+    <div className="min-h-screen flex  justify-center bg-gradient-to-br from-neutral-50 via-white to-neutral-100 p-4">
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
@@ -71,7 +71,7 @@ export const Login = () => {
             Welcome Back
           </Text>
           <Text size="sm" className="text-neutral-600 text-sm">
-            Sign in to your Candle Cow Bar account
+            Rewards await ! Sign in to your Candle Cow Bar account
           </Text>
         </div>
 
