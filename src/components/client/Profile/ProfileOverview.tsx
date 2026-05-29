@@ -6,7 +6,8 @@ import { ProfileSideBar } from "./ProfileSideBar";
 import Orders from "./Orders";
 import { PROFILE_SECTIONS } from "@/types/User";
 import ProfileOverviewSkeleton from "./ProfileOverviewSkeleton";
-import { ProfileSection } from "./ProfileSection";
+import { UserInfoCard } from "./UserInfoCart";
+import { MemberQRCode } from "./MemberQrCode";
 
 export default function ProfileOverviewPage({ section }: { section?: string }) {
   console.log({ section });
@@ -40,9 +41,16 @@ export default function ProfileOverviewPage({ section }: { section?: string }) {
               {section === PROFILE_SECTIONS.ORDERS && <Orders />}
               {section === PROFILE_SECTIONS.FAVORITES && <Favorites />}
               {section === PROFILE_SECTIONS.PROFILE && (
-                <div className="shadow-sm rounded-lg border-neutral-300 p-6 bg-white">
-                  <ProfileSection />
-                </div>
+                <>
+                  {/* User Information */}
+                  <div className="space-y-6">
+                    <UserInfoCard />
+                  </div>
+                  {/* QR Code & Quick Actions */}
+                  <div className="space-y-6">
+                    <MemberQRCode />
+                  </div>
+                </>
               )}
             </div>
           </main>

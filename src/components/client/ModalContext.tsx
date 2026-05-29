@@ -38,7 +38,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
       {children}
       {typeof window !== "undefined" && isOpen && content
         ? createPortal(
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 h-full">
+            <div className="fixed inset-0 z-99 flex items-center justify-center p-4 h-full">
               <div
                 className="absolute inset-0 bg-black/40"
                 onClick={close}

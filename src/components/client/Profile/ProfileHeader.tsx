@@ -11,6 +11,7 @@ export const ProfileHeader = async () => {
   const user = await getUser();
   const recentOrders = await getUserOrders(user?.id);
   const favorites = await getUserFavorites(user?.id);
+
   return (
     <div className="rounded-3xl bg-white p-6 shadow-sm">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
