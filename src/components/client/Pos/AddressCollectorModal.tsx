@@ -33,9 +33,11 @@ type AddressFormData = {
 export const AddressCollectorModal = ({
   user_id,
   heading,
+  onSave,
 }: {
   user_id?: string;
   heading?: string;
+  onSave?: (updatedProfile: UserProfile) => void;
 }) => {
   const [_profile, setProfile] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,6 +92,7 @@ export const AddressCollectorModal = ({
       },
     };
     await updateUserProfile({ user: { ...formattedUserData } });
+    onSave?.({ ...formattedUserData });
   };
 
   return (

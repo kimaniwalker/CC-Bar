@@ -1,7 +1,7 @@
 "use client";
 
 import { Heart } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../Auth/AuthContext";
 import { useFavorites } from "./FavoritesContext";
 import { removeFavoriteById } from "@/utils/Favorites/removeFavoriteById";
@@ -21,6 +21,11 @@ export const ProductHeartButton = ({
   const isFavorited = productIds.includes(String(product_id));
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { user } = useUser();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleAddFavoriteWithRewards = async () => {
     // Add favorite with rewards
@@ -74,6 +79,20 @@ export const ProductHeartButton = ({
       setIsLoading(false);
     }
   };
+
+  // Don't render until mounted to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        className={`absolute z-10 rounded-full bg-white/90 p-2 shadow-sm backdrop-blur transition hover:scale-105 ${className ? className : "right-3 top-3"}`}
+        disabled
+        aria-label="Loading favorite status"
+      >
+        <Heart className="h-5 w-5" />
+      </button>
+    );
+  }
 
   return (
     <button

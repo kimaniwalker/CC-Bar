@@ -9,11 +9,20 @@ type CartContextType = {
   removeFromCart: (sku: string) => void;
   removeProductBySku: (sku: string) => void;
   clearCart: () => void;
-  getCartProductQuantity: (id: string) => number | undefined;
+  getCartProductQuantity: (id: string) => number;
   getCartSubtotal: () => number;
   getTotalCartQuantity: () => number;
-  getSelectedVariationQuantity: ({product, selectedColor, selectedSize}:{product:Product, selectedColor: string, selectedSize: string}) => number;
+  getSelectedVariationQuantity: ({
+    product,
+    selectedColor,
+    selectedSize,
+  }: {
+    product: Product;
+    selectedColor: string;
+    selectedSize: string;
+  }) => number;
   handleAdjustProductQuantity: (sku: string, newQuantity: number) => void;
+  isHydrated: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -22,23 +31,23 @@ const CART_KEY = "cc_bar_cart";
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [cart, setCart] = useState<CartProduct[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // ✅ Load cart from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem(CART_KEY);
-    if (stored) {
-      try {
-        setCart(JSON.parse(stored));
-      } catch (err) {
-        console.error("Failed to parse cart from localStorage", err);
-      }
+    // Load cart from localStorage after mount
+    const savedCart = localStorage.getItem(CART_KEY);
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
     }
+    setIsHydrated(true);
   }, []);
 
-  // ✅ Sync cart to localStorage on changes
+  // Save to localStorage when cart changes
   useEffect(() => {
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  }, [cart]);
+    if (isHydrated) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart, isHydrated]);
 
   const addToCart = (item: CartProduct) => {
     setCart((prev) => {
@@ -46,7 +55,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (existing) {
         return prev.map((p) =>
-          p.sku === item.sku ? { ...p, quantity: p.quantity + 1 } : p
+          p.sku === item.sku ? { ...p, quantity: p.quantity + 1 } : p,
         );
       }
 
@@ -54,13 +63,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const removeFromCart = (sku: string) => {  // 👈 just sku now
+  const removeFromCart = (sku: string) => {
+    // 👈 just sku now
     setCart((prev) =>
       prev.flatMap((item) => {
         if (item.sku !== sku) return [item];
-        if (item.quantity > 1) return [{ ...item, quantity: item.quantity - 1 }];
+        if (item.quantity > 1)
+          return [{ ...item, quantity: item.quantity - 1 }];
         return [];
-      })
+      }),
     );
   };
 
@@ -75,19 +86,27 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       .filter((item: CartProduct) => item.id === id)
       .reduce((total, item) => total + (item.quantity || 1), 0);
 
-      const getCartSubtotal = (): number => {
-        const rawTotal = cart.reduce((total, item) => {
-          return total + item.price * item.quantity;
-        }, 0);
-      
-        // round to 2 decimal places
-        return Math.round(rawTotal * 100) / 100;
-      };
+  const getCartSubtotal = (): number => {
+    const rawTotal = cart.reduce((total, item) => {
+      return total + item.price * item.quantity;
+    }, 0);
+
+    // round to 2 decimal places
+    return Math.round(rawTotal * 100) / 100;
+  };
   const getTotalCartQuantity = (): number => {
     return cart.reduce((total, item) => total + (item.quantity || 1), 0);
-  }
+  };
 
-  const getSelectedVariationQuantity = ({ product, selectedColor, selectedSize }: { product: Product, selectedColor: string, selectedSize: string }) => {
+  const getSelectedVariationQuantity = ({
+    product,
+    selectedColor,
+    selectedSize,
+  }: {
+    product: Product;
+    selectedColor: string;
+    selectedSize: string;
+  }) => {
     const variation = product.variations?.find((v) => {
       const sizeMatch = v.size ? v.size === selectedSize : true;
       const colorMatch = v.color ? v.color === selectedColor : true;
@@ -97,17 +116,17 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!variation?.sku) return 0;
 
     return cart
-      .filter(item => item.sku === variation.sku)
+      .filter((item) => item.sku === variation.sku)
       .reduce((total, item) => total + item.quantity, 0);
   };
 
   const handleAdjustProductQuantity = (sku: string, newQuantity: number) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.sku === sku ? { ...item, quantity: newQuantity } : item
-      )
+        item.sku === sku ? { ...item, quantity: newQuantity } : item,
+      ),
     );
-  }
+  };
 
   return (
     <CartContext.Provider
@@ -122,6 +141,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         getTotalCartQuantity,
         getSelectedVariationQuantity,
         handleAdjustProductQuantity,
+        isHydrated,
       }}
     >
       {children}
