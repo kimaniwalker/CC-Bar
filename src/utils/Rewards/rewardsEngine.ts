@@ -15,7 +15,7 @@ export const rewardEngine = {
     return supabase.rpc("complete_reward_action", {
       p_user_id: userId,
       p_action_key: actionKey,
-      p_webhook_event_id: idempotency_key,
+      p_webhook_event_id: idempotency_key ?? null,
     });
   },
   async redeem({

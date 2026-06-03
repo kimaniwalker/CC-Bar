@@ -161,7 +161,7 @@ export const UserInfoCard = () => {
           ) : (
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-neutral-400" />
-              <Text size="md" className="font-medium text-neutral-500">
+              <Text size="sm" className="font-medium">
                 No address on file
               </Text>
             </div>

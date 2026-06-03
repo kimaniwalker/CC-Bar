@@ -1,18 +1,18 @@
-"use server"
-import {  FavoritesResponse } from "@/types/Favorites";
+"use server";
+import { FavoritesResponse } from "@/types/Favorites";
 import { createClient } from "../supabase/server";
 
 export default async function getUserFavorites(userId?: string) {
+  if (!userId) {
+    console.warn("No user ID provided for fetching orders.");
+    return [];
+  }
 
-    if (!userId) {
-        console.warn("No user ID provided for fetching orders.");
-        return [];
-    }
-
-    const supabase = await createClient();
-    const { data, error } = await supabase
-        .from("favorites")
-        .select(`
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("favorites")
+    .select(
+      `
             id,
             user_id,
             product_id,
@@ -20,17 +20,16 @@ export default async function getUserFavorites(userId?: string) {
             products (
                 *
             )
-        `)
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
-        .overrideTypes<FavoritesResponse[]>()
+        `,
+    )
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .overrideTypes<FavoritesResponse[]>();
 
-        console.log({data})
+  if (error) {
+    console.error("Error fetching user favorites details:", error);
+    return [];
+  }
 
-    if (error) {
-        console.error("Error fetching user favorites details:", error);
-        return [];
-    }
-
-    return data ?? [];
+  return data ?? [];
 }

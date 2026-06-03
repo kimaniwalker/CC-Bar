@@ -8,6 +8,7 @@ import { PROFILE_SECTIONS } from "@/types/User";
 import ProfileOverviewSkeleton from "./ProfileOverviewSkeleton";
 import { UserInfoCard } from "./UserInfoCart";
 import { MemberQRCode } from "./MemberQrCode";
+import { SubscriptionCard } from "./SubscriptionsCard";
 
 export default function ProfileOverviewPage({ section }: { section?: string }) {
   console.log({ section });
@@ -42,13 +43,17 @@ export default function ProfileOverviewPage({ section }: { section?: string }) {
               {section === PROFILE_SECTIONS.FAVORITES && <Favorites />}
               {section === PROFILE_SECTIONS.PROFILE && (
                 <>
+                  {/* QR Code & Quick Actions */}
+                  <div className="space-y-6">
+                    <MemberQRCode />
+                  </div>
                   {/* User Information */}
                   <div className="space-y-6">
                     <UserInfoCard />
                   </div>
-                  {/* QR Code & Quick Actions */}
                   <div className="space-y-6">
-                    <MemberQRCode />
+                    {/* Additional profile-related components can go here */}
+                    <SubscriptionCard />
                   </div>
                 </>
               )}

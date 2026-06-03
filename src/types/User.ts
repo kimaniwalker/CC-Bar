@@ -24,3 +24,14 @@ export enum PROFILE_SECTIONS {
   SETTINGS = "settings",
   PROFILE = "profile",
 }
+
+export type Subscription = {
+  id: string;
+  user_id: string;
+  status: string;
+  subscription_id: string;
+  next_renewal: string;
+  created_at: string;
+  updated_at: string;
+  cancel_at: string | null;
+};
