@@ -5,7 +5,7 @@ import { Text } from "@/components/ds/Text";
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { Mail, Sparkles, Check, AlertCircle } from "lucide-react";
+import { Mail, Sparkles, Check, AlertCircle, Crown } from "lucide-react";
 
 export const Login = () => {
   const supabase = createClient();
@@ -16,6 +16,9 @@ export const Login = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const searchParams = useSearchParams();
+  const isVipSubscriptionFlow =
+    searchParams.get("flow") === "isVipSubscription";
+  const shouldRedirect = searchParams.get("redirect_to");
 
   React.useEffect(() => {
     const errorMessage = searchParams.get("errorMessage");
@@ -34,7 +37,7 @@ export const Login = () => {
         email: email,
         options: {
           shouldCreateUser: true,
-          emailRedirectTo: process.env.NEXT_PUBLIC_SUPABASE_AUTH_REDIRECT_URL!,
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_AUTH_REDIRECT_URL!}${shouldRedirect ? `?redirect_to=${shouldRedirect}` : ""}`,
         },
       });
       if (error) {
@@ -60,20 +63,48 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex  justify-center bg-gradient-to-br from-neutral-50 via-white to-neutral-100 p-4">
+    <div className="min-h-screen flex justify-center bg-linear-to-br from-neutral-50 via-white to-neutral-100 p-4">
       <div className="w-full max-w-md">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-black mb-4">
-            <Sparkles className="w-8 h-8 text-white" />
+          <div
+            className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 ${
+              isVipSubscriptionFlow ? "bg-purple-600" : "bg-black"
+            }`}
+          >
+            {isVipSubscriptionFlow ? (
+              <Crown className="w-8 h-8 text-white" />
+            ) : (
+              <Sparkles className="w-8 h-8 text-white" />
+            )}
           </div>
           <Text size="xxl" className="text-3xl font-bold text-neutral-900 mb-2">
-            Welcome Back
+            {isVipSubscriptionFlow ? "Become a VIP Member" : "Welcome Back"}
           </Text>
           <Text size="sm" className="text-neutral-600 text-sm">
-            Rewards await ! Sign in to your Candle Cow Bar account
+            {isVipSubscriptionFlow
+              ? "Create your account to unlock exclusive VIP benefits"
+              : "Rewards await! Sign in to your Candle Cow Bar account"}
           </Text>
         </div>
+
+        {/* VIP Flow Info Banner */}
+        {isVipSubscriptionFlow && (
+          <div className="mb-6 rounded-2xl bg-linear-to-br from-purple-50 to-pink-50 border-2 border-purple-200 p-4">
+            <div className="flex items-start gap-3">
+              <Crown className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" />
+              <div className="text-sm text-purple-900">
+                <Text size="sm" className="font-semibold mb-1">
+                  You&apos;re one step away from VIP access!
+                </Text>
+                <Text size="xs" className="text-purple-700">
+                  Enter your email to create an account and proceed to VIP
+                  membership checkout.
+                </Text>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Card */}
         <div className="bg-white rounded-3xl shadow-xl border border-neutral-200 p-8">
@@ -111,7 +142,11 @@ export const Login = () => {
             <button
               type="submit"
               disabled={!isValidEmail(email) || isSubmitting || isSubmitted}
-              className={`w-full h-14 rounded-2xl bg-black text-white font-medium transition-all hover:bg-neutral-800 active:scale-[0.98] disabled:bg-neutral-300 disabled:cursor-not-allowed disabled:hover:bg-neutral-300 flex items-center justify-center gap-2 ${montserrat.className}`}
+              className={`w-full h-14 rounded-2xl ${
+                isVipSubscriptionFlow
+                  ? "bg-purple-600 hover:bg-purple-700"
+                  : "bg-black hover:bg-neutral-800"
+              } text-white font-medium transition-all active:scale-[0.98] disabled:bg-neutral-300 disabled:cursor-not-allowed disabled:hover:bg-neutral-300 flex items-center justify-center gap-2 ${montserrat.className}`}
             >
               {isSubmitting ? (
                 <>
@@ -125,8 +160,16 @@ export const Login = () => {
                 </>
               ) : (
                 <>
-                  <Mail className="h-5 w-5" />
-                  <Text size="sm">Continue with Email</Text>
+                  {isVipSubscriptionFlow ? (
+                    <Crown className="h-5 w-5" />
+                  ) : (
+                    <Mail className="h-5 w-5" />
+                  )}
+                  <Text size="sm">
+                    {isVipSubscriptionFlow
+                      ? "Continue to VIP Checkout"
+                      : "Continue with Email"}
+                  </Text>
                 </>
               )}
             </button>
@@ -146,8 +189,9 @@ export const Login = () => {
                       Magic link sent!
                     </Text>
                     <Text size="xs" className="text-xs text-green-700">
-                      Check your inbox for a sign-in link. It may take a few
-                      minutes to arrive.
+                      {isVipSubscriptionFlow
+                        ? "Check your inbox for a sign-in link. After signing in, you'll be redirected to complete your VIP membership."
+                        : "Check your inbox for a sign-in link. It may take a few minutes to arrive."}
                     </Text>
                   </div>
                 </div>
@@ -189,8 +233,9 @@ export const Login = () => {
                       No password needed
                     </Text>
                     <Text>
-                      We&apos;ll send you a magic link to sign in instantly. New
-                      here? An account will be created for you automatically.
+                      {isVipSubscriptionFlow
+                        ? "We'll send you a magic link to create your account instantly. After signing in, you'll proceed to VIP membership checkout."
+                        : "We'll send you a magic link to sign in instantly. New here? An account will be created for you automatically."}
                     </Text>
                   </div>
                 </div>
@@ -213,7 +258,7 @@ export const Login = () => {
             <a href="/privacy" className="underline">
               Privacy Policy
             </a>
-            . .
+            .
           </Text>
         </div>
       </div>

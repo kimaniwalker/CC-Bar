@@ -37,10 +37,18 @@ export async function handleShopCheckout(session: Stripe.Checkout.Session) {
   }
 
   // Collect all stock updates
+
   const stockUpdates = lineItems.reduce(
     (acc, item) => {
       const product = item.price?.product as Stripe.Product;
       const { product_id, sku, isVariationProduct } = product?.metadata || {};
+      const SUBSCRIPTION_SKU = "SKU-CCBAR-SUB";
+
+      // Skip subscription items
+      if (sku === SUBSCRIPTION_SKU) {
+        console.log("⏭️ Skipping subscription item from stock sync:", sku);
+        return acc;
+      }
 
       if (!product_id) {
         console.warn("⚠️ Missing product_id on line item:", item.id);

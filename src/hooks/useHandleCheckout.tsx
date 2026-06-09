@@ -6,7 +6,12 @@ import { round } from "lodash";
 import Stripe from "stripe";
 
 export default function useHandlePayment() {
-  return { calculateTotal, formatBody, formatReservationsData };
+  return {
+    calculateTotal,
+    formatBody,
+    formatReservationsData,
+    formatLineItems,
+  };
 }
 
 function formatReservationsMetadata(data: ReservationsFormInputs) {

@@ -1,12 +1,9 @@
 import { Text } from "@/components/ds/Text";
-import { useUserProfile } from "@/hooks/useUserProfile";
 import { SubscriptionStatus } from "@/types/Subscriptions";
 import { Subscription } from "@/types/User";
-import { handleManageSubscription } from "@/utils/Subscriptions/handleManageSubscription";
 import { User } from "@supabase/supabase-js";
-import { Calendar, CreditCard, DollarSign, ExternalLink } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Calendar, CreditCard, DollarSign } from "lucide-react";
+import { SubscriptionActions } from "./SubscriptionActions";
 
 export const SubscriptionDetails = ({
   subscription,
@@ -15,57 +12,76 @@ export const SubscriptionDetails = ({
   subscription: Subscription | null;
   user: User | null;
 }) => {
-  const router = useRouter();
-  const { userProfile } = useUserProfile(user?.id ?? null);
-  const [loadingPortal, setLoadingPortal] = useState(false);
-  const periodEndDate =
-    subscription && !subscription.cancel_at
-      ? new Date(subscription.next_renewal)
-      : null;
+  if (!subscription) {
+    return null;
+  }
+
+  const periodEndDate = subscription.next_renewal
+    ? new Date(subscription.next_renewal)
+    : null;
   const isPendingCancelation =
-    subscription?.status === SubscriptionStatus.CANCELED;
-
-  const handleManageUserSubscription = async () => {
-    setLoadingPortal(true);
-    try {
-      if (!userProfile?.customer_id) {
-        throw new Error("No customer ID found for user");
-      }
-      const url = await handleManageSubscription(userProfile.customer_id);
-
-      if (url) {
-        router.push(url);
-      }
-    } catch (error) {
-      console.error("Failed to create portal session:", error);
-    } finally {
-      setLoadingPortal(false);
-    }
-  };
+    subscription.status === SubscriptionStatus.CANCELED;
+  const isPaused = subscription.status === SubscriptionStatus.PAUSED;
 
   const getStatusBadge = (status: string) => {
-    if (status === "active") {
-      return (
-        <span className="inline-flex rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700">
-          Active
-        </span>
-      );
-    }
-    if (status === "past_due") {
-      return (
-        <span className="inline-flex rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700">
-          Past Due
-        </span>
-      );
-    }
-    if (status === "canceled") {
-      return (
-        <span className="inline-flex rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-yellow-700">
-          Canceled
-        </span>
-      );
-    }
-    return null;
+    const statusConfig = {
+      [SubscriptionStatus.ACTIVE]: {
+        bg: "bg-green-100",
+        text: "text-green-700",
+        label: "Active",
+      },
+      [SubscriptionStatus.PAUSED]: {
+        bg: "bg-yellow-100",
+        text: "text-yellow-700",
+        label: "Paused",
+      },
+      [SubscriptionStatus.TRIALING]: {
+        bg: "bg-blue-100",
+        text: "text-blue-700",
+        label: "Trial",
+      },
+      [SubscriptionStatus.PAST_DUE]: {
+        bg: "bg-red-100",
+        text: "text-red-700",
+        label: "Past Due",
+      },
+      [SubscriptionStatus.INCOMPLETE]: {
+        bg: "bg-red-100",
+        text: "text-red-700",
+        label: "Incomplete",
+      },
+      [SubscriptionStatus.INCOMPLETE_EXPIRED]: {
+        bg: "bg-red-100",
+        text: "text-red-700",
+        label: "Expired",
+      },
+      [SubscriptionStatus.UNPAID]: {
+        bg: "bg-red-100",
+        text: "text-red-700",
+        label: "Unpaid",
+      },
+      [SubscriptionStatus.CANCELED]: {
+        bg: "bg-neutral-100",
+        text: "text-neutral-700",
+        label: "Canceled",
+      },
+      [SubscriptionStatus.ENDED]: {
+        bg: "bg-neutral-100",
+        text: "text-neutral-700",
+        label: "Ended",
+      },
+    };
+
+    const config = statusConfig[status as SubscriptionStatus];
+    if (!config) return null;
+
+    return (
+      <span
+        className={`inline-flex rounded-full ${config.bg} px-2.5 py-1 text-xs font-medium ${config.text} uppercase`}
+      >
+        {config.label}
+      </span>
+    );
   };
 
   return (
@@ -80,7 +96,7 @@ export const SubscriptionDetails = ({
             <Text size="lg" className="font-semibold">
               Subscription
             </Text>
-            {getStatusBadge(subscription?.status ?? "")}
+            {getStatusBadge(subscription.status)}
           </div>
         </div>
       </div>
@@ -98,10 +114,16 @@ export const SubscriptionDetails = ({
           <Text size="md" className="font-semibold">
             CC VIP Monthly
           </Text>
-          {isPendingCancelation && (
+          {isPendingCancelation && periodEndDate && (
             <Text size="sm" className="mt-1 text-yellow-700">
               Your subscription is set to cancel on{" "}
-              {periodEndDate?.toLocaleDateString()}.
+              {periodEndDate.toLocaleDateString()}.
+            </Text>
+          )}
+          {isPaused && periodEndDate && (
+            <Text size="sm" className="mt-1 text-yellow-700">
+              Your subscription is paused and will resume on{" "}
+              {periodEndDate.toLocaleDateString()}.
             </Text>
           )}
         </div>
@@ -114,45 +136,33 @@ export const SubscriptionDetails = ({
           <div className="flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-neutral-400" />
             <Text size="md" className="font-medium">
-              25/month
+              $25/month
             </Text>
           </div>
         </div>
 
-        {/* Next Charge */}
-        <div>
-          <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-neutral-500">
-            {subscription?.status === SubscriptionStatus.CANCELED
-              ? "Ends On"
-              : "Next Charge"}
-          </label>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-neutral-400" />
-            <Text size="md" className="font-medium">
-              {periodEndDate?.toLocaleDateString()}
-            </Text>
+        {/* Next Charge / Resume Date */}
+        {periodEndDate && (
+          <div>
+            <label className="mb-1 block text-xs font-medium uppercase tracking-wide text-neutral-500">
+              {isPendingCancelation
+                ? "Ends On"
+                : isPaused
+                  ? "Resumes On"
+                  : "Next Charge"}
+            </label>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-neutral-400" />
+              <Text size="md" className="font-medium">
+                {periodEndDate.toLocaleDateString()}
+              </Text>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Manage Button */}
-      <button
-        onClick={handleManageUserSubscription}
-        disabled={loadingPortal}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-3 text-sm font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        {loadingPortal ? (
-          <>
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-            <span>Loading...</span>
-          </>
-        ) : (
-          <>
-            <span>Manage Subscription</span>
-            <ExternalLink className="h-4 w-4" />
-          </>
-        )}
-      </button>
+      {/* Action Buttons */}
+      <SubscriptionActions subscription={subscription} user={user} />
 
       {/* Info */}
       <div className="mt-4 rounded-xl bg-blue-50 p-3">

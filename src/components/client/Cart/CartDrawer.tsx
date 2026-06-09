@@ -4,27 +4,19 @@ import { useCart } from "./CartContext";
 import CartProduct from "@/components/client/Cart/CartProduct";
 import { CloseIcon } from "@/components/ds/CloseIcon";
 import { AnimatePresence, motion } from "motion/react";
-import useStripe from "@/hooks/useStripe";
-import useHandleCheckout from "@/hooks/useHandleCheckout";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { validateStock } from "@/utils/Product/validateProductStock";
 import React from "react";
 import { StockError } from "@/types/Product";
-import { useUser } from "../Auth/AuthContext";
 
 export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   const { cart, getTotalCartQuantity, getCartSubtotal } = useCart();
   const [errors, setErrors] = React.useState<StockError[]>([]);
   const router = useRouter();
-  const pathname = usePathname();
-  const { user } = useUser();
-  const { formatBody } = useHandleCheckout();
-  const body = formatBody(cart, 900, pathname, user);
-  console.log({ body });
 
-  const { checkout } = useStripe();
   const cartQuanity = getTotalCartQuantity();
   const cartSubtotal = getCartSubtotal();
+
   const handleCheckout = async () => {
     // 👇 check stock first
     const { valid, errors } = await validateStock(cart);
@@ -34,9 +26,8 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
       return { success: false, errors }; // 👈 return errors to client
     }
     if (valid) {
-      console.log("Stock valid, proceeding to checkout...");
-      const session = await checkout(body);
-      if (session.url) router.push(session.url);
+      onClose();
+      router.push("/checkout");
     }
   };
 
@@ -48,16 +39,17 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   return (
     <AnimatePresence>
       <motion.div transition={{ type: "spring", duration: 1 }}>
-        <div className="fixed top-0 right-0 w-full sm:w-lg h-full bg-white shadow-lg z-100 p-4">
-          <div className="flex flex-col">
-            <Text as="h2" size="lg" className="text-2xl font-bold mb-4">
-              Your Cart ({cartQuanity}) - ${cartSubtotal}
+        <div className="fixed top-0 right-0 w-full sm:w-lg h-full bg-white shadow-lg z-100 p-4 flex flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <Text as="h2" size="lg" className="text-2xl font-bold">
+              Your Cart ({cartQuanity})
             </Text>
-            <span className="">
-              <CloseIcon onClose={onClose} />
-            </span>
+            <CloseIcon onClose={onClose} />
           </div>
-          <div className="flex-1 overflow-y-auto h-2/3">
+
+          {/* Cart Items */}
+          <div className="flex-1 overflow-y-auto">
             {cartQuanity === 0 ? (
               <div className="flex flex-col flex-wrap mt-4">
                 <Text size="lg">Your cart is empty</Text>
@@ -73,23 +65,42 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
               ))
             )}
           </div>
-          <Text size="lg" className="text-2xl font-bold mb-2 py-2">
-            Disclaimer
-          </Text>
-          <Text size="sm" className={`text-sm font-bold mb-4`}>
-            Free shipping on orders over $75 • Handmade to order • Ships in 3–5
-            business days
-          </Text>
-          <button
-            onClick={handleCheckout}
-            type="button"
-            disabled={errors.length > 0}
-            className="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800 mt-4 w-full disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-700 disabled:cursor-not-allowed"
-          >
-            <Text as="span" size="sm" className="uppercase text-lg">
-              Checkout
-            </Text>
-          </button>
+
+          {/* Cart Summary */}
+          {cartQuanity > 0 && (
+            <div className="border-t border-neutral-200 pt-4 mt-4 space-y-4">
+              {/* Current Subtotal */}
+              <div className="flex justify-between items-center">
+                <Text size="md" className="font-medium">
+                  Subtotal
+                </Text>
+                <Text size="md" className="font-semibold">
+                  ${cartSubtotal.toFixed(2)}
+                </Text>
+              </div>
+
+              {/* Disclaimer */}
+              <div className="space-y-2">
+                <Text size="lg" className="font-bold">
+                  Disclaimer
+                </Text>
+                <Text size="sm" className="text-neutral-600">
+                  Free shipping on orders over $75 • Handmade to order • Ships
+                  in 3–5 business days
+                </Text>
+              </div>
+
+              {/* Checkout Button */}
+              <button
+                onClick={handleCheckout}
+                type="button"
+                disabled={errors.length > 0}
+                className="w-full rounded-2xl bg-black px-5 py-3 text-lg font-medium uppercase text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-gray-700"
+              >
+                Continue to Checkout
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
     </AnimatePresence>

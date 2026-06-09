@@ -28,10 +28,10 @@ export const SubscriptionSignup = ({ user }: { user: User | null }) => {
   };
 
   return (
-    <div className="rounded-2xl border border-neutral-200 bg-gradient-to-br bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-neutral-200 bg-linear-to-br bg-white p-6 shadow-sm">
       {/* Header */}
       <div className="mb-6 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-blue-500">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-linear-to-br from-purple-500 to-blue-500">
           <Sparkles className="h-5 w-5 text-white" />
         </div>
         <Text size="lg" className="font-semibold">

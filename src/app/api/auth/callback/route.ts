@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
+  const redirectTo =
+    searchParams.get("redirect_to") || "/profile/overview?success=true";
 
   if (code) {
     const supabase = await createClient();
@@ -37,5 +39,5 @@ export async function GET(request: Request) {
 
   console.log("✅ Auth callback successful");
   console.log({ origin });
-  return NextResponse.redirect(`${origin}/profile/overview?success=true`);
+  return NextResponse.redirect(`${origin}${redirectTo}`);
 }

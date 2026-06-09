@@ -9,6 +9,7 @@ import { withRewards } from "@/utils/Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
 import { handleUpdateSubscriptionBySubscriptionId } from "@/utils/Subscriptions/handleUpdateSubscriptionBySubscriptionId";
 import { SubscriptionStatus } from "@/types/Subscriptions";
+import { calculateNextRenewalDate } from "@/utils/Subscriptions/calculateNextRenewalDate";
 
 // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -87,6 +88,8 @@ export async function POST(req: Request) {
         let status: SubscriptionStatus;
         if (fullSubscription.cancel_at) {
           status = SubscriptionStatus.CANCELED;
+        } else if (fullSubscription.pause_collection?.behavior === "void") {
+          status = SubscriptionStatus.PAUSED;
         } else {
           status = fullSubscription.status as SubscriptionStatus;
         }
@@ -102,6 +105,8 @@ export async function POST(req: Request) {
 
         break;
       }
+
+      // ...existing code...
 
       case "invoice.paid":
       case "invoice.payment_succeeded": {
@@ -124,7 +129,7 @@ export async function POST(req: Request) {
           await handleUpdateSubscriptionBySubscriptionId({
             subscriptionId,
             status: SubscriptionStatus.ACTIVE,
-            next_renewal: new Date(invoice.period_end * 1000).toISOString(),
+            next_renewal: calculateNextRenewalDate(),
             cancel_at: null,
           });
         }
@@ -148,15 +153,21 @@ export async function POST(req: Request) {
           const subscriptionId =
             invoice.parent.subscription_details.subscription;
 
+          // Get the subscription to access billing cycle anchor
+          const subscription =
+            await stripe.subscriptions.retrieve(subscriptionId);
+
           await handleUpdateSubscriptionBySubscriptionId({
             subscriptionId,
-            status: invoice.status ?? SubscriptionStatus.PAST_DUE,
-            next_renewal: new Date(invoice.period_end * 1000).toISOString(),
+            status: subscription.status as SubscriptionStatus,
+            next_renewal: calculateNextRenewalDate(),
             cancel_at: null,
           });
         }
         break;
       }
+
+      // ...existing code...
 
       default:
         console.log(`Unhandled event type: ${event.type}`);
