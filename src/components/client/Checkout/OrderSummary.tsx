@@ -64,6 +64,13 @@ export const OrderSummary = ({
   const handlePay = async () => {
     setLoading(true);
 
+    if (isVipSubscriptionFlow && !user?.id) {
+      router.push(
+        "/auth/login?flow=isVipSubscription&redirect_to=/checkout?flow=isVipSubscription",
+      );
+      return;
+    }
+
     try {
       const { valid, errors } = await validateStock(cart);
 
@@ -173,7 +180,9 @@ export const OrderSummary = ({
                       : "text-neutral-600"
                   }
                 >
-                  {cartSubtotal < 75 ? "$9.00" : "Free"}
+                  {cartSubtotal < 75 && !isVipSubscriptionFlow
+                    ? "$9.00"
+                    : "Free"}
                 </Text>
               </div>
             </button>
@@ -255,7 +264,9 @@ export const OrderSummary = ({
               shippingMethod === "pickup" ? "text-green-600 font-medium" : ""
             }
           >
-            {shippingMethod === "delivery" && cartSubtotal < 75
+            {shippingMethod === "delivery" &&
+            cartSubtotal < 75 &&
+            !isVipSubscriptionFlow
               ? "$9.00"
               : "Free"}
           </Text>
@@ -287,7 +298,7 @@ export const OrderSummary = ({
         </div>
 
         <button
-          disabled={loading || cart.length === 0}
+          disabled={loading || (cart.length === 0 && !isVipSubscriptionFlow)}
           onClick={handlePay}
           className="h-14 rounded-2xl bg-black text-white font-medium transition hover:bg-neutral-800 disabled:bg-neutral-400 disabled:cursor-not-allowed"
         >

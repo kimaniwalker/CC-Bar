@@ -2,31 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { Text } from "@/components/ds/Text";
-import { handleSubscriptionSignup } from "@/utils/Subscriptions/handleSubscriptionSignup";
-import { User } from "@supabase/supabase-js";
 import { Sparkles } from "lucide-react";
 
-export const SubscriptionSignup = ({ user }: { user: User | null }) => {
+export const SubscriptionSignup = () => {
   const router = useRouter();
 
   const handleSubscribe = async () => {
-    if (!user) {
-      console.error("User not authenticated");
-      return;
-    }
-    const url = await handleSubscriptionSignup({
-      metadata: {
-        user_id: user.id,
-        ...(user.email && { email: user.email }),
-      },
-      redirect_url: "/profile/overview?section=profile",
-    });
-
-    if (url) {
-      router.push(url);
-    } else {
-      console.error("Failed to create checkout session");
-    }
+    router.push("/checkout?flow=isVipSubscription");
   };
 
   return (

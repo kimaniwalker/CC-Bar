@@ -13,7 +13,7 @@ export const SubscriptionCard = async () => {
 
   // No subscription - Show sign up
   if (!subscription) {
-    return <SubscriptionSignup user={user} />;
+    return <SubscriptionSignup />;
   }
 
   return <SubscriptionDetails subscription={subscription} user={user} />;

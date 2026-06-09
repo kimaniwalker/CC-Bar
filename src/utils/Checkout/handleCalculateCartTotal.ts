@@ -12,9 +12,14 @@ export const handleCalculateCartTotal = (
   const FREE_SHIPPING_THRESHOLD = 75;
   const STANDARD_SHIPPING_COST = 9;
 
-  const SHIPPING_COST =
-    cartSubtotal < FREE_SHIPPING_THRESHOLD ? STANDARD_SHIPPING_COST : 0;
-  const shippingCost = shippingMethod === "delivery" ? SHIPPING_COST : 0;
+  // VIP members always get free shipping
+  // Otherwise, charge shipping if cart < $75 and delivery is selected
+  const shippingCost =
+    isVip ||
+    shippingMethod === "pickup" ||
+    cartSubtotal >= FREE_SHIPPING_THRESHOLD
+      ? 0
+      : STANDARD_SHIPPING_COST;
 
   const vipDiscount = isVip ? cartSubtotal * 0.2 : 0; // 20% discount for VIPs
 
