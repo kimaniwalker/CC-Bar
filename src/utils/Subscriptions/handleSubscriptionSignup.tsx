@@ -4,13 +4,11 @@ import { CheckoutType } from "@/types/Reservations";
 import Stripe from "stripe";
 
 export const handleSubscriptionSignup = async ({
-  user_id,
-  email,
+  metadata,
   redirect_url,
   line_items,
 }: {
-  user_id: string;
-  email: string;
+  metadata?: Record<string, string>;
   redirect_url: string;
   line_items?: Stripe.Checkout.SessionCreateParams.LineItem[];
 }) => {
@@ -18,6 +16,10 @@ export const handleSubscriptionSignup = async ({
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
   const priceId = "price_1TcSveHqeKE5XTo5yFbPSmfa";
+  const vipFlowPriceId = "price_1TgUSjHqeKE5XTo5zw7a290X"; // Same price for VIP flow, but could be different if needed
+
+  const priceIdToUse =
+    metadata?.is_vip_subscription_flow === "true" ? vipFlowPriceId : priceId;
 
   // Calculate billing cycle anchor for the 5th of the month
   const now = new Date();
@@ -41,7 +43,7 @@ export const handleSubscriptionSignup = async ({
 
   // Subscription line item
   const subscriptionLineItem = {
-    price: priceId,
+    price: priceIdToUse,
     quantity: 1,
     metadata: {
       product_id: "0ffe0d01-f0d2-492d-a3b4-2f1dd52fa01c", // 👈 must be string
@@ -58,16 +60,73 @@ export const handleSubscriptionSignup = async ({
 
   const session = await stripe.checkout.sessions.create({
     mode: "subscription",
-    client_reference_id: user_id,
-    customer_email: email,
+    client_reference_id: metadata?.user_id,
+    customer_email: metadata?.email,
     metadata: {
       type: CheckoutType.SHOP,
       will_get_current_box: willGetCurrentBox.toString(),
       has_shop_items: line_items && line_items.length > 0 ? "true" : "false",
+      ...metadata,
     },
     subscription_data: {
       trial_end: billingCycleAnchor, // Free trial until the 5th, then charge
     },
+    discounts: [
+      {
+        coupon:
+          metadata?.is_vip_subscription_flow === "true"
+            ? "CCBARVIP20OFF"
+            : undefined, // Apply VIP discount if user is VIP
+      },
+    ],
+    payment_method_types: [
+      "card",
+      "cashapp",
+      "klarna",
+      "link",
+    ] as Stripe.Checkout.SessionCreateParams.PaymentMethodType[],
+    ...(metadata?.shippingMethod === "delivery" && {
+      shipping_address_collection: {
+        allowed_countries: [
+          "US",
+        ] as Stripe.Checkout.SessionCreateParams.ShippingAddressCollection.AllowedCountry[],
+      },
+    }),
+    phone_number_collection: {
+      enabled: true,
+    },
+    ...(metadata?.shippingMethod === "pickup" && {
+      custom_text: {
+        submit: {
+          message:
+            "We'll begin preparing your order shortly. Once it's ready for pickup, we'll send you a text notification and email with pickup instructions.",
+        },
+      },
+    }),
+    ...(metadata?.includes_shipping === "false" && {
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: {
+              amount: 900, // $9 delivery fee
+              currency: "usd",
+            },
+            display_name: "Delivery",
+            delivery_estimate: {
+              minimum: {
+                unit: "business_day",
+                value: 2,
+              },
+              maximum: {
+                unit: "business_day",
+                value: 5,
+              },
+            },
+          },
+        },
+      ],
+    }),
     line_items: checkoutLineItems,
     success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SUBSCRIPTION}`,
     cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,

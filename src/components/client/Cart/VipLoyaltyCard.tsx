@@ -12,16 +12,18 @@ interface VipLoyaltyCardProps {
   cartSubtotal: number;
   onSubscribe: () => void;
   isVipSubscriptionFlow?: boolean;
+  isPickup?: boolean;
 }
 
 const VIP_DISCOUNT = 0.2; // 20% off
 const FREE_SHIPPING_THRESHOLD = 75;
-const STANDARD_SHIPPING_COST = 10;
+const STANDARD_SHIPPING_COST = 9;
 
 export const VipLoyaltyCard = ({
   cartSubtotal,
   onSubscribe,
   isVipSubscriptionFlow,
+  isPickup = false,
 }: VipLoyaltyCardProps) => {
   const { user } = useUser();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
@@ -50,8 +52,14 @@ export const VipLoyaltyCard = ({
   // VIP pricing calculations
   const vipSubtotal = cartSubtotal * (1 - VIP_DISCOUNT);
   const discountSavings = cartSubtotal - vipSubtotal;
-  const shippingCost =
-    cartSubtotal < FREE_SHIPPING_THRESHOLD ? STANDARD_SHIPPING_COST : 0;
+
+  // Calculate shipping cost (0 for pickup or VIP members, or if over threshold)
+  const shippingCost = isPickup
+    ? 0
+    : cartSubtotal < FREE_SHIPPING_THRESHOLD
+      ? STANDARD_SHIPPING_COST
+      : 0;
+
   const totalSavings = discountSavings + shippingCost;
 
   if (loading) {
@@ -89,7 +97,7 @@ export const VipLoyaltyCard = ({
             </div>
           </div>
 
-          {shippingCost > 0 && (
+          {!isPickup && shippingCost > 0 && (
             <div className="flex items-start gap-2">
               <Check className="h-4 w-4 text-emerald-600 mt-0.5" />
               <div className="flex-1">
@@ -159,7 +167,7 @@ export const VipLoyaltyCard = ({
           </Text>
         </div>
 
-        {shippingCost > 0 && (
+        {!isPickup && shippingCost > 0 && (
           <div className="flex justify-between items-center">
             <Text size="sm" className="text-purple-700">
               With Free Shipping

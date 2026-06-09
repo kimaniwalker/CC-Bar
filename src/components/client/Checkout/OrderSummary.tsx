@@ -78,10 +78,15 @@ export const OrderSummary = ({
       // VIP Subscription Flow (user signing up for VIP + shop items)
       if (isVipSubscriptionFlow && !hasActiveSubscription) {
         const url = await handleSubscriptionSignup({
-          user_id: user?.id ?? "",
-          email: user?.email ?? "",
           redirect_url: "/checkout?flow=isVipSubscription",
           line_items: cart.length > 0 ? formatLineItems(cart) : undefined,
+          metadata: {
+            ...(user?.id && { user_id: user.id }),
+            ...(user?.email && { email: user.email }),
+            shippingMethod,
+            is_vip_subscription_flow: "true",
+            includes_shipping: "true",
+          },
         });
 
         if (url) {
@@ -95,10 +100,16 @@ export const OrderSummary = ({
         line_items: formatLineItems(cart),
         redirect_url: "/checkout",
         metadata: {
-          user_id: user?.id ?? "",
-          email: user?.email ?? "",
+          ...(user?.id && { user_id: user.id }),
+          ...(user?.email && { email: user.email }),
           is_vip: hasActiveSubscription ? "true" : "false",
           shippingMethod,
+          includes_shipping:
+            hasActiveSubscription ||
+            shippingMethod === "pickup" ||
+            (shippingMethod === "delivery" && cartSubtotal >= 75)
+              ? "true"
+              : "false", // Free shipping for VIPs and orders over $75 & pickup orders
         },
       });
 
@@ -162,7 +173,7 @@ export const OrderSummary = ({
                       : "text-neutral-600"
                   }
                 >
-                  $9.00
+                  {cartSubtotal < 75 ? "$9.00" : "Free"}
                 </Text>
               </div>
             </button>
@@ -244,7 +255,9 @@ export const OrderSummary = ({
               shippingMethod === "pickup" ? "text-green-600 font-medium" : ""
             }
           >
-            {shippingMethod === "delivery" ? "$9.00" : "Free"}
+            {shippingMethod === "delivery" && cartSubtotal < 75
+              ? "$9.00"
+              : "Free"}
           </Text>
         </div>
 
@@ -254,6 +267,7 @@ export const OrderSummary = ({
           isVipSubscriptionFlow={isVipSubscriptionFlow}
           cartSubtotal={cartSubtotal}
           onSubscribe={onSubscribeToVip}
+          isPickup={shippingMethod === "pickup"}
         />
 
         <hr />

@@ -15,8 +15,10 @@ export const SubscriptionSignup = ({ user }: { user: User | null }) => {
       return;
     }
     const url = await handleSubscriptionSignup({
-      user_id: user.id,
-      email: user?.email ?? "",
+      metadata: {
+        user_id: user.id,
+        ...(user.email && { email: user.email }),
+      },
       redirect_url: "/profile/overview?section=profile",
     });
 
