@@ -45,7 +45,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   // Save to localStorage when cart changes
   useEffect(() => {
     if (isHydrated) {
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
     }
   }, [cart, isHydrated]);
 
