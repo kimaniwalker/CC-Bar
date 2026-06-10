@@ -6,20 +6,10 @@ import { withRewards } from "@/utils/Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
 import type Stripe from "stripe";
 import { handleOrderCheckout } from "./handleOrderCheckout";
-import { handleShopSubscription } from "../Subscriptions/handleShopSubscription";
 
 export async function handleShopCheckout(session: Stripe.Checkout.Session) {
   const supabase = await createClient();
   const { lineItems } = await retreiveCheckoutSession(session.id);
-
-  if (session.mode === "subscription") {
-    console.warn(
-      "⚠️ Received subscription checkout session in shop webhook handler. Session ID:",
-      session.id,
-    );
-    await handleShopSubscription(session); // Process the subscription (creates/updates subscription record)
-    return; // Exit gracefully
-  }
 
   // Check if this order has already been processed
   const { data: existingOrder } = await supabase

@@ -3,13 +3,14 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { handleReservationCheckout } from "@/utils/Cart/handleReservationCheckout";
 import { handleShopCheckout } from "@/utils/Cart/handleShopCheckout";
+import { handleShopSubscription } from "@/utils/Subscriptions/handleShopSubscription";
 import { CheckoutType } from "@/types/Reservations";
 import { handleInStoreCheckout } from "@/utils/Pos/handleInStoreCheckout";
 import { withRewards } from "@/utils/Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
-import { handleUpdateSubscriptionBySubscriptionId } from "@/utils/Subscriptions/handleUpdateSubscriptionBySubscriptionId";
 import { SubscriptionStatus } from "@/types/Subscriptions";
 import { calculateNextRenewalDate } from "@/utils/Subscriptions/calculateNextRenewalDate";
+import { handleUpdateSubscription } from "@/utils/Subscriptions/handleUpdateSubscription";
 
 // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -47,7 +48,13 @@ export async function POST(req: Request) {
         }
 
         if (type === CheckoutType.SHOP) {
-          await handleShopCheckout(session);
+          // Handle subscription checkouts
+          if (session.mode === "subscription") {
+            await handleShopSubscription(session.id);
+          } else {
+            // Handle regular shop checkouts
+            await handleShopCheckout(session);
+          }
           break;
         }
 
@@ -74,13 +81,13 @@ export async function POST(req: Request) {
         break;
       }
 
-      case "customer.subscription.created":
+      // Only handle subscription status changes (not creation)
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
         console.log(`Subscription event (${event.type}):`, subscription.id);
 
-        // Fetch the full subscription data to ensure we have current_period_end
+        // Fetch the full subscription data
         const fullSubscription = await stripe.subscriptions.retrieve(
           subscription.id,
         );
@@ -94,21 +101,19 @@ export async function POST(req: Request) {
           status = fullSubscription.status as SubscriptionStatus;
         }
 
-        await handleUpdateSubscriptionBySubscriptionId({
-          subscriptionId: subscription.id as string,
+        await handleUpdateSubscription({
+          subscription_id: subscription.id,
           status,
-          next_renewal: null,
+          next_renewal: calculateNextRenewalDate(),
           cancel_at: fullSubscription.cancel_at
             ? new Date(fullSubscription.cancel_at * 1000).toISOString()
             : null,
+          updated_at: new Date().toISOString(),
         });
 
         break;
       }
 
-      // ...existing code...
-
-      case "invoice.paid":
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice & {
           parent?: {
@@ -123,14 +128,14 @@ export async function POST(req: Request) {
           invoice.parent?.type === "subscription_details" &&
           invoice.parent.subscription_details
         ) {
-          const subscriptionId =
+          const subscription_id =
             invoice.parent.subscription_details.subscription;
-
-          await handleUpdateSubscriptionBySubscriptionId({
-            subscriptionId,
+          await handleUpdateSubscription({
+            subscription_id,
             status: SubscriptionStatus.ACTIVE,
             next_renewal: calculateNextRenewalDate(),
             cancel_at: null,
+            updated_at: new Date().toISOString(),
           });
         }
         break;
@@ -150,24 +155,18 @@ export async function POST(req: Request) {
           invoice.parent?.type === "subscription_details" &&
           invoice.parent.subscription_details
         ) {
-          const subscriptionId =
+          const subscription_id =
             invoice.parent.subscription_details.subscription;
 
-          // Get the subscription to access billing cycle anchor
-          const subscription =
-            await stripe.subscriptions.retrieve(subscriptionId);
-
-          await handleUpdateSubscriptionBySubscriptionId({
-            subscriptionId,
-            status: subscription.status as SubscriptionStatus,
+          await handleUpdateSubscription({
+            subscription_id,
+            status: SubscriptionStatus.PAST_DUE,
             next_renewal: calculateNextRenewalDate(),
-            cancel_at: null,
+            updated_at: new Date().toISOString(),
           });
         }
         break;
       }
-
-      // ...existing code...
 
       default:
         console.log(`Unhandled event type: ${event.type}`);

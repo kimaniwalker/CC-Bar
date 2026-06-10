@@ -50,6 +50,7 @@ export const SubscriptionActions = ({
     try {
       await handlePauseSubscription({
         subscriptionId: subscription.subscription_id,
+        user_id: user?.id,
       });
       router.refresh();
     } catch (error) {

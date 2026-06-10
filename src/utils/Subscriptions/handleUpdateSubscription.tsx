@@ -1,25 +1,27 @@
 "use server";
 
-import { Subscription } from "@/types/User";
+import { SubscriptionInsert } from "@/types/User";
 import { createClient } from "../supabase/server";
 
 export const handleUpdateSubscription = async (
-  subscription: Omit<Subscription, "id" | "created_at" | "updated_at">,
+  subscription: SubscriptionInsert,
 ) => {
   const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("subscriptions")
-    .upsert(subscription)
-    .eq("user_id", subscription.user_id)
+    .upsert(subscription, {
+      onConflict: "subscription_id",
+      ignoreDuplicates: false,
+    })
     .select("*")
-    .single()
-    .overrideTypes<Subscription>();
+    .single();
 
   if (error) {
     console.error("Error updating subscription:", error);
     return null;
   }
 
+  console.log("✅ Subscription upserted successfully:", data.id);
   return data;
 };

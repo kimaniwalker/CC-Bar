@@ -1,13 +1,15 @@
 "use server";
 import Stripe from "stripe";
-import { handleUpdateSubscriptionBySubscriptionId } from "./handleUpdateSubscriptionBySubscriptionId";
 import { SubscriptionStatus } from "@/types/Subscriptions";
 import { revalidatePath } from "next/cache";
+import { handleUpdateSubscription } from "./handleUpdateSubscription";
 
 export const handlePauseSubscription = async ({
   subscriptionId,
+  user_id,
 }: {
   subscriptionId: string;
+  user_id?: string;
 }) => {
   // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -46,12 +48,16 @@ export const handlePauseSubscription = async ({
   });
 
   // Update your database with pause status
-  await handleUpdateSubscriptionBySubscriptionId({
-    subscriptionId,
+  const response = await handleUpdateSubscription({
+    subscription_id: subscriptionId,
     status: SubscriptionStatus.PAUSED,
     next_renewal: new Date(resumesAt * 1000).toISOString(),
     cancel_at: null,
+    updated_at: new Date().toISOString(),
+    user_id,
   });
+
+  console.log("✅ Subscription paused successfully:", response);
 
   // Revalidate the profile page to refresh server components
   revalidatePath("/profile/overview", "page");

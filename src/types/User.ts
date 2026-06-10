@@ -35,3 +35,13 @@ export type Subscription = {
   updated_at: string;
   cancel_at: string | null;
 };
+
+export type SubscriptionInsert = {
+  user_id?: string;
+  status: string;
+  subscription_id: string;
+  next_renewal?: string;
+  created_at?: string;
+  updated_at: string;
+  cancel_at?: string | null;
+};
