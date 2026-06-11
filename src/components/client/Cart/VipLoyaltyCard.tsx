@@ -2,14 +2,12 @@
 
 import { Text } from "@/components/ds/Text";
 import { Crown, Sparkles, Check, AlertCircle, Pause } from "lucide-react";
-import { useUser } from "../Auth/AuthContext";
-import { useEffect, useState } from "react";
-import { getUserSubscription } from "@/utils/Subscriptions/getUserSubscription";
 import { SubscriptionStatus } from "@/types/Subscriptions";
 import { Subscription } from "@/types/User";
 import { hasActiveBenefits } from "@/utils/Subscriptions/hasActiveBenefits";
 
 interface VipLoyaltyCardProps {
+  subscription: Subscription | null;
   cartSubtotal: number;
   onSubscribe: () => void;
   isVipSubscriptionFlow?: boolean;
@@ -25,31 +23,8 @@ export const VipLoyaltyCard = ({
   onSubscribe,
   isVipSubscriptionFlow,
   isPickup = false,
+  subscription,
 }: VipLoyaltyCardProps) => {
-  const { user } = useUser();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSubscription = async () => {
-      if (!user?.id) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const subscriptions = await getUserSubscription(user.id);
-        setSubscription(subscriptions?.[0] || null);
-      } catch (error) {
-        console.error("Error fetching subscription:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubscription();
-  }, [user?.id]);
-
   // VIP pricing calculations
   const vipSubtotal = cartSubtotal * (1 - VIP_DISCOUNT);
   const discountSavings = cartSubtotal - vipSubtotal;
@@ -62,10 +37,6 @@ export const VipLoyaltyCard = ({
       : 0;
 
   const totalSavings = discountSavings + shippingCost;
-
-  if (loading) {
-    return null;
-  }
 
   const subscriptionStatus = subscription?.status;
   const isPausedVip = subscriptionStatus === SubscriptionStatus.PAUSED;
