@@ -76,7 +76,6 @@ export const AddressCollectorModal = ({
   }, [user_id, reset]);
 
   const onSubmit = async (data: AddressFormData) => {
-    console.log("Form submitted:", data);
     // Add your update logic here
     const formattedUserData = {
       id: user_id ?? "guest",

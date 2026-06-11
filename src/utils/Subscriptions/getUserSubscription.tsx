@@ -17,7 +17,5 @@ export const getUserSubscription = async (userId: string) => {
     return null;
   }
 
-  console.log("Fetched subscription from database:", subscription);
-
   return subscription;
 };

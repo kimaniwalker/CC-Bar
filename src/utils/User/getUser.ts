@@ -7,7 +7,6 @@ export async function getUser() {
     data: { user },
     error,
   } = await supabase.auth.getUser();
-  console.log({ user });
 
   if (error) {
     console.error("Error fetching user:", error);

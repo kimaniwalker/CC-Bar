@@ -88,13 +88,11 @@ export const ReservationsForm = () => {
       ReservationsFormData: reservation,
       user_id: user?.id,
     });
-    console.log({ reservationsData });
     handleCheckout(reservationsData);
   };
 
   const handleSelectDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDate = e.target.value;
-    console.log("Selected date:", selectedDate);
     router.push(`?date=${selectedDate}`);
   };
   const today = new Intl.DateTimeFormat("en-CA", {

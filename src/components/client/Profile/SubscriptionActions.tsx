@@ -3,10 +3,12 @@
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { SubscriptionStatus } from "@/types/Subscriptions";
 import { Subscription } from "@/types/User";
+import { handleCancelPauseSchedule } from "@/utils/Subscriptions/handleCancelPauseSchedule";
 import { handleManageSubscription } from "@/utils/Subscriptions/handleManageSubscription";
 import { handlePauseSubscription } from "@/utils/Subscriptions/handlePauseSubscription";
+import { handleReactivateSubscription } from "@/utils/Subscriptions/handleReactivateSubscription";
 import { User } from "@supabase/supabase-js";
-import { ExternalLink, Pause } from "lucide-react";
+import { ExternalLink, Pause, RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,11 +23,29 @@ export const SubscriptionActions = ({
   const { userProfile } = useUserProfile(user?.id ?? null);
   const [loadingPortal, setLoadingPortal] = useState(false);
   const [loadingPause, setLoadingPause] = useState(false);
+  const [loadingReactivate, setLoadingReactivate] = useState(false);
+  const [loadingCancelPause, setLoadingCancelPause] = useState(false);
 
-  const isPendingCancelation =
-    subscription.status === SubscriptionStatus.CANCELED;
+  const cancelAtDate = subscription.cancel_at
+    ? new Date(subscription.cancel_at)
+    : null;
+  const pauseScheduledDate = subscription.pause_scheduled_at
+    ? new Date(subscription.pause_scheduled_at)
+    : null;
+
+  const isScheduledToCancel = cancelAtDate && cancelAtDate > new Date();
+  const isScheduledToPause =
+    pauseScheduledDate && pauseScheduledDate > new Date();
+
+  // Button visibility logic
   const canPause =
-    subscription.status === SubscriptionStatus.ACTIVE && !isPendingCancelation;
+    subscription.status === SubscriptionStatus.ACTIVE &&
+    !isScheduledToCancel &&
+    !isScheduledToPause;
+  const canReactivate =
+    isScheduledToCancel && subscription.status === SubscriptionStatus.ACTIVE;
+  const canCancelPause =
+    isScheduledToPause && subscription.status === SubscriptionStatus.ACTIVE;
 
   const handleManageUserSubscription = async () => {
     if (!userProfile?.customer_id) return;
@@ -60,8 +80,85 @@ export const SubscriptionActions = ({
     }
   };
 
+  const handleReactivate = async () => {
+    if (!subscription.subscription_id) return;
+
+    setLoadingReactivate(true);
+    try {
+      await handleReactivateSubscription({
+        subscriptionId: subscription.subscription_id,
+        user_id: user?.id,
+      });
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to reactivate subscription:", error);
+    } finally {
+      setLoadingReactivate(false);
+    }
+  };
+
+  const handleCancelPause = async () => {
+    if (!subscription.subscription_id) return;
+
+    setLoadingCancelPause(true);
+    try {
+      // Reactivate removes the pause schedule
+      await handleCancelPauseSchedule({
+        subscriptionId: subscription.subscription_id,
+        user_id: user?.id,
+      });
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to cancel pause:", error);
+    } finally {
+      setLoadingCancelPause(false);
+    }
+  };
+
   return (
     <div className="mt-6 space-y-3">
+      {/* Cancel Scheduled Pause Button */}
+      {canCancelPause && (
+        <button
+          onClick={handleCancelPause}
+          disabled={loadingCancelPause}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-blue-500 bg-blue-50 py-3 text-sm font-medium text-blue-700 transition hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loadingCancelPause ? (
+            <>
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-blue-700 border-t-transparent" />
+              <span>Canceling...</span>
+            </>
+          ) : (
+            <>
+              <RotateCcw className="h-4 w-4" />
+              <span>Cancel Scheduled Pause</span>
+            </>
+          )}
+        </button>
+      )}
+
+      {/* Reactivate Button - Shows when scheduled to cancel */}
+      {canReactivate && (
+        <button
+          onClick={handleReactivate}
+          disabled={loadingReactivate}
+          className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-green-500 bg-green-50 py-3 text-sm font-medium text-green-700 transition hover:bg-green-100 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {loadingReactivate ? (
+            <>
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-green-700 border-t-transparent" />
+              <span>Reactivating...</span>
+            </>
+          ) : (
+            <>
+              <RotateCcw className="h-4 w-4" />
+              <span>Cancel Pending Cancellation</span>
+            </>
+          )}
+        </button>
+      )}
+
       {/* Pause Button */}
       {canPause && (
         <button
@@ -77,7 +174,7 @@ export const SubscriptionActions = ({
           ) : (
             <>
               <Pause className="h-4 w-4" />
-              <span>Pause Next Month</span>
+              <span>Pause Next Cycle</span>
             </>
           )}
         </button>

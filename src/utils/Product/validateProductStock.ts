@@ -43,8 +43,6 @@ export async function validateStock(cart: Cart) {
         .eq("id", item.id)
         .single();
 
-      console.log("VariationsProduct", { product });
-
       if (error) {
         console.error(
           `Failed to fetch variation product ${item.id}:`,
@@ -62,8 +60,6 @@ export async function validateStock(cart: Cart) {
       const variation = product?.variations?.find(
         (v: ProductVariation) => v.sku === item.sku,
       );
-
-      console.log({ variation, item });
 
       if (!variation || variation.stock < item.quantity) {
         errors.push(formatStockError(item, variation?.stock ?? 0));

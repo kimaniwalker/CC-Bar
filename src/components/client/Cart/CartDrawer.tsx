@@ -10,8 +10,8 @@ import React from "react";
 import { StockError } from "@/types/Product";
 import { useUser } from "../Auth/AuthContext";
 import { getUserSubscription } from "@/utils/Subscriptions/getUserSubscription";
-import { SubscriptionStatus } from "@/types/Subscriptions";
 import { CartBanner } from "./CartBanner";
+import { Subscription } from "@/types/User";
 
 const VIP_DISCOUNT = 0.2; // 20% off
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -21,8 +21,9 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   const { cart, getTotalCartQuantity, getCartSubtotal } = useCart();
   const { user } = useUser();
   const [errors, setErrors] = React.useState<StockError[]>([]);
-  const [subscriptionStatus, setSubscriptionStatus] =
-    React.useState<SubscriptionStatus | null>(null);
+  const [subscription, setSubscription] = React.useState<Subscription | null>(
+    null,
+  );
   const [loading, setLoading] = React.useState(true);
   const router = useRouter();
 
@@ -38,9 +39,8 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
 
       try {
         const subscriptions = await getUserSubscription(user.id);
-        const status =
-          (subscriptions?.[0]?.status as SubscriptionStatus) || null;
-        setSubscriptionStatus(status);
+        const subscription = subscriptions?.[0];
+        setSubscription(subscription ?? null);
       } catch (error) {
         console.error("Error fetching subscription:", error);
       } finally {
@@ -117,7 +117,7 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
               {/* VIP Banner */}
               {!loading && (
                 <CartBanner
-                  subscriptionStatus={subscriptionStatus}
+                  subscription={subscription}
                   totalVipSavings={totalVipSavings}
                   onClickJoinVip={handleJoinVip}
                 />

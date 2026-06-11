@@ -22,7 +22,6 @@ export const PosAddToCartButton = ({
     selectedSize,
     selectedColor,
   });
-  console.log({ selectedVariation });
 
   return (
     <>

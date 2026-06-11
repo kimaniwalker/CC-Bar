@@ -11,8 +11,6 @@ import { MemberQRCode } from "./MemberQrCode";
 import { SubscriptionCard } from "./SubscriptionsCard";
 
 export default function ProfileOverviewPage({ section }: { section?: string }) {
-  console.log({ section });
-
   return (
     <Suspense fallback={<ProfileOverviewSkeleton />}>
       <div className="min-h-screen bg-gray-100 text-neutral-900">

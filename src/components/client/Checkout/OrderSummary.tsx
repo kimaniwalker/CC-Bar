@@ -10,9 +10,9 @@ import { Store, Truck } from "lucide-react";
 import useHandlePayment from "@/hooks/useHandleCheckout";
 import { handleSubscriptionSignup } from "@/utils/Subscriptions/handleSubscriptionSignup";
 import { getUserSubscription } from "@/utils/Subscriptions/getUserSubscription";
-import { SubscriptionStatus } from "@/types/Subscriptions";
 import { handleCheckout } from "@/utils/Checkout/handleCheckout";
 import { handleCalculateCartTotal } from "@/utils/Checkout/handleCalculateCartTotal";
+import { hasActiveBenefits } from "@/utils/Subscriptions/hasActiveBenefits";
 
 type ShippingMethod = "delivery" | "pickup";
 
@@ -42,9 +42,8 @@ export const OrderSummary = ({
     const fetchSubscriptionStatus = async () => {
       if (user?.id) {
         const subscriptions = await getUserSubscription(user.id);
-        const hasActiveSubscription =
-          subscriptions?.[0]?.status === SubscriptionStatus.ACTIVE;
-        setHasActiveSubscription(hasActiveSubscription);
+        const subscription = subscriptions?.[0];
+        setHasActiveSubscription(hasActiveBenefits(subscription ?? null));
       }
     };
 

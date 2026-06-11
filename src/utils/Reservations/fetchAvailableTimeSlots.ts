@@ -18,7 +18,5 @@ export default async function fetchAvailableTimeSlots({
     return null;
   }
 
-  console.log(data);
-
   return (data ?? []) as Timeslot[];
 }

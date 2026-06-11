@@ -150,8 +150,6 @@ function formatReservationsLineItems(data: ReservationsFormInputs) {
   };
 
   lineItems.push(body);
-
-  console.log(lineItems);
   return lineItems;
 }
 
