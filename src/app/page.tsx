@@ -12,7 +12,9 @@ export default function Home() {
       <HomePageBanner />
       <TrustBanner />
       <Suspense fallback={<ProductGridSkeleton />}>
-        <FeaturedProducts />
+        <div className="my-12">
+          <FeaturedProducts />
+        </div>
       </Suspense>
       <HowItWorks />
       <SignUpBanner />

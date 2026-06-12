@@ -55,6 +55,7 @@ export default function CheckoutContent({
           <CheckoutCartItems
             onHandleClearError={handleClearError}
             errors={errors}
+            hasVipSubscriptionInCart={isVipSubscriptionFlow}
           />
 
           {/* Empty Cart State */}

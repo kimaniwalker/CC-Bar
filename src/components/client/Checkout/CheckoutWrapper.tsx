@@ -9,7 +9,7 @@ export default async function CheckoutWrapper({ flow }: { flow?: string }) {
   const subscriptions = user ? await getUserSubscription(user.id) : null;
   const subscription = subscriptions ? subscriptions[0] : null;
 
-  if (flow === "isVipSubscriptionFlow" && subscription) {
+  if (flow === "isVipSubscription" && subscription) {
     redirect("/profile/overview?error=already-subscribed");
   }
 

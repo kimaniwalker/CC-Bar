@@ -9,7 +9,7 @@ export const CheckoutHeader = () => {
           <ShoppingBag className="h-6 w-6 text-white" />
         </div>
         <div>
-          <Text size="xl" className="font-bold text-neutral-900">
+          <Text size="xl" className="font-bold text-neutral-900 text-2xl">
             Checkout
           </Text>
           <Text size="sm" className="text-neutral-600">

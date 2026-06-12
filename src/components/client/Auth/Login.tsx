@@ -5,7 +5,15 @@ import { Text } from "@/components/ds/Text";
 import { createClient } from "@/utils/supabase/client";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { Mail, Sparkles, Check, AlertCircle, Crown } from "lucide-react";
+import {
+  Mail,
+  Sparkles,
+  Check,
+  AlertCircle,
+  Crown,
+  MailIcon,
+  MailOpen,
+} from "lucide-react";
 
 export const Login = () => {
   const supabase = createClient();
@@ -81,7 +89,7 @@ export const Login = () => {
           <Text size="xxl" className="text-3xl font-bold text-neutral-900 mb-2">
             {isVipSubscriptionFlow ? "Become a VIP Member" : "Welcome Back"}
           </Text>
-          <Text size="sm" className="text-neutral-600 text-sm">
+          <Text size="sm" className="text-neutral-600 text-md">
             {isVipSubscriptionFlow
               ? "Create your account to unlock exclusive VIP benefits"
               : "Rewards await! Sign in to your Candle Cow Bar account"}
@@ -117,6 +125,7 @@ export const Login = () => {
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
                 <Input
+                  leadingIcon={MailIcon}
                   hideLabel
                   type="email"
                   name="email"
@@ -163,7 +172,7 @@ export const Login = () => {
                   {isVipSubscriptionFlow ? (
                     <Crown className="h-5 w-5" />
                   ) : (
-                    <Mail className="h-5 w-5" />
+                    <MailOpen className="h-5 w-5" />
                   )}
                   <Text size="sm">
                     {isVipSubscriptionFlow
@@ -228,11 +237,11 @@ export const Login = () => {
                   <div className="text-xs text-neutral-600 leading-relaxed">
                     <Text
                       size="md"
-                      className="font-medium text-neutral-900 mb-1"
+                      className="font-medium text-neutral-900 mb-1 text-lg"
                     >
                       No password needed
                     </Text>
-                    <Text>
+                    <Text size="sm" className="text-neutral-700 text-sm">
                       {isVipSubscriptionFlow
                         ? "We'll send you a magic link to create your account instantly. After signing in, you'll proceed to VIP membership checkout."
                         : "We'll send you a magic link to sign in instantly. New here? An account will be created for you automatically."}

@@ -12,6 +12,7 @@ import { useUser } from "../Auth/AuthContext";
 import { getUserSubscription } from "@/utils/Subscriptions/getUserSubscription";
 import { CartBanner } from "./CartBanner";
 import { Subscription } from "@/types/User";
+import { CartBannerSkeleton } from "./CartBannerSkeleton";
 
 const VIP_DISCOUNT = 0.2; // 20% off
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -115,7 +116,9 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
           {cartQuanity > 0 && (
             <div className="border-t border-neutral-200 pt-4 mt-4 space-y-4">
               {/* VIP Banner */}
-              {!loading && (
+              {loading ? (
+                <CartBannerSkeleton />
+              ) : (
                 <CartBanner
                   subscription={subscription}
                   totalVipSavings={totalVipSavings}
