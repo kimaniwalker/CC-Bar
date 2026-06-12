@@ -1,4 +1,4 @@
-import HomeBanner from "@/components/client/Home/HomeBanner";
+import HomePageBanner from "@/components/client/Home/HomePageBanner";
 import HowItWorks from "@/components/client/Home/HowItWorks";
 import SignUpBanner from "@/components/client/Home/SignUpBanner";
 import { TrustBanner } from "@/components/client/Home/TrustBanner";
@@ -9,7 +9,7 @@ import { Suspense } from "react";
 export default function Home() {
   return (
     <>
-      <HomeBanner />
+      <HomePageBanner />
       <TrustBanner />
       <Suspense fallback={<ProductGridSkeleton />}>
         <FeaturedProducts />

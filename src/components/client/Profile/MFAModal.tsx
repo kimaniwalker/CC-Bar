@@ -9,6 +9,7 @@ import { toast } from "sonner";
 export const MFAModal = () => {
   const [phone, setPhone] = React.useState<string>("");
   const [error, setError] = React.useState<string | null>(null);
+  const [smsConsent, setSmsConsent] = React.useState<boolean>(false);
   const [step, setStep] = React.useState<"add_phone" | "verify_otp">(
     "add_phone",
   );
@@ -16,6 +17,10 @@ export const MFAModal = () => {
   const supabase = createClient();
 
   const handleAddPhone = async () => {
+    if (!smsConsent) {
+      throw new Error("Please agree to receive SMS messages");
+    }
+
     const { data, error } = await supabase.auth.updateUser({ phone });
 
     if (error) {
@@ -37,7 +42,7 @@ export const MFAModal = () => {
 
   return (
     <div className="rounded-3xl border border-neutral-200 bg-[#F8F5F1] p-5 relative flex flex-col items-start">
-      <Text className="text-sm font-medium text-neutral-900">
+      <Text size="md" className="font-semibold text-neutral-900">
         Enable phone sign in
       </Text>
 
@@ -64,9 +69,35 @@ export const MFAModal = () => {
             placeholder="Enter your phone number"
             className="my-4 w-full py-2 border-2 border-black rounded-full px-2 text-black font-semibold shadow-2xl"
           />
+
+          {/* SMS Consent Checkbox */}
+          <label className="flex items-start gap-3 mb-4 cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={smsConsent}
+              onChange={(e) => setSmsConsent(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900 focus:ring-offset-0 cursor-pointer"
+            />
+            <Text size="xs" className="text-sm text-neutral-500">
+              By continuing, you agree to receive SMS messages for account
+              access and notifications. You may receive up to 5 messages per
+              month. Reply STOP to unsubscribe, HELP for assistance. Message and
+              data rates may apply. See our{" "}
+              <a href="/terms" className="underline hover:text-neutral-900">
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a href="/privacy" className="underline hover:text-neutral-900">
+                Privacy Policy
+              </a>
+              .
+            </Text>
+          </label>
+
           <button
             onClick={onAddPhone}
-            className="mt-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            disabled={!phone}
+            className="mt-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="text-sm">Continue</span>
           </button>

@@ -1,9 +1,9 @@
 "use client";
 
-import animationData from "../../../../public/cow.json";
+import animationData from "../../../../public/bg2.json";
 import { useLottie } from "lottie-react";
 
-const CowLottie = () => {
+const BgLottie = () => {
   const defaultOptions = {
     animationData: animationData,
     loop: true,
@@ -25,4 +25,4 @@ const CowLottie = () => {
   );
 };
 
-export default CowLottie;
+export default BgLottie;

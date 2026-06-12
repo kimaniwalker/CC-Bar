@@ -2,13 +2,21 @@
 
 import React, { JSX } from "react";
 import clsx from "clsx";
-import { averia_libre, fraunces, inter, josefin, montserrat, outfit } from "./Fonts";
+import {
+  averia_libre,
+  fraunces,
+  inter,
+  josefin,
+  montserrat,
+  outfit,
+} from "./Fonts";
 
-type HeadingSize = "sm" | "md" | "lg" | "xl" | "xxl" | "xs";
+type HeadingSize = "sm" | "md" | "lg" | "xl" | "xxl" | "xs" | "base";
 
 const sizeToTagMap: Record<HeadingSize, keyof JSX.IntrinsicElements> = {
   xs: "h6",
   sm: "h5",
+  base: "p",
   md: "h4",
   lg: "h3",
   xl: "h2",
@@ -18,6 +26,7 @@ const sizeToTagMap: Record<HeadingSize, keyof JSX.IntrinsicElements> = {
 const sizeStyles: Record<HeadingSize, string> = {
   xs: "text-xs",
   sm: "text-sm",
+  base: "text-base", // No size applied, allows full className control
   md: "text-lg",
   lg: "text-xl",
   xl: "text-3xl",
@@ -30,6 +39,7 @@ const fontStyles: Record<
 > = {
   xs: montserrat,
   sm: montserrat,
+  base: outfit,
   md: inter,
   lg: outfit,
   xl: josefin,
@@ -60,10 +70,13 @@ export const Text = ({
       : {};
 
   const font = fontStyles[size];
+  // Don't apply default size if className contains custom text-* sizing
+  const hasCustomSize = className?.includes("text-");
+  const appliedSize = hasCustomSize ? "" : sizeStyles[size];
 
   return (
     <Tag
-      className={clsx(font.className, sizeStyles[size], className)}
+      className={clsx(font.className, appliedSize, className)}
       {...accessibleProps}
     >
       {children}
