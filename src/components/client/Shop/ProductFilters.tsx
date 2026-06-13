@@ -215,7 +215,7 @@ function FilterContent({
       {activeFilters.length > 0 && (
         <div className="pb-6 border-b border-neutral-200">
           <div className="flex items-center justify-between mb-3">
-            <Text size="sm" className="font-semibold text-neutral-900">
+            <Text size="lg" className="font-semibold text-neutral-900 text-lg">
               Active Filters
             </Text>
             <button
@@ -251,7 +251,10 @@ function FilterContent({
               onClick={() => toggleCategory(category.key)}
               className="w-full flex items-center justify-between mb-3 group"
             >
-              <Text size="sm" className="font-semibold text-neutral-900">
+              <Text
+                size="lg"
+                className="font-semibold text-neutral-900 text-lg"
+              >
                 {category.name}
               </Text>
               <ChevronDown

@@ -1,6 +1,7 @@
 "use cache";
 import { createClient } from "@/utils/supabase/client";
 import { cacheTag } from "next/cache";
+import { Product } from "@/types/Product";
 
 type SortOption =
   | "price_asc"
@@ -10,7 +11,17 @@ type SortOption =
   | "name_asc"
   | "name_desc";
 
-export async function getProducts(query?: string, sort?: string) {
+type FilterParams = {
+  price?: string;
+  scent?: string;
+  size?: string;
+};
+
+export async function getProducts(
+  query?: string,
+  sort?: string,
+  filters?: FilterParams,
+) {
   cacheTag("products");
   const supabase = createClient();
 
@@ -21,7 +32,7 @@ export async function getProducts(query?: string, sort?: string) {
     queryBuilder = queryBuilder.ilike("name", `%${query}%`);
   }
 
-  // Apply sorting
+  // Apply sorting (before filtering, for better performance)
   if (sort) {
     switch (sort as SortOption) {
       case "price_asc":
@@ -34,7 +45,6 @@ export async function getProducts(query?: string, sort?: string) {
         queryBuilder = queryBuilder.order("created_at", { ascending: false });
         break;
       case "bestselling":
-        // Assuming you have a sales_count or similar column
         queryBuilder = queryBuilder.order("sales_count", { ascending: false });
         break;
       case "name_asc":
@@ -44,11 +54,9 @@ export async function getProducts(query?: string, sort?: string) {
         queryBuilder = queryBuilder.order("name", { ascending: false });
         break;
       default:
-        // Default sort by created_at descending
         queryBuilder = queryBuilder.order("created_at", { ascending: false });
     }
   } else {
-    // Default sort when no sort param
     queryBuilder = queryBuilder.order("created_at", { ascending: false });
   }
 
@@ -59,5 +67,62 @@ export async function getProducts(query?: string, sort?: string) {
     throw new Error("Failed to fetch products");
   }
 
-  return data;
+  if (!data) return [];
+
+  // Client-side filtering for variations
+  let filteredProducts = data as Product[];
+
+  // Filter by price (considering variations)
+  if (filters?.price) {
+    const [min, max] = filters.price.split("-").map(Number);
+    filteredProducts = filteredProducts.filter((product) => {
+      // Check base price
+      const basePrice =
+        product.on_sale && product.sale_price
+          ? product.sale_price
+          : product.price;
+
+      if (basePrice >= min && basePrice <= max) return true;
+
+      // Check variation prices
+      if (product.variations && product.variations.length > 0) {
+        return product.variations.some((variation) => {
+          const variationPrice = variation.sale_price ?? variation.price;
+          return variationPrice >= min && variationPrice <= max;
+        });
+      }
+
+      return false;
+    });
+  }
+
+  // Filter by size (considering variations)
+  if (filters?.size) {
+    const sizeFilter = filters.size;
+    filteredProducts = filteredProducts.filter((product) => {
+      // Check available_sizes array
+      if (product.available_sizes?.includes(sizeFilter)) return true;
+
+      // Check variations
+      if (product.variations && product.variations.length > 0) {
+        return product.variations.some(
+          (variation) => variation.size === sizeFilter,
+        );
+      }
+
+      return false;
+    });
+  }
+
+  // Filter by scent/tags
+  if (filters?.scent) {
+    filteredProducts = filteredProducts.filter((product) => {
+      // Check tags array for scent
+      return product.tags?.some((tag) =>
+        tag.toLowerCase().includes(filters.scent!.toLowerCase()),
+      );
+    });
+  }
+
+  return filteredProducts;
 }

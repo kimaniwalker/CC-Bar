@@ -15,20 +15,31 @@ import { Suspense } from "react";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ query?: string; category?: string; sort?: string }>;
+  searchParams: Promise<{
+    query?: string;
+    category?: string;
+    sort?: string;
+    price?: string;
+    scent?: string;
+    size?: string;
+  }>;
 }) {
   const params = await searchParams;
   const query = params.query ?? "";
   const selectedCategory = params.category ?? "";
   const sort = params.sort ?? "";
-  const products = await getProducts(query, sort);
+
+  const products = await getProducts(query, sort, {
+    price: params.price,
+    scent: params.scent,
+    size: params.size,
+  });
 
   return (
     <>
       <Suspense fallback={<CategorySkeleton />}>
         <Categories selectedCategory={selectedCategory} />
       </Suspense>
-
       <Suspense fallback={<CategoryBannerSkeleton />}>
         <CategoryBanner
           product_count={products.length}

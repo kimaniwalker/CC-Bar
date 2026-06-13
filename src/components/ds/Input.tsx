@@ -6,6 +6,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   errorMessage?: string;
   hideLabel?: boolean;
   leadingIcon?: LucideIcon;
+  inputClassName?: string;
 };
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -14,17 +15,21 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       errorMessage,
       hideLabel = false,
       className,
+      inputClassName,
       name,
       leadingIcon: LeadingIcon,
       ...props
     },
     ref,
   ) => {
-    const baseClasses = `mt-1 block w-full box-border ${
+    const defaultClasses = `mt-1 block w-full box-border ${
       LeadingIcon ? "pl-12 pr-3" : "px-3"
     } py-2 border ${
       errorMessage ? "border-red-800" : "border-gray-300"
-    } rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm ${montserrat.className} ${className ?? ""}`;
+    } rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm ${montserrat.className}`;
+
+    const inputClasses =
+      inputClassName ?? `${defaultClasses} ${className ?? ""}`;
 
     const capitalizeFirstLetter = (str?: string) => {
       if (!str) return "";
@@ -53,7 +58,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={name}
             name={name}
-            className={baseClasses}
+            className={inputClasses}
             aria-invalid={!!errorMessage}
             aria-describedby={errorMessage ? `${name}-error` : undefined}
             {...props}
