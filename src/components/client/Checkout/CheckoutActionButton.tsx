@@ -113,7 +113,7 @@ export const CheckoutActionButton = ({
         onClick={handlePay}
         className="h-14 rounded-2xl bg-black text-white font-medium transition hover:bg-neutral-800 disabled:bg-neutral-400 disabled:cursor-not-allowed"
       >
-        {loading ? "Processing..." : "Complete Checkout"}
+        {loading ? "Processing..." : "Pay Now"}
       </button>
 
       <Text size="sm" className="text-center text-neutral-500">
