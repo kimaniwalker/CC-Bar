@@ -43,7 +43,7 @@ export const handleShopSubscription = async (sessionId: string) => {
   const stockUpdates = lineItems.reduce(
     (acc, item) => {
       const product = item.price?.product as Stripe.Product;
-      const { product_id, sku, isVariationProduct } = product?.metadata || {};
+      const { product_id, sku } = product?.metadata || {};
       const SUBSCRIPTION_SKU = "SKU-CCBAR-SUB";
 
       // Skip subscription items
@@ -61,7 +61,6 @@ export const handleShopSubscription = async (sessionId: string) => {
         product_id,
         sku,
         quantity: item.quantity ?? 0,
-        is_variation: isVariationProduct === "true",
       });
 
       return acc;
@@ -70,7 +69,6 @@ export const handleShopSubscription = async (sessionId: string) => {
       product_id: string;
       sku: string;
       quantity: number;
-      is_variation: boolean;
     }[],
   );
 

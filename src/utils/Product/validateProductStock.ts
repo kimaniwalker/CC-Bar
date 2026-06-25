@@ -1,7 +1,11 @@
 "use server";
 import { createClient } from "@/utils/supabase/client";
 import { Cart } from "@/types/Cart";
-import { ProductVariation, StockError } from "@/types/Product";
+import { StockError } from "@/types/Product";
+import {
+  formatSelectedOptions,
+  getCartProductKey,
+} from "@/utils/Cart/normalizeCartProduct";
 
 export async function validateStock(cart: Cart) {
   const supabase = createClient();
@@ -11,86 +15,52 @@ export async function validateStock(cart: Cart) {
     item: Cart[number],
     availableStock: number,
   ): StockError => {
-    const variation = [item.size, item.color].filter(Boolean).join(" | ");
+    // Format selected options for display
+    const optionsText = formatSelectedOptions(item);
+    const displayName = optionsText
+      ? `${item.name} (${optionsText})`
+      : item.name;
+
+    // Get unique cart key
+    const key = getCartProductKey(item);
 
     if (availableStock === 0) {
       return {
-        sku: item.sku,
+        key,
         availableStock,
-        errorMessage: `${item.name}${variation ? ` (${variation})` : ""} is out of stock.`,
+        errorMessage: `${displayName} is out of stock.`,
       };
     }
-    if (item.isVariationProduct) {
-      return {
-        sku: item.sku,
-        availableStock,
-        errorMessage: `${item.name}${variation ? ` (${variation})` : ""} only has ${availableStock} left in stock.`,
-      };
-    }
+
     return {
-      sku: item.sku,
+      key,
       availableStock,
-      errorMessage: `${item.name} only has ${availableStock} left in stock.`,
+      errorMessage: `${displayName} only has ${availableStock} left in stock.`,
     };
   };
 
   for (const item of cart) {
-    if (item.isVariationProduct) {
-      // variation product — check variation stock
-      const { data: product, error } = await supabase
-        .from("products")
-        .select("variations")
-        .eq("id", item.id)
-        .single();
+    const { data: product, error } = await supabase
+      .from("products")
+      .select("stock")
+      .eq("id", item.id)
+      .single();
 
-      if (error) {
-        console.error(
-          `Failed to fetch variation product ${item.id}:`,
-          error.message,
-        );
-        errors.push({
-          isDbError: true,
-          sku: item.sku,
-          availableStock: 0,
-          errorMessage: `Product stock could not be verified. Please try again.`,
-        });
-        continue; // 👈 skip to next item
-      }
+    if (error) {
+      console.error(`Failed to fetch product ${item.id}:`, error.message);
+      errors.push({
+        isDbError: true,
+        key: getCartProductKey(item),
+        availableStock: 0,
+        errorMessage: `Product stock could not be verified. Please try again.`,
+      });
+      continue;
+    }
 
-      const variation = product?.variations?.find(
-        (v: ProductVariation) => v.sku === item.sku,
-      );
-
-      if (!variation || variation.stock < item.quantity) {
-        errors.push(formatStockError(item, variation?.stock ?? 0));
-      }
-    } else {
-      // standard product — check product stock
-      const { data: product, error } = await supabase
-        .from("products")
-        .select("stock")
-        .eq("id", item.id)
-        .single();
-
-      if (error) {
-        console.error(`Failed to fetch product ${item.id}:`, error.message);
-        errors.push({
-          isDbError: true,
-          sku: item.sku,
-          availableStock: 0,
-          errorMessage: `Product stock could not be verified. Please try again.`,
-        });
-        continue; // 👈 skip to next item
-      }
-
-      if (!product || product.stock < item.quantity) {
-        errors.push(formatStockError(item, product?.stock ?? 0));
-      }
+    if (!product || product.stock < item.quantity) {
+      errors.push(formatStockError(item, product?.stock ?? 0));
     }
   }
-
-  console.log("Stock validation errors:", errors);
-  console.log({ valid: errors.length === 0 });
 
   return { valid: errors.length === 0, errors };
 }

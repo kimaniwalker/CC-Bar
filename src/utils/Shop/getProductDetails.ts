@@ -1,13 +1,20 @@
-"use cache"
-import { createClient } from "@/utils/supabase/client";
-import { Product } from "@/types/Product";
+import { ProductWithOptions } from "@/types/Product";
+import { createClient } from "../supabase/server";
 
 // accept a single id or an array of ids
-export const getProductDetails = async (ids: string | string[]): Promise<Product[]> => {
-  const supabase = createClient();
+export const getProductDetails = async (
+  ids: string | string[],
+): Promise<ProductWithOptions[]> => {
+  const supabase = await createClient();
 
   // build query depending on whether ids is an array or single value
-  let query = supabase.from("products").select("*");
+  let query = supabase.from("products").select(`
+    *,
+    product_option_groups (
+      *,
+      product_options (*)
+    )
+  `);
 
   if (Array.isArray(ids)) {
     query = query.in("id", ids);
@@ -22,5 +29,5 @@ export const getProductDetails = async (ids: string | string[]): Promise<Product
     return [];
   }
 
-  return (data ?? []) as Product[];
+  return (data ?? []) as ProductWithOptions[];
 };

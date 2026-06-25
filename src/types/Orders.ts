@@ -41,6 +41,8 @@ export interface OrderItem {
   quantity: number;
   price: number;
   sku: string;
+  selected_options?: Record<string, string>;
+  custom_message?: string;
 }
 
 export type OrdersResponse = Order & { order_items: OrderItem[] };

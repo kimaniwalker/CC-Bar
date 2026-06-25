@@ -41,7 +41,7 @@ export const MFAModal = () => {
   };
 
   return (
-    <div className="rounded-3xl border border-neutral-200 bg-[#F8F5F1] p-5 relative flex flex-col items-start">
+    <div className="rounded-3xl border border-neutral-200 bg-[#F8F5F1] p-5 relative flex flex-col w-full">
       <Text size="md" className="font-semibold text-neutral-900">
         Enable phone sign in
       </Text>
@@ -96,7 +96,7 @@ export const MFAModal = () => {
 
           <button
             onClick={onAddPhone}
-            disabled={!phone}
+            disabled={!phone || !smsConsent}
             className="mt-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:bg-neutral-400 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="text-sm">Continue</span>

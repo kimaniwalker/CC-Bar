@@ -44,6 +44,7 @@ export const CheckoutActionButton = ({
       router.push(
         "/auth/login?flow=isVipSubscription&redirect_to=/checkout?flow=isVipSubscription",
       );
+      setLoading(false);
       return;
     }
 
@@ -106,19 +107,33 @@ export const CheckoutActionButton = ({
     }
   };
 
+  const handleOptOut = () => {
+    router.push("/checkout");
+  };
+
   return (
-    <>
+    <div className="space-y-3">
       <button
         disabled={loading || (cart.length === 0 && !isVipSubscriptionFlow)}
         onClick={handlePay}
-        className="h-14 rounded-2xl bg-black text-white font-medium transition hover:bg-neutral-800 disabled:bg-neutral-400 disabled:cursor-not-allowed"
+        className="w-full h-14 rounded-2xl bg-black text-white font-medium transition hover:bg-neutral-800 disabled:bg-neutral-400 disabled:cursor-not-allowed"
       >
         {loading ? "Processing..." : "Pay Now"}
       </button>
 
+      {isVipSubscriptionFlow && !hasActiveSubscription && (
+        <button
+          onClick={handleOptOut}
+          disabled={loading}
+          className="w-full h-12 rounded-2xl bg-white border-2 border-neutral-200 text-neutral-700 font-medium transition hover:bg-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Continue without VIP
+        </button>
+      )}
+
       <Text size="sm" className="text-center text-neutral-500">
         Secure checkout powered by Stripe.
       </Text>
-    </>
+    </div>
   );
 };

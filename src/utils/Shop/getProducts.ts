@@ -1,7 +1,5 @@
-"use cache";
-import { createClient } from "@/utils/supabase/client";
-import { cacheTag } from "next/cache";
-import { Product } from "@/types/Product";
+import { ProductWithOptions } from "@/types/Product";
+import { createClient } from "../supabase/server";
 
 type SortOption =
   | "price_asc"
@@ -21,18 +19,23 @@ export async function getProducts(
   query?: string,
   sort?: string,
   filters?: FilterParams,
-) {
-  cacheTag("products");
-  const supabase = createClient();
+): Promise<ProductWithOptions[]> {
+  const supabase = await createClient();
 
-  let queryBuilder = supabase.from("products").select("*");
+  let queryBuilder = supabase.from("products").select(`
+      *,
+      product_option_groups (
+        *,
+        product_options (*)
+      )
+    `);
 
   // Apply search filter
   if (query?.trim()) {
     queryBuilder = queryBuilder.ilike("name", `%${query}%`);
   }
 
-  // Apply sorting (before filtering, for better performance)
+  // Apply sorting
   if (sort) {
     switch (sort as SortOption) {
       case "price_asc":
@@ -69,44 +72,35 @@ export async function getProducts(
 
   if (!data) return [];
 
-  // Client-side filtering for variations
-  let filteredProducts = data as Product[];
+  let filteredProducts = data as ProductWithOptions[];
 
-  // Filter by price (considering variations)
+  // Filter by price (base price only)
   if (filters?.price) {
     const [min, max] = filters.price.split("-").map(Number);
     filteredProducts = filteredProducts.filter((product) => {
-      // Check base price
+      // Get base price (starting price before options)
       const basePrice =
         product.on_sale && product.sale_price
           ? product.sale_price
           : product.price;
 
-      if (basePrice >= min && basePrice <= max) return true;
-
-      // Check variation prices
-      if (product.variations && product.variations.length > 0) {
-        return product.variations.some((variation) => {
-          const variationPrice = variation.sale_price ?? variation.price;
-          return variationPrice >= min && variationPrice <= max;
-        });
-      }
-
-      return false;
+      // Only check if base price is within range
+      return basePrice / 100 >= min && basePrice / 100 <= max;
     });
   }
 
-  // Filter by size (considering variations)
+  // Filter by size (checking product options)
   if (filters?.size) {
-    const sizeFilter = filters.size;
+    const sizeFilter = filters.size.toLowerCase();
     filteredProducts = filteredProducts.filter((product) => {
-      // Check available_sizes array
-      if (product.available_sizes?.includes(sizeFilter)) return true;
+      // Check if there's a "Size" option group
+      const sizeGroup = product.product_option_groups?.find(
+        (group) => group.name.toLowerCase() === "size",
+      );
 
-      // Check variations
-      if (product.variations && product.variations.length > 0) {
-        return product.variations.some(
-          (variation) => variation.size === sizeFilter,
+      if (sizeGroup) {
+        return sizeGroup.product_options.some((option) =>
+          option.name.toLowerCase().includes(sizeFilter),
         );
       }
 
@@ -114,13 +108,29 @@ export async function getProducts(
     });
   }
 
-  // Filter by scent/tags
+  // Filter by scent (checking tags or scent option group)
   if (filters?.scent) {
+    const scentFilter = filters.scent.toLowerCase();
     filteredProducts = filteredProducts.filter((product) => {
       // Check tags array for scent
-      return product.tags?.some((tag) =>
-        tag.toLowerCase().includes(filters.scent!.toLowerCase()),
+      if (
+        product.tags?.some((tag) => tag.toLowerCase().includes(scentFilter))
+      ) {
+        return true;
+      }
+
+      // Check if there's a "Scent" option group
+      const scentGroup = product.product_option_groups?.find(
+        (group) => group.name.toLowerCase() === "fragrance",
       );
+
+      if (scentGroup) {
+        return scentGroup.product_options.some((option) =>
+          option.name.toLowerCase().includes(scentFilter),
+        );
+      }
+
+      return false;
     });
   }
 

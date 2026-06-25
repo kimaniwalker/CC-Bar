@@ -1,30 +1,17 @@
 "use client";
 
-import { CartProduct, Product } from "@/types/Product";
-import { getProducts } from "@/utils/Shop/getProducts";
-import { useEffect, useMemo, useState } from "react";
+import { CartProduct, ProductWithOptions } from "@/types/Product";
+import { useState, useMemo } from "react";
+import {
+  calculateProductPrice,
+  getCartProductKey,
+  isSameCartProduct,
+} from "@/utils/Cart/normalizeCartProduct";
 
-export const usePosCart = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+export const usePosCart = (initialProducts: ProductWithOptions[] = []) => {
+  const [products] = useState<ProductWithOptions[]>(initialProducts);
   const [cart, setCart] = useState<CartProduct[]>([]);
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadProducts() {
-      try {
-        const data = await getProducts();
-
-        setProducts(data || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadProducts();
-  }, []);
 
   const filteredProducts = useMemo(() => {
     return products.filter((product) =>
@@ -34,17 +21,18 @@ export const usePosCart = () => {
 
   const subtotal = useMemo(() => {
     return cart.reduce((acc, item) => {
-      return acc + item.price * item.quantity;
+      const itemPrice = calculateProductPrice(item);
+      return acc + itemPrice * item.quantity;
     }, 0);
   }, [cart]);
 
   const addToCart = (item: CartProduct) => {
     setCart((prev) => {
-      const existing = prev.find((p) => p.sku === item.sku); // 👈 match on sku
+      const existing = prev.find((p) => isSameCartProduct(p, item));
 
       if (existing) {
         return prev.map((p) =>
-          p.sku === item.sku ? { ...p, quantity: p.quantity + 1 } : p,
+          isSameCartProduct(p, item) ? { ...p, quantity: p.quantity + 1 } : p,
         );
       }
 
@@ -52,11 +40,10 @@ export const usePosCart = () => {
     });
   };
 
-  const decreaseQuantity = (sku: string) => {
-    // 👈 just sku now
+  const decreaseQuantity = (key: string) => {
     setCart((prev) =>
       prev.flatMap((item) => {
-        if (item.sku !== sku) return [item];
+        if (getCartProductKey(item) !== key) return [item];
         if (item.quantity > 1)
           return [{ ...item, quantity: item.quantity - 1 }];
         return [];
@@ -68,7 +55,7 @@ export const usePosCart = () => {
     products,
     cart,
     search,
-    loading,
+    loading: false, // No loading since data is passed as prop
     filteredProducts,
     subtotal,
     addToCart,

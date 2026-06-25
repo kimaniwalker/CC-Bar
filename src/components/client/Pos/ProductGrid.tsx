@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { Text } from "@/components/ds/Text";
-import { Product } from "@/types/Product";
+import { Product, ProductWithOptions } from "@/types/Product";
 
 interface ProductGridProps {
-  products: Product[];
+  products: ProductWithOptions[];
   loading: boolean;
-  onProductClick: (product: Product) => void;
+  onProductClick: (product: ProductWithOptions) => void;
 }
 
 export const ProductGrid = ({

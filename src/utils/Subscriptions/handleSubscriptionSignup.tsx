@@ -49,7 +49,6 @@ export const handleSubscriptionSignup = async ({
       product_id: "0ffe0d01-f0d2-492d-a3b4-2f1dd52fa01c", // 👈 must be string
       sku: "SKU-CCBAR-SUB",
       quantity: String(1),
-      isVariationProduct: String(false),
     },
   };
 

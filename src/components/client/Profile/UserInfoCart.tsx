@@ -42,6 +42,10 @@ export const UserInfoCard = () => {
           setProfile(updatedProfile);
         }}
       />,
+      {
+        maxWidth: "2xl",
+        padding: "md",
+      },
     );
   };
 

@@ -52,12 +52,26 @@ export const handleAddNewOrder = async ({ order }: { order: OrderInsert }) => {
   // attach order_id to each order item before inserting
   const itemsToInsert = order.lineItems.map((item) => {
     const product = item.price?.product as Stripe.Product;
+    const metadata = product.metadata || {};
+
+    // Extract selected options from metadata
+    const selectedOptions: Record<string, string> = {};
+    Object.entries(metadata).forEach(([key, value]) => {
+      // Skip system fields, only store option selections
+      if (!["product_id", "sku", "quantity", "custom_message"].includes(key)) {
+        selectedOptions[key] = value;
+      }
+    });
+
     return {
       order_id: orderId,
-      product_id: product.metadata?.product_id || null,
-      sku: product.metadata?.sku || null,
+      product_id: metadata.product_id || null,
+      sku: metadata.sku || null,
       quantity: item.quantity,
       price: item.price?.unit_amount || 0,
+      selected_options:
+        Object.keys(selectedOptions).length > 0 ? selectedOptions : null,
+      custom_message: metadata.custom_message || null,
     };
   });
 

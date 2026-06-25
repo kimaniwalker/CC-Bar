@@ -1,117 +1,104 @@
 import { Stack } from "@/components/ds/Stack";
-import { useState } from "react";
 import { motion } from "motion/react";
 import { useCart } from "../Cart/CartContext";
-import { Product } from "@/types/Product";
+import { ProductWithOptions } from "@/types/Product";
 import { useModal } from "../ModalContext";
 import ProductVariationsModal from "./ProductVariationsModal";
-import { getProductSku } from "@/utils/Product/getProductSku";
-import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
+import { Trash2, ShoppingCart } from "lucide-react";
+import { getCartProductKey } from "@/utils/Cart/normalizeCartProduct";
 
 type QuickAddProps = {
   hideQuickAdd: boolean;
-  product: Product;
+  product: ProductWithOptions;
 };
+
 export default function ProductCardQuickAdd({
   hideQuickAdd,
   product,
 }: QuickAddProps) {
-  const { addToCart, cart, removeFromCart } = useCart();
+  const { addToCart, cart, removeProductByKey } = useCart();
   const { open } = useModal();
-  const [selectedSize, _setSelectedSize] = useState("");
-  const [selectedColor, _setSelectedColor] = useState("");
 
-  const hasQuantity = Boolean(cart.find((item) => item.id === product.id));
-  const hasVariations = !!(
-    product.available_colors?.length || product.available_sizes?.length
+  // Check if ANY version of this product (with any options) is in cart
+  const hasQuantity = cart.some((item) => item.id === product.id);
+
+  const hasOptions = !!product.product_option_groups?.some((group) =>
+    group.product_options.some((opt) => opt.active),
   );
   const isOutOfStock = product.stock === 0;
 
-  const handleATC = () => {
+  const handleQuickAdd = () => {
     if (isOutOfStock) return;
-    addToCart(normalizeCartProduct(product));
+
+    // Quick add without options - just add to cart with defaults
+    addToCart({
+      ...product,
+      quantity: 1,
+      selected_options: undefined,
+    });
   };
 
-  const handleSelectSizeAndColor = () => {
-    open(<ProductVariationsModal key={product.id} product={product} />);
+  const handleOpenOptionsModal = () => {
+    open(<ProductVariationsModal key={product.id} product={product} />, {
+      maxWidth: "lg",
+      padding: "lg",
+      showCloseButton: true,
+    });
+  };
+
+  const handleRemove = () => {
+    // Find all cart items with this product ID
+    const itemsToRemove = cart.filter((item) => item.id === product.id);
+
+    // Remove all versions of this product
+    itemsToRemove.forEach((item) => {
+      const key = getCartProductKey(item);
+      removeProductByKey(key);
+    });
   };
 
   if (hideQuickAdd) return null;
+
   return (
-    <>
-      <Stack
-        justify="center"
-        className={`w-full z-10 max-h-10 h-full absolute bottom-0`}
+    <Stack
+      justify="center"
+      className="w-full z-10 max-h-10 h-full absolute bottom-0"
+    >
+      <motion.div
+        className="w-3/4"
+        initial={{ y: 25 }}
+        animate={{ y: 0 }}
+        exit={{ opacity: 0, y: 25 }}
+        transition={{
+          ease: "easeInOut",
+          duration: 0.5,
+        }}
       >
-        <motion.div
-          className="w-3/4"
-          initial={{ y: 25 }}
-          animate={{ y: 0 }}
-          exit={{ opacity: 0, y: 25 }}
-          transition={{
-            ease: "easeInOut",
-            duration: 0.5,
-          }}
-        >
-          <div className="flex w-full rounded-md shadow-xs z-10" role="group">
-            <button
-              disabled={!hasQuantity || isOutOfStock}
-              type="button"
-              onClick={() =>
-                removeFromCart(
-                  getProductSku({ product, selectedColor, selectedSize }),
-                )
-              }
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center disabled:bg-gray-200"
-            >
-              <svg
-                className="w-4.5 h-4.5 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-            <button
-              type="button"
-              onClick={
-                !hasVariations ? () => handleATC() : handleSelectSizeAndColor
-              }
-              disabled={!hasVariations && isOutOfStock}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white justify-center flex items-center disabled:bg-gray-200"
-            >
-              <svg
-                className="w-4.5 h-4.5 text-gray-800 dark:text-white"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5 3a1 1 0 0 0 0 2h.687L7.82 15.24A3 3 0 1 0 11.83 17h2.34A3 3 0 1 0 17 15H9.813l-.208-1h8.145a1 1 0 0 0 .979-.796l1.25-6A1 1 0 0 0 19 6h-2.268A2 2 0 0 1 15 9a2 2 0 1 1-4 0 2 2 0 0 1-1.732-3h-1.33L7.48 3.796A1 1 0 0 0 6.5 3H5Z"
-                  clipRule="evenodd"
-                />
-                <path
-                  fillRule="evenodd"
-                  d="M14 5a1 1 0 1 0-2 0v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0V8h1a1 1 0 1 0 0-2h-1V5Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
-          </div>
-        </motion.div>
-      </Stack>
-    </>
+        <div className="flex w-full rounded-md shadow-sm z-10" role="group">
+          {/* Remove Button */}
+          <button
+            disabled={!hasQuantity || isOutOfStock}
+            type="button"
+            onClick={handleRemove}
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-red-600 focus:z-10 focus:ring-2 focus:ring-red-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 justify-center flex items-center disabled:bg-gray-200 disabled:cursor-not-allowed transition"
+            aria-label="Remove from cart"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+
+          {/* Add to Cart / Select Options Button */}
+          <button
+            type="button"
+            onClick={hasOptions ? handleOpenOptionsModal : handleQuickAdd}
+            disabled={!hasOptions && isOutOfStock}
+            className="flex-1 px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-r border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-600 focus:z-10 focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 justify-center flex items-center gap-1.5 disabled:bg-gray-200 disabled:cursor-not-allowed transition"
+            aria-label={hasOptions ? "Select options" : "Add to cart"}
+          >
+            <ShoppingCart className="w-4 h-4" />
+            {hasOptions && <span className="text-xs">+</span>}
+          </button>
+        </div>
+      </motion.div>
+    </Stack>
   );
 }

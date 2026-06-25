@@ -8,7 +8,7 @@ export const CheckoutErrorBanner = ({
   onClearError,
 }: {
   errors: StockError[];
-  onClearError: (sku: string) => void;
+  onClearError: (key: string) => void;
 }) => {
   if (errors.length === 0) {
     return null;
@@ -25,15 +25,16 @@ export const CheckoutErrorBanner = ({
           <div className="space-y-2">
             {errors.map((error) => (
               <div
-                key={error.sku}
+                key={error.key}
                 className="flex items-center justify-between bg-white/60 rounded-lg p-2"
               >
                 <Text size="sm" className="text-red-800">
                   {error.errorMessage}
                 </Text>
                 <button
-                  onClick={() => onClearError(error.sku)}
+                  onClick={() => onClearError(error.key)}
                   className="ml-2 text-red-600 hover:text-red-800 transition"
+                  aria-label="Clear error"
                 >
                   <X className="h-4 w-4" />
                 </button>

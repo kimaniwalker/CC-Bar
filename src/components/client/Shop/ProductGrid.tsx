@@ -2,11 +2,11 @@
 
 import { Text } from "@/components/ds/Text";
 import ProductCard from "./ProductCard";
-import { Product } from "@/types/Product";
+import { ProductWithOptions } from "@/types/Product";
 import { PackageOpen, Search } from "lucide-react";
 
 type ProductList = {
-  products: Product[];
+  products: ProductWithOptions[];
   heading?: string;
 };
 

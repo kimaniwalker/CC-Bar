@@ -8,14 +8,18 @@ import { useModal } from "@/components/client/ModalContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { usePosCheckout } from "@/hooks/usePosCheckout";
 import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
-import { Product } from "@/types/Product";
+import { ProductWithOptions } from "@/types/Product";
 import PosVariationsModal from "./PosVariationsModal";
 
 import { CartSidebar } from "./CartSidebar";
 import { ProductGrid } from "./ProductGrid";
 import { AddressCollectorModal } from "./AddressCollectorModal";
 
-export default function PosContent() {
+export default function PosContent({
+  products,
+}: {
+  products: ProductWithOptions[];
+}) {
   const searchParams = useSearchParams();
   const user_id = searchParams.get("user_id");
 
@@ -29,7 +33,7 @@ export default function PosContent() {
     addToCart,
     decreaseQuantity,
     setCart,
-  } = usePosCart();
+  } = usePosCart(products);
 
   const { userProfile, profileLoading, setUserProfile } =
     useUserProfile(user_id);
@@ -58,21 +62,31 @@ export default function PosContent() {
     }
   };
 
-  const handleAddToCart = (product: Product) => {
-    const hasVariants = product.available_colors || product.available_sizes;
+  const handleAddToCart = (product: ProductWithOptions) => {
+    // Check if product has option groups
+    const hasOptions = !!product.product_option_groups?.some((group) =>
+      group.product_options.some((opt) => opt.active),
+    );
 
-    if (hasVariants) {
+    if (hasOptions) {
       open(
         <PosVariationsModal
           product={product}
           onAddToCart={addToCart}
           cart={cart}
         />,
+        {},
       );
       return;
     }
 
-    addToCart(normalizeCartProduct(product));
+    // Add simple product without options
+    addToCart(
+      normalizeCartProduct(product, {
+        quantity: 1,
+        selected_options: undefined,
+      }),
+    );
   };
 
   const handleOpenAddressCollector = () => {
@@ -81,6 +95,7 @@ export default function PosContent() {
         user_id={user_id ?? "guest"}
         onSave={(updatedProfile) => setUserProfile(updatedProfile)}
       />,
+      { maxWidth: "2xl" },
     );
   };
 

@@ -2,8 +2,11 @@
 import { Cart } from "@/types/Cart";
 import { CheckoutType, ReservationsFormInputs } from "@/types/Reservations";
 import { UserProfile } from "@/types/User";
-import { round } from "lodash";
 import Stripe from "stripe";
+import {
+  calculateProductPrice,
+  formatSelectedOptions,
+} from "@/utils/Cart/normalizeCartProduct";
 
 export default function useHandlePayment() {
   return {
@@ -32,45 +35,61 @@ function formatReservationsMetadata(data: ReservationsFormInputs) {
 
   return metaData;
 }
+
 function formatLineItems(cart: Cart) {
-  return cart.map((item) => ({
-    price_data: {
-      currency: "usd",
-      unit_amount: Math.round(item.price * 100),
-      product_data: {
-        name: item.name,
-        description:
-          [item.size, item.color].filter(Boolean).join(" | ") || undefined,
-        images: [item.thumbnail],
-        metadata: {
-          product_id: String(item.id), // 👈 must be string
-          sku: item.sku,
-          quantity: String(item.quantity),
-          isVariationProduct: String(item.isVariationProduct),
-          ...(item.color && { color: item.color }),
-          ...(item.size && { size: item.size }),
-          ...(item.custom_messsage && { custom_message: item.custom_messsage }),
+  return cart.map((item) => {
+    // Calculate price with options
+    const itemPrice = calculateProductPrice(item);
+
+    // Format selected options for description
+    const selectedOptionsText = formatSelectedOptions(item);
+
+    // Build description with options
+    const description = selectedOptionsText || undefined;
+
+    // Build metadata with selected options
+    const metadata: Record<string, string> = {
+      product_id: String(item.id),
+      sku: item.sku,
+      quantity: String(item.quantity),
+    };
+
+    // Add selected options to metadata
+    if (item.selected_options) {
+      Object.entries(item.selected_options).forEach(([groupName, option]) => {
+        const optionName = Array.isArray(option.optionName)
+          ? option.optionName.join(", ")
+          : option.optionName;
+        metadata[groupName.toLowerCase().replace(/\s+/g, "_")] = optionName;
+      });
+    }
+
+    // Add custom message if present
+    if (item.custom_message) {
+      metadata["custom_message"] = item.custom_message;
+    }
+
+    return {
+      price_data: {
+        currency: "usd",
+        unit_amount: Math.round(itemPrice * 100), // Price includes option adjustments
+        product_data: {
+          name: item.name,
+          description,
+          images: [item.thumbnail],
+          metadata,
         },
       },
-    },
-    quantity: item.quantity,
-  }));
+      quantity: item.quantity,
+    };
+  });
 }
 
 function calculateTotal(cart: Cart) {
-  let total = 0;
-
-  if (cart.length >= 1) {
-    for (let i = 0; i < cart.length; i++) {
-      const item = cart[i];
-      const price = item.price;
-      const quantity = item.quantity;
-
-      total += price * quantity;
-    }
-  }
-
-  return round(total, 2);
+  return cart.reduce((total, item) => {
+    const itemPrice = calculateProductPrice(item);
+    return total + itemPrice * item.quantity;
+  }, 0);
 }
 
 function formatBody(
@@ -135,6 +154,7 @@ function formatBody(
   };
   return body;
 }
+
 function formatReservationsLineItems(data: ReservationsFormInputs) {
   const lineItems = [];
   const body = {

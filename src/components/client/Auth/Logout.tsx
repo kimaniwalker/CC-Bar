@@ -4,8 +4,9 @@ import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LogOut } from "lucide-react";
+import { signOut } from "@/utils/User/signOut";
 
-export const Logout = () => {
+export const Logout = ({ onLogout }: { onLogout: () => void }) => {
   const supabase = createClient();
   const router = useRouter();
   const [hasSession, setHasSession] = useState(false);
@@ -17,15 +18,39 @@ export const Logout = () => {
       setHasSession(!!sessionData?.session?.user);
     }
     checkSession();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setHasSession(!!session?.user);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [supabase.auth]);
 
   const handleLogout = async () => {
     setIsLoading(true);
     try {
+      // Sign out client-side first
       await supabase.auth.signOut();
-      router.push("/auth/login");
+
+      // Update local state immediately
+      setHasSession(false);
+
+      // Call onLogout callback
+      onLogout();
+
+      // Call server action to clear server-side session
+      await signOut();
     } catch (error) {
       console.error("Error signing out:", error);
+      // Still try to clean up
+      setHasSession(false);
+      onLogout();
+      router.push("/auth/login");
     } finally {
       setIsLoading(false);
     }

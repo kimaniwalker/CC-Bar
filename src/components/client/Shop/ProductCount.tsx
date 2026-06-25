@@ -2,6 +2,7 @@
 import { Text } from "@/components/ds/Text";
 import { useCart } from "../Cart/CartContext";
 import { useEffect, useState } from "react";
+import { ShoppingCart } from "lucide-react";
 
 export default function ProductCount({ id }: { id: string }) {
   const { getCartProductQuantity, isHydrated } = useCart();
@@ -11,16 +12,17 @@ export default function ProductCount({ id }: { id: string }) {
     setMounted(true);
   }, []);
 
-  if (!mounted) {
-    return null;
-  }
+  if (!mounted || !isHydrated) return null;
 
-  if (!isHydrated) return null; // Don't render until cart is hydrated
   const quantity = getCartProductQuantity(id);
   if (quantity === 0) return null;
+
   return (
-    <div className="bg-white w-8 h-8 rounded-full absolute top-0 -right-1 flex justify-center z-10">
-      <Text size="sm">{getCartProductQuantity(id)}</Text>
+    <div className="flex items-center gap-1 bg-black text-white px-4 py-2 rounded-full shadow-md z-10 absolute top-2 left-2">
+      <ShoppingCart className="w-3 h-3" />
+      <Text size="xs" className="font-semibold">
+        {quantity}
+      </Text>
     </div>
   );
 }

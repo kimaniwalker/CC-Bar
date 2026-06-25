@@ -1,17 +1,12 @@
 import ProductGrid from "../client/Shop/ProductGrid";
-import { createClient } from "@/utils/supabase/server";
+import { getProducts } from "@/utils/Shop/getProducts";
 
-export default async function FeaturedProducts({ heading }: { heading?: string }) {
-
-  const supabase = await createClient()
-  const { data: products, error } = await supabase
-    .from("products")
-    .select();
-
-  if (error) {
-    console.error(error);
-    return null;
-  }
+export default async function FeaturedProducts({
+  heading,
+}: {
+  heading?: string;
+}) {
+  const products = await getProducts();
 
   return <ProductGrid products={products ?? []} heading={heading} />;
 }

@@ -1,7 +1,11 @@
 import { Text } from "@/components/ds/Text";
 import { StockError, type CartProduct } from "@/types/Product";
 import Image from "next/image";
-import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
+import {
+  calculateProductPrice,
+  formatSelectedOptions,
+  getCartProductKey,
+} from "@/utils/Cart/normalizeCartProduct";
 import { montserrat } from "@/components/ds/Fonts";
 import { useMediaQuery } from "react-responsive";
 import { ProductHeartButton } from "../Favorites/ProductHeartButton";
@@ -16,34 +20,40 @@ export default function CheckoutCartItem({
 }: {
   product: CartProduct;
   errors?: StockError[];
-  onHandleUpdateProductQuantity?: (sku: string) => void;
+  onHandleUpdateProductQuantity?: (key: string) => void;
 }) {
-  const hasVariation = product.color || product.size;
-  const productName = hasVariation
-    ? `${product.name} - ${[product.color, product.size].filter(Boolean).join(" - ")}`
-    : product.name;
   const {
     addToCart,
     removeFromCart,
     handleAdjustProductQuantity,
-    removeProductBySku,
+    removeProductByKey,
   } = useCart();
   const isMobile = useMediaQuery({ query: "(max-width: 640px)" });
 
-  const error = errors?.find((e) => e.sku === product.sku);
+  // Get unique cart key for this product + options
+  const cartKey = getCartProductKey(product);
+
+  const error = errors?.find((e) => e.key === cartKey);
   const isDbError = error?.isDbError ?? false;
   const isOutOfStock = error?.availableStock === 0 && !isDbError;
   const hasError = Boolean(error);
 
+  // Format selected options for display
+  const selectedOptionsText = formatSelectedOptions(product);
+
+  // Calculate final price with options
+  const itemPrice = calculateProductPrice(product);
+  const totalPrice = itemPrice * product.quantity;
+
   const updateProductQuantity = () => {
     if (!error) return;
-    if (error) handleAdjustProductQuantity(product.sku, error.availableStock);
-    onHandleUpdateProductQuantity?.(product.sku);
+    handleAdjustProductQuantity(cartKey, error.availableStock);
+    onHandleUpdateProductQuantity?.(cartKey);
   };
 
   const handleRemoveProduct = () => {
-    removeProductBySku(product.sku);
-    onHandleUpdateProductQuantity?.(product.sku);
+    removeProductByKey(cartKey);
+    onHandleUpdateProductQuantity?.(cartKey);
   };
 
   return (
@@ -102,7 +112,7 @@ export default function CheckoutCartItem({
             src={product.thumbnail}
             fill
             style={{ objectFit: "cover" }}
-            alt={productName}
+            alt={product.name}
             sizes="(max-width: 640px) 96px, 112px"
             className="transition-transform hover:scale-105"
           />
@@ -116,7 +126,7 @@ export default function CheckoutCartItem({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
             <Text size="md" className="font-bold text-neutral-900 line-clamp-2">
-              {productName}
+              {product.name}
             </Text>
             <button
               onClick={handleRemoveProduct}
@@ -127,35 +137,26 @@ export default function CheckoutCartItem({
             </button>
           </div>
 
-          {/* Variation Details */}
-          {(product.color || product.size) && (
-            <div className="flex gap-2 mb-2">
-              {product.color && (
-                <span className="text-xs px-2 py-1 rounded-full bg-neutral-100 text-neutral-600 font-medium">
-                  {product.color}
-                </span>
-              )}
-              {product.size && (
-                <span className="text-xs px-2 py-1 rounded-full bg-neutral-100 text-neutral-600 font-medium">
-                  {product.size}
-                </span>
-              )}
-            </div>
+          {/* Selected Options */}
+          {selectedOptionsText && (
+            <Text size="sm" className="text-neutral-600 mb-2">
+              {selectedOptionsText}
+            </Text>
           )}
 
           {/* Price */}
           <Text size="sm" className="font-semibold text-neutral-900 mb-3">
-            ${product.price}{" "}
+            ${itemPrice.toFixed(2)}{" "}
             <span className="text-neutral-500">× {product.quantity}</span>
             <span className="ml-2 text-neutral-700">
-              = ${(product.price * product.quantity).toFixed(2)}
+              = ${totalPrice.toFixed(2)}
             </span>
           </Text>
 
           {/* Quantity Controls */}
           <div className="inline-flex items-center gap-2 rounded-full border-2 border-neutral-200 bg-white p-1">
             <button
-              onClick={() => removeFromCart(product.sku)}
+              onClick={() => removeFromCart(cartKey)}
               disabled={hasError}
               className="w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center hover:bg-neutral-800 transition disabled:bg-neutral-300 disabled:cursor-not-allowed"
               aria-label="Decrease quantity"
@@ -172,7 +173,7 @@ export default function CheckoutCartItem({
             </span>
 
             <button
-              onClick={() => addToCart(normalizeCartProduct(product))}
+              onClick={() => addToCart(product)}
               disabled={hasError}
               className="w-8 h-8 rounded-full bg-neutral-900 text-white flex items-center justify-center hover:bg-neutral-800 transition disabled:bg-neutral-300 disabled:cursor-not-allowed"
               aria-label="Increase quantity"

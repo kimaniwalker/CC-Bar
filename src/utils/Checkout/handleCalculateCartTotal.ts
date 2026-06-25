@@ -1,12 +1,15 @@
 import { Cart } from "@/types/Cart";
+import { calculateProductPrice } from "@/utils/Cart/normalizeCartProduct";
 
 export const handleCalculateCartTotal = (
   cart: Cart,
   shippingMethod: "delivery" | "pickup",
   isVip: boolean,
 ) => {
+  // Calculate subtotal with product options
   const cartSubtotal = cart.reduce((total, item) => {
-    return total + item.price * item.quantity;
+    const itemPrice = calculateProductPrice(item);
+    return total + itemPrice * item.quantity;
   }, 0);
 
   const FREE_SHIPPING_THRESHOLD = 75;

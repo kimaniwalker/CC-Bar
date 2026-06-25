@@ -13,6 +13,7 @@ import { getUserSubscription } from "@/utils/Subscriptions/getUserSubscription";
 import { CartBanner } from "./CartBanner";
 import { Subscription } from "@/types/User";
 import { CartBannerSkeleton } from "./CartBannerSkeleton";
+import { getCartProductKey } from "@/utils/Cart/normalizeCartProduct";
 
 const VIP_DISCOUNT = 0.2; // 20% off
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -53,21 +54,22 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   }, [user?.id]);
 
   const handleCheckout = async () => {
-    // 👇 check stock first
+    // Check stock first
     const { valid, errors } = await validateStock(cart);
 
     if (!valid) {
       setErrors(errors);
-      return { success: false, errors }; // 👈 return errors to client
+      return { success: false, errors };
     }
+
     if (valid) {
       onClose();
       router.push("/checkout");
     }
   };
 
-  const handleClearError = (sku: string) => {
-    const filteredErrors = errors.filter((e) => e.sku !== sku);
+  const handleClearError = (key: string) => {
+    const filteredErrors = errors.filter((e) => e.key !== key);
     setErrors(filteredErrors);
   };
 
@@ -101,14 +103,19 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
                 <Text size="lg">Your cart is empty</Text>
               </div>
             ) : (
-              cart.map((product, index) => (
-                <CartProduct
-                  key={index}
-                  product={product}
-                  errors={errors}
-                  onHandleUpdateProductQuantity={(sku) => handleClearError(sku)}
-                />
-              ))
+              cart.map((product) => {
+                const cartKey = getCartProductKey(product);
+                return (
+                  <CartProduct
+                    key={cartKey}
+                    product={product}
+                    errors={errors}
+                    onHandleUpdateProductQuantity={(key) =>
+                      handleClearError(key)
+                    }
+                  />
+                );
+              })
             )}
           </div>
 

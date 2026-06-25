@@ -110,7 +110,7 @@ export function Navbar({
           <Text size="sm" className="my-2">
             Hand-poured luxury candles & fragrance experiences.{" "}
           </Text>
-          <Logout />
+          <Logout onLogout={onClose} />
         </div>
       </aside>
     </>

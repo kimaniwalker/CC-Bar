@@ -37,7 +37,7 @@ export const MockSubscriptionProductCard = () => {
           </Text>
         </div>
         <Text size="xs" className="mt-1 text-purple-600">
-          Cancel anytime • Billed on the 5th of each month
+          Cancel or skip anytime • Billed on the 5th of each month
         </Text>
       </div>
 

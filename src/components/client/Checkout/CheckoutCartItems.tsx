@@ -32,8 +32,8 @@ export const CheckoutCartItems = ({
       </div>
 
       <div className="space-y-3">
-        {cart.map((product) => (
-          <div key={`${product.sku}-${product.id}`}>
+        {cart.map((product, index) => (
+          <div key={index}>
             <CheckoutCartItem
               product={product}
               errors={errors}

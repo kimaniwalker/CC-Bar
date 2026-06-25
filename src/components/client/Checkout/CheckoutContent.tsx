@@ -28,8 +28,8 @@ export default function CheckoutContent({
 
   const cartSubtotal = getCartSubtotal();
 
-  const handleClearError = (sku: string) => {
-    setErrors((prev) => prev.filter((e) => e.sku !== sku));
+  const handleClearError = (key: string) => {
+    setErrors((prev) => prev.filter((e) => e.key !== key));
   };
 
   return (

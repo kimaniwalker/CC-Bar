@@ -6,12 +6,12 @@ import { useState } from "react";
 import ProductCardQuickAdd from "./ProductCardQuickAdd";
 import { useMediaQuery } from "react-responsive";
 import ProductCount from "./ProductCount";
-import { Product } from "@/types/Product";
+import { ProductWithOptions } from "@/types/Product";
 import { useRouter } from "next/navigation";
 import { ProductBadge } from "./ProductBadge";
 import { ProductHeartButton } from "../Favorites/ProductHeartButton";
 
-export default function ProductCard(product: Product) {
+export default function ProductCard(product: ProductWithOptions) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const [isHovered, setIsHovered] = useState(false);
   const { id, name, price, thumbnail } = product;
@@ -57,7 +57,7 @@ export default function ProductCard(product: Product) {
             {name}
           </Text>
           <Text size="md" className="mt-1 text-gray-900">
-            ${price.toFixed(2)}
+            ${price / 100}
           </Text>
         </Stack>
       </a>
