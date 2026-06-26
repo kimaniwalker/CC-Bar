@@ -26,10 +26,12 @@ export const usePosCheckout = () => {
     subtotal,
     userProfile,
     cart,
+    existing_order_id,
   }: {
     subtotal: number;
     userProfile: UserProfile | null;
     cart: CartProduct[];
+    existing_order_id?: string;
   }) {
     await createPosReader();
     const terminal = await getTerminal();
@@ -51,6 +53,7 @@ export const usePosCheckout = () => {
       terminal,
       options: {
         ...userProfile,
+        existing_order_id,
         id: userProfile?.id || "guest",
       },
       orderItems: cart,

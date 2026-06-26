@@ -24,6 +24,7 @@ export type ProductOptionGroups = {
   selection_type: "single" | "multiple";
   display_order: number;
   created_at: string;
+  max_selections?: number;
 };
 
 //option_group_id uuid not null references product_option_groups(id)

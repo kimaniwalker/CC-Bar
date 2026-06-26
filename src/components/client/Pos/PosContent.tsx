@@ -10,10 +10,11 @@ import { usePosCheckout } from "@/hooks/usePosCheckout";
 import { normalizeCartProduct } from "@/utils/Cart/normalizeCartProduct";
 import { ProductWithOptions } from "@/types/Product";
 import PosVariationsModal from "./PosVariationsModal";
-
 import { CartSidebar } from "./CartSidebar";
 import { ProductGrid } from "./ProductGrid";
 import { AddressCollectorModal } from "./AddressCollectorModal";
+import { useReservationContext } from "@/hooks/useReservationContext";
+import { ReservationBanner } from "../Reservations/ReservationBanner";
 
 export default function PosContent({
   products,
@@ -22,6 +23,7 @@ export default function PosContent({
 }) {
   const searchParams = useSearchParams();
   const user_id = searchParams.get("user_id");
+  const reservation_id = searchParams.get("reservation_id");
 
   const {
     cart,
@@ -37,6 +39,13 @@ export default function PosContent({
 
   const { userProfile, profileLoading, setUserProfile } =
     useUserProfile(user_id);
+
+  const {
+    reservation,
+    order,
+    loading: reservationLoading,
+  } = useReservationContext(reservation_id);
+
   const { checkout } = usePosCheckout();
   const { open } = useModal();
 
@@ -48,9 +57,19 @@ export default function PosContent({
         return;
       }
 
-      await checkout({ subtotal, userProfile, cart });
+      // Pass existing order ID if this is a reservation
+      await checkout({
+        subtotal,
+        userProfile,
+        cart,
+        existing_order_id: order?.id,
+      });
 
-      alert("Payment successful! Thank you for your purchase.");
+      alert(
+        order?.id
+          ? "Reservation completed! Items have been added to the order."
+          : "Payment successful! Thank you for your purchase.",
+      );
       setCart([]);
     } catch (error) {
       console.error("Error during checkout:", error);
@@ -120,6 +139,15 @@ export default function PosContent({
               className="max-w-sm bg-white"
             />
           </div>
+
+          {/* Reservation Banner */}
+          {reservation && order && (
+            <ReservationBanner
+              reservation={reservation}
+              order={order}
+              loading={reservationLoading}
+            />
+          )}
         </div>
 
         {/* Scrollable Products Grid */}

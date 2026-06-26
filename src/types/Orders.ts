@@ -11,6 +11,7 @@ export enum ORDER_STATUS {
   DELIVERED = "Delivered",
   CANCELLED = "Cancelled",
   PARTIALLY_PAID = "Partially Paid",
+  PAID = "Paid",
 }
 
 export interface Order {

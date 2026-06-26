@@ -44,7 +44,7 @@ export const ProductPrice = ({
           </Text>
           {on_sale && (
             <Text size="sm" className="text-gray-500 line-through ml-2">
-              ${price.toFixed(2)}
+              ${price / 100}
             </Text>
           )}
         </div>
@@ -57,10 +57,10 @@ export const ProductPrice = ({
     return (
       <div className="flex items-center gap-2">
         <Text size="md" className="text-gray-500 line-through">
-          ${price.toFixed(2)}
+          ${price / 100}
         </Text>
         <Text size="md" className="text-red-500 font-bold">
-          ${sale_price.toFixed(2)}
+          ${sale_price / 100}
         </Text>
       </div>
     );
@@ -69,7 +69,7 @@ export const ProductPrice = ({
   // Single price (regular)
   return (
     <Text size="md" className="font-bold">
-      ${price.toFixed(2)}
+      ${price / 100}
     </Text>
   );
 };

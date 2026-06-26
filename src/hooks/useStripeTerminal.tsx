@@ -91,7 +91,9 @@ export function useStripeTerminal() {
   }: {
     amount: number;
     terminal: Terminal;
-    options?: UserProfile & {};
+    options?: UserProfile & {
+      existing_order_id?: string;
+    };
     orderItems: CartProduct[];
   }): Promise<CollectPaymentResult> {
     setPaymentStatus("creating_intent");
