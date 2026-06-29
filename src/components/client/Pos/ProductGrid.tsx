@@ -68,7 +68,7 @@ function ProductCard({
 
       <div className="flex flex-1 flex-col gap-2 p-4">
         <Text size="sm">{product.name}</Text>
-        <Text size="sm">${product.price.toFixed(2)}</Text>
+        <Text size="sm">${product.price / 100}</Text>
       </div>
     </button>
   );

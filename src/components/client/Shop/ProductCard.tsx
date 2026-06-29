@@ -52,7 +52,7 @@ export default function ProductCard(product: ProductWithOptions) {
         <Stack direction="col">
           <Text
             size="sm"
-            className="mt-4 text-gray-700 w-35 sm:w-50 md:w-60 line-clamp-1 text-ellipsis text-lg"
+            className="mt-4 text-gray-700 w-35 sm:w-50 md:w-60 line-clamp-2 text-ellipsis text-lg"
           >
             {name}
           </Text>

@@ -1,3 +1,5 @@
+"use server";
+
 import { ProductWithOptions } from "@/types/Product";
 import { createClient } from "../supabase/server";
 
@@ -13,6 +15,7 @@ type FilterParams = {
   price?: string;
   scent?: string;
   size?: string;
+  type?: string; // NEW: Add type filter
 };
 
 export async function getProducts(
@@ -33,6 +36,11 @@ export async function getProducts(
   // Apply search filter
   if (query?.trim()) {
     queryBuilder = queryBuilder.ilike("name", `%${query}%`);
+  }
+
+  // Apply type filter - NEW
+  if (filters?.type) {
+    queryBuilder = queryBuilder.eq("type", filters.type);
   }
 
   // Apply sorting
@@ -78,13 +86,11 @@ export async function getProducts(
   if (filters?.price) {
     const [min, max] = filters.price.split("-").map(Number);
     filteredProducts = filteredProducts.filter((product) => {
-      // Get base price (starting price before options)
       const basePrice =
         product.on_sale && product.sale_price
           ? product.sale_price
           : product.price;
 
-      // Only check if base price is within range
       return basePrice / 100 >= min && basePrice / 100 <= max;
     });
   }
@@ -93,7 +99,6 @@ export async function getProducts(
   if (filters?.size) {
     const sizeFilter = filters.size.toLowerCase();
     filteredProducts = filteredProducts.filter((product) => {
-      // Check if there's a "Size" option group
       const sizeGroup = product.product_option_groups?.find(
         (group) => group.name.toLowerCase() === "size",
       );
@@ -112,14 +117,12 @@ export async function getProducts(
   if (filters?.scent) {
     const scentFilter = filters.scent.toLowerCase();
     filteredProducts = filteredProducts.filter((product) => {
-      // Check tags array for scent
       if (
         product.tags?.some((tag) => tag.toLowerCase().includes(scentFilter))
       ) {
         return true;
       }
 
-      // Check if there's a "Scent" option group
       const scentGroup = product.product_option_groups?.find(
         (group) => group.name.toLowerCase() === "fragrance",
       );

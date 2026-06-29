@@ -6,7 +6,9 @@ export default async function FeaturedProducts({
 }: {
   heading?: string;
 }) {
-  const products = await getProducts();
+  const products = await getProducts(undefined, undefined, {
+    type: "byo",
+  });
 
   return <ProductGrid products={products ?? []} heading={heading} />;
 }

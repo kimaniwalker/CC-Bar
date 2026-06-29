@@ -57,7 +57,7 @@ export default function ProductGrid({ products, heading }: ProductList) {
       <div className="w-full mx-auto max-w-2xl px-4  sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Products</h2>
         {heading && (
-          <Text size="lg" className="mb-6">
+          <Text size="sm" className="mb-6 text-xl font-semibold text-gray-900">
             {heading}
           </Text>
         )}

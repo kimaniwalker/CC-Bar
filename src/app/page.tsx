@@ -13,7 +13,7 @@ export default function Home() {
       <TrustBanner />
       <Suspense fallback={<ProductGridSkeleton />}>
         <div className="my-12">
-          <FeaturedProducts />
+          <FeaturedProducts heading="(BYO) - Build Your Own" />
         </div>
       </Suspense>
       <HowItWorks />

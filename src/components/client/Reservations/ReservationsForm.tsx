@@ -144,7 +144,7 @@ export const ReservationsForm = () => {
     activities: selectedActivities ?? [],
     addOns: selectedAddOns ?? [],
   });
-  const basePrice = 25;
+  const basePrice = 65;
   const estimatedTotal = basePrice + estimatedActivitiesAndAddOns;
   const remainingBalance = estimatedTotal - 25;
 
