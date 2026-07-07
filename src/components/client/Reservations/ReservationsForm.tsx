@@ -4,7 +4,6 @@ import { Input } from "@/components/ds/Input";
 import { MultiSelectField } from "@/components/ds/MultiSelect";
 import { Text } from "@/components/ds/Text";
 import useHandlePayment from "@/hooks/useHandleCheckout";
-import useStripe from "@/hooks/useStripe";
 import { ReservationsFormInputs, Timeslot } from "@/types/Reservations";
 import Stripe from "stripe";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -32,6 +31,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { checkout } from "@/utils/Reservations/checkout";
 
 export const ReservationsForm = () => {
   const date = useSearchParams().get("date") ?? undefined;
@@ -53,7 +53,6 @@ export const ReservationsForm = () => {
 
   const router = useRouter();
   const { formatReservationsData } = useHandlePayment();
-  const { checkout } = useStripe();
   const [timeSlots, setTimeSlots] = React.useState<Timeslot[]>([]);
   const [isLoadingSlots, setIsLoadingSlots] = React.useState(false);
   const { user } = useUser();
@@ -74,8 +73,8 @@ export const ReservationsForm = () => {
   }, [date]);
 
   const handleCheckout = async (body: Stripe.Checkout.SessionCreateParams) => {
-    const session = await checkout(body);
-    if (session.url) router.push(session.url);
+    const url = await checkout(body);
+    if (url) router.push(url);
   };
 
   const onSubmit: SubmitHandler<ReservationsFormInputs> = async (
@@ -146,7 +145,7 @@ export const ReservationsForm = () => {
   });
   const basePrice = 65;
   const estimatedTotal = basePrice + estimatedActivitiesAndAddOns;
-  const remainingBalance = estimatedTotal - 25;
+  const remainingBalance = estimatedTotal - basePrice;
 
   return (
     <div className="min-h-screen bg-linear-to-b from-neutral-50 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -434,7 +433,7 @@ export const ReservationsForm = () => {
                         Due Today
                       </Text>
                       <Text size="md" className="font-bold text-yellow-300">
-                        $25 Deposit
+                        $65 Deposit
                       </Text>
                     </div>
                     <Text size="xs" className="text-white/60">
@@ -479,7 +478,7 @@ export const ReservationsForm = () => {
                 type="submit"
                 className="w-full py-4 bg-neutral-900 text-white rounded-full font-bold text-lg hover:bg-neutral-800 disabled:bg-neutral-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                Reserve with $25 Deposit
+                Reserve with $65 Deposit
               </button>
             </motion.div>
           </form>

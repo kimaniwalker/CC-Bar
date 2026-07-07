@@ -7,10 +7,10 @@ import { calculateNextRenewalDate } from "./calculateNextRenewalDate";
 import { createClient } from "../supabase/server";
 import { handleAddNewOrder } from "../Orders/handleAddNewOrder";
 import { ORDER_STATUS } from "@/types/Orders";
-import { retreiveCheckoutSession } from "@/hooks/useStripe";
 import Stripe from "stripe";
 import { withRewards } from "../Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
+import { retreiveCheckoutSession } from "../Cart/retrieveCheckoutSession";
 
 // Extend the Stripe Session type to include invoice
 interface SubscriptionSession extends Stripe.Checkout.Session {
@@ -18,8 +18,7 @@ interface SubscriptionSession extends Stripe.Checkout.Session {
 }
 
 export const handleShopSubscription = async (sessionId: string) => {
-  const { session: rawSession, lineItems } =
-    await retreiveCheckoutSession(sessionId);
+  const { session: rawSession } = await retreiveCheckoutSession(sessionId);
   const session = rawSession as SubscriptionSession;
   const supabase = await createClient();
 
@@ -40,7 +39,7 @@ export const handleShopSubscription = async (sessionId: string) => {
 
   // Collect all stock updates
 
-  const stockUpdates = lineItems.reduce(
+  const stockUpdates = session?.line_items?.data.reduce(
     (acc, item) => {
       const product = item.price?.product as Stripe.Product;
       const { product_id, sku } = product?.metadata || {};
@@ -96,7 +95,7 @@ export const handleShopSubscription = async (sessionId: string) => {
           throw error;
         }
 
-        console.log(`✅ Stock synced for ${stockUpdates.length} items`);
+        console.log(`✅ Stock synced for ${stockUpdates?.length} items`);
         // Create order record
         console.log("✅ Creating new subscription order:", session.invoice);
 
@@ -110,7 +109,7 @@ export const handleShopSubscription = async (sessionId: string) => {
             subtotal: session.amount_subtotal ?? 0,
             shipping_total: session.total_details?.amount_shipping ?? 0,
             status: ORDER_STATUS.CONFIRMED,
-            lineItems,
+            lineItems: session?.line_items?.data || [],
           },
         });
 

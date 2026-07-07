@@ -1,9 +1,9 @@
 "use server";
 
-import { retreiveCheckoutSession } from "@/hooks/useStripe";
 import { handleAddNewOrder } from "@/utils/Orders/handleAddNewOrder";
 import { ORDER_STATUS } from "@/types/Orders";
 import type Stripe from "stripe";
+import { retreiveCheckoutSession } from "./retrieveCheckoutSession";
 
 export async function handleOrderCheckout(
   stripeSession: Stripe.Checkout.Session,
