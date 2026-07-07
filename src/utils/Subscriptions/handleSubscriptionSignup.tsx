@@ -1,6 +1,7 @@
 "use server";
 
 import { CheckoutType } from "@/types/Reservations";
+import { getDomain } from "@/utils/Formatters/getDomain";
 import Stripe from "stripe";
 
 export const handleSubscriptionSignup = async ({
@@ -14,6 +15,7 @@ export const handleSubscriptionSignup = async ({
 }) => {
   // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  const domain = getDomain();
 
   const priceId = process.env.STRIPE_SUBSCRIPTION_PRICE_ID;
   const vipFlowPriceId = process.env.STRIPE_VIP_SUBSCRIPTION_PRICE_ID; // Same price for VIP flow, but could be different if needed
@@ -127,8 +129,8 @@ export const handleSubscriptionSignup = async ({
       ],
     }),
     line_items: checkoutLineItems,
-    success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SUBSCRIPTION}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
+    success_url: `${domain}/success?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SUBSCRIPTION}`,
+    cancel_url: `${domain}${redirect_url}`,
   });
 
   return session.url;

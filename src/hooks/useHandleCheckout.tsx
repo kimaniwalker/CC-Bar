@@ -7,6 +7,7 @@ import {
   calculateProductPrice,
   formatSelectedOptions,
 } from "@/utils/Cart/normalizeCartProduct";
+import { getDomain } from "@/utils/Formatters/getDomain";
 
 export default function useHandlePayment() {
   return {
@@ -98,14 +99,16 @@ function formatBody(
   redirect_url: string,
   user?: UserProfile | null,
 ) {
+  const domain = getDomain();
+
   const body = {
     mode: "payment" as Stripe.Checkout.SessionCreateParams.Mode,
     line_items: formatLineItems(cart),
     client_reference_id: user?.id ?? "guest",
     metadata: { type: CheckoutType.SHOP, user_id: user?.id ?? "guest" },
     submit_type: "pay" as Stripe.Checkout.SessionCreateParams.SubmitType,
-    success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
+    success_url: `${domain}/success?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.SHOP}`,
+    cancel_url: `${domain}${redirect_url}`,
     allow_promotion_codes: true,
     payment_method_types: [
       "card",
@@ -184,6 +187,8 @@ function formatReservationsData({
 }) {
   const metadata = formatReservationsMetadata(ReservationsFormData);
   const line_items = formatReservationsLineItems(ReservationsFormData);
+  const domain = getDomain();
+
   const body = {
     line_items,
     mode: "payment" as Stripe.Checkout.SessionCreateParams.Mode,
@@ -191,8 +196,8 @@ function formatReservationsData({
     customer_email: ReservationsFormData.email,
     client_reference_id: user_id ?? "guest",
     submit_type: "pay" as Stripe.Checkout.SessionCreateParams.SubmitType,
-    success_url: `${process.env.NEXT_PUBLIC_DOMAIN}success/?session_id={CHECKOUT_SESSION_ID}&type=${CheckoutType.RESERVATION}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}${redirect_url}`,
+    success_url: `${domain}/success?session_id={CHECKOUT_SESSION_ID}&type=reservation`,
+    cancel_url: `${domain}${redirect_url}`,
     allow_promotion_codes: true,
     payment_method_types: [
       "card",
