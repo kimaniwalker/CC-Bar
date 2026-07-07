@@ -25,8 +25,7 @@ export default async function Page({
   }>;
 }) {
   const params = await searchParams;
-  const query = params.query ?? "";
-  const selectedCategory = params.category ?? "";
+  const query = params.query ?? params.category ?? "";
   const sort = params.sort ?? "";
 
   const products = await getProducts(query, sort, {
@@ -38,12 +37,12 @@ export default async function Page({
   return (
     <>
       <Suspense fallback={<CategorySkeleton />}>
-        <Categories selectedCategory={selectedCategory} />
+        <Categories selectedCategory={query} />
       </Suspense>
       <Suspense fallback={<CategoryBannerSkeleton />}>
         <CategoryBanner
           product_count={products.length}
-          selectedCategory={selectedCategory || query || "All Products"}
+          selectedCategory={query || "All Products"}
         />
       </Suspense>
 

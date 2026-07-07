@@ -62,7 +62,7 @@ export function Navbar({
               onClick={onClose}
               className="transition hover:text-black"
             >
-              Candle Classes
+              CCB CLASSES
             </Link>
 
             <Link

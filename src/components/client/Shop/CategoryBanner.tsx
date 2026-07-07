@@ -1,6 +1,7 @@
 import { montserrat } from "@/components/ds/Fonts";
 import { Text } from "@/components/ds/Text";
 import { getCategories } from "@/utils/Shop/getCategories";
+import { capitalize } from "lodash";
 import { Package, Sparkles } from "lucide-react";
 
 export const CategoryBanner = async ({
@@ -43,7 +44,7 @@ export const CategoryBanner = async ({
               as="div"
               className="text-4xl sm:text-5xl md:text-7xl font-black text-neutral-900 tracking-tight"
             >
-              {selectedCategory}
+              {capitalize(selectedCategory)}
             </Text>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full border-2 border-neutral-200 shadow-sm">
               <Package className="w-4 h-4 text-neutral-600" />

@@ -35,7 +35,11 @@ export async function getProducts(
 
   // Apply search filter
   if (query?.trim()) {
-    queryBuilder = queryBuilder.ilike("name", `%${query}%`);
+    const searchTerm = `%${query}%`;
+
+    queryBuilder = queryBuilder.or(
+      `name.ilike.${searchTerm},description.ilike.${searchTerm},sku.ilike.${searchTerm}`,
+    );
   }
 
   // Apply type filter - NEW
