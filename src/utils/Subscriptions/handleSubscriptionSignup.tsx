@@ -15,8 +15,8 @@ export const handleSubscriptionSignup = async ({
   // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-  const priceId = "price_1TcSveHqeKE5XTo5yFbPSmfa";
-  const vipFlowPriceId = "price_1TgUSjHqeKE5XTo5zw7a290X"; // Same price for VIP flow, but could be different if needed
+  const priceId = process.env.STRIPE_SUBSCRIPTION_PRICE_ID;
+  const vipFlowPriceId = process.env.STRIPE_VIP_SUBSCRIPTION_PRICE_ID; // Same price for VIP flow, but could be different if needed
 
   const priceIdToUse =
     metadata?.is_vip_subscription_flow === "true" ? vipFlowPriceId : priceId;
