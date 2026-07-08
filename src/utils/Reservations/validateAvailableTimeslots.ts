@@ -17,7 +17,7 @@ export const validateAvailableTimeslots = async ({
     selected_date: selected_date, // e.g. "2026-05-26"
     slot_start_utc: selected_slot, // a Date object or ISO string for the slot start
     requested_guests: Number(guests),
-    max_capacity: 4, // optional if your function default is 4
+    max_capacity: 20, // optional if your function default is 4
   });
 
   if (error) {
@@ -34,7 +34,7 @@ export const validateAvailableTimeslots = async ({
       available: false,
       reason:
         data.remaining_capacity < guests
-          ? `Not enough capacity for the selected time slot. Only ${data.remaining_capacity} left`
+          ? `Only ${data.remaining_capacity} slots left for the selected time.`
           : "Selected time slot is fully booked.",
     };
   }
