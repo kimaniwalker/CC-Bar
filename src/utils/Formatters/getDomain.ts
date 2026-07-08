@@ -1,6 +1,7 @@
 export const getDomain = () => {
-  if (process.env.VERCEL_ENV === "production") {
-    return process.env.NEXT_PUBLIC_DOMAIN;
+  // Check if we have a production domain set
+  if (process.env.NEXT_PUBLIC_DOMAIN || process.env.DOMAIN) {
+    return process.env.NEXT_PUBLIC_DOMAIN || process.env.DOMAIN;
   }
 
   const vercelUrl =
