@@ -14,6 +14,7 @@ import {
   MailIcon,
   MailOpen,
 } from "lucide-react";
+import { getDomain } from "@/utils/Formatters/getDomain";
 
 export const Login = () => {
   const supabase = createClient();
@@ -39,13 +40,14 @@ export const Login = () => {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const signInWithEmail = async () => {
+    const domain = getDomain();
     setIsSubmitting(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email: email,
         options: {
           shouldCreateUser: true,
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_SUPABASE_AUTH_REDIRECT_URL!}${shouldRedirect ? `?redirect_to=${shouldRedirect}` : ""}`,
+          emailRedirectTo: `${domain!}/api/auth/callback${shouldRedirect ? `?redirect_to=${shouldRedirect}` : ""}`,
         },
       });
       if (error) {
