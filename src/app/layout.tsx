@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        <GoogleTagManager gtmId="G-MHW50SCV5R" />
+        <GoogleTagManager gtmId="GTM-K7L78RMQ" />
         <AuthProvider>
           <CartModalProvider>
             <CartProvider>
