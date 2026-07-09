@@ -7,6 +7,7 @@ import { CartModalProvider } from "@/components/client/CartModalContext";
 import { AuthProvider } from "@/components/client/Auth/AuthContext";
 import { FavoritesProvider } from "@/components/client/Favorites/FavoritesContext";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,6 +29,7 @@ export default function RootLayout({
                 <FavoritesProvider>
                   <Header />
                   {children}
+                  <Analytics />
                   <Toaster
                     position="top-right"
                     richColors
