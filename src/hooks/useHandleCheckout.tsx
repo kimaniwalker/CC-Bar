@@ -163,7 +163,7 @@ function formatReservationsLineItems(data: ReservationsFormInputs) {
   const body = {
     price_data: {
       currency: "usd",
-      unit_amount: 6500,
+      unit_amount: data.guests >= 5 ? 5000 : 6500,
       product_data: {
         name: "CC BAR Creative Experience",
         description: `Date: ${data.date} Time: ${data.time} Guests: ${data.guests}`,

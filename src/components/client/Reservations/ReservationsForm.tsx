@@ -6,7 +6,7 @@ import { Text } from "@/components/ds/Text";
 import useHandlePayment from "@/hooks/useHandleCheckout";
 import { ReservationsFormInputs, Timeslot } from "@/types/Reservations";
 import Stripe from "stripe";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import {
   SubmitHandler,
@@ -35,6 +35,9 @@ import { checkout } from "@/utils/Reservations/checkout";
 
 export const ReservationsForm = () => {
   const date = useSearchParams().get("date") ?? undefined;
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const methods = useForm<ReservationsFormInputs>({
     mode: "onBlur",
     reValidateMode: "onChange",
@@ -92,8 +95,14 @@ export const ReservationsForm = () => {
       });
       return;
     }
+
+    // Build current URL for redirect
+    const currentUrl = searchParams.toString()
+      ? `${pathname}?${searchParams.toString()}`
+      : pathname;
+
     const reservationsData = formatReservationsData({
-      redirect_url: "/",
+      redirect_url: currentUrl,
       ReservationsFormData: reservation,
       user_id: user?.id,
     });
@@ -139,13 +148,25 @@ export const ReservationsForm = () => {
     return activityTotal + addOnTotal;
   };
 
+  // Get current guest count
+  const guestsCount =
+    useWatch({ control: methods.control, name: "guests" }) ?? 1;
+  const numberOfGuests = Number(guestsCount);
+
+  // Group rate pricing: 5+ people get $45/person instead of $65/person
+  const isGroupRate = numberOfGuests >= 5;
+  const basePrice = isGroupRate ? 50 : 65;
+  const depositAmount = basePrice; // Deposit is same as base price per person
+
   const estimatedActivitiesAndAddOns = calculateEstimatedTotal({
     activities: selectedActivities ?? [],
     addOns: selectedAddOns ?? [],
   });
-  const basePrice = 65;
-  const estimatedTotal = basePrice + estimatedActivitiesAndAddOns;
-  const remainingBalance = estimatedTotal - basePrice;
+
+  const estimatedTotal =
+    basePrice * numberOfGuests + estimatedActivitiesAndAddOns;
+  const totalDeposit = depositAmount * numberOfGuests;
+  const remainingBalance = estimatedTotal - totalDeposit;
 
   return (
     <div className="min-h-screen bg-linear-to-b from-neutral-50 to-white py-12 px-4 sm:px-6 lg:px-8">
@@ -365,12 +386,33 @@ export const ReservationsForm = () => {
               </Text>
 
               <div className="space-y-4">
+                {/* Group Rate Banner */}
+                {isGroupRate && (
+                  <div className="bg-yellow-300/20 border border-yellow-300/30 rounded-xl p-4 mb-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles className="w-4 h-4 text-yellow-300" />
+                      <Text size="sm" className="font-semibold text-yellow-300">
+                        Group Rate Applied!
+                      </Text>
+                    </div>
+                    <Text size="xs" className="text-white/70">
+                      Save ${(65 - 50) * numberOfGuests} with our group pricing
+                    </Text>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                  <Text size="sm" className="text-white/70">
-                    Base Experience
-                  </Text>
+                  <div>
+                    <Text size="sm" className="text-white/70">
+                      Base Experience
+                    </Text>
+                    <Text size="xs" className="text-white/50">
+                      ${basePrice} × {numberOfGuests}{" "}
+                      {numberOfGuests > 1 ? "guests" : "guest"}
+                    </Text>
+                  </div>
                   <Text size="md" className="font-semibold">
-                    ${basePrice}
+                    ${basePrice * numberOfGuests}
                   </Text>
                 </div>
 
@@ -433,11 +475,12 @@ export const ReservationsForm = () => {
                         Due Today
                       </Text>
                       <Text size="md" className="font-bold text-yellow-300">
-                        $65 Deposit
+                        ${totalDeposit} Deposit
                       </Text>
                     </div>
                     <Text size="xs" className="text-white/60">
-                      Secures your reservation
+                      ${depositAmount} per person × {numberOfGuests}{" "}
+                      {numberOfGuests > 1 ? "guests" : "guest"}
                     </Text>
                   </div>
 
@@ -478,7 +521,12 @@ export const ReservationsForm = () => {
                 type="submit"
                 className="w-full py-4 bg-neutral-900 text-white rounded-full font-bold text-lg hover:bg-neutral-800 disabled:bg-neutral-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                Reserve with $65 Deposit
+                Reserve with ${totalDeposit} Deposit
+                {numberOfGuests > 1 && (
+                  <span className="text-sm font-normal ml-1">
+                    (${depositAmount} per person)
+                  </span>
+                )}
               </button>
             </motion.div>
           </form>
