@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { Calendar, Sparkles, Users, Flame } from "lucide-react";
 import BgLottie from "./BgLottie";
-import { sendGAEvent, sendGTMEvent } from "@next/third-parties/google";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function HomePageBanner() {
   const router = useRouter();
@@ -20,12 +20,7 @@ export default function HomePageBanner() {
   };
 
   const handleBookClick = () => {
-    sendGTMEvent({ event: "buttonClicked", value: "Reserve Your Spot" });
-    sendGAEvent({
-      action: "buttonClicked",
-      category: "HomePageBanner",
-      label: "Reserve Your Spot",
-    });
+    sendGAEvent("event", "buttonClicked", { value: "Reserve Your Spot" });
     router.push("/reservations?date=" + getTodayCST());
   };
 
