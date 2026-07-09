@@ -9,7 +9,7 @@ import { FavoritesProvider } from "@/components/client/Favorites/FavoritesContex
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { GoogleTagManager } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -25,6 +25,7 @@ export default function RootLayout({
     <html>
       <body>
         <GoogleTagManager gtmId="GTM-K7L78RMQ" />
+        <GoogleAnalytics gaId="G-MHW50SCV5R" />
         <AuthProvider>
           <CartModalProvider>
             <CartProvider>
