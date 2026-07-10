@@ -155,17 +155,26 @@ export default function TermsPage() {
 
           <Text className="font-semibold mt-4">8.4 Opt-Out Instructions</Text>
           <Text>
-            You can opt out of SMS messages at any time by replying STOP to any
-            message. After opting out, you will receive one final confirmation
-            message. You may continue to receive transactional messages related
-            to active orders or reservations.
+            You can opt out of SMS messages at any time by replying{" "}
+            <span className="font-bold">STOP</span> to any message. After opting
+            out, you will receive one final confirmation message. You may
+            continue to receive transactional messages related to active orders
+            or reservations.
           </Text>
 
           <Text className="font-semibold mt-4">8.5 Help & Support</Text>
           <Text>
-            For help with SMS messages, reply HELP to any message or contact us
-            at support@candlecowbar.com. For customer service, visit our website
-            or call our store directly.
+            For help with SMS messages, reply{" "}
+            <span className="font-bold">HELP</span> to any message or contact us
+            at{" "}
+            <a
+              href="mailto:support@candlecowbar.com"
+              className="underline hover:text-neutral-600"
+            >
+              support@candlecowbar.com
+            </a>
+            . For customer service, visit our website or call our store
+            directly.
           </Text>
 
           <Text className="font-semibold mt-4">8.6 No Third-Party Sharing</Text>
@@ -185,8 +194,14 @@ export default function TermsPage() {
           </Text>
           <Text>
             Your phone number is stored securely and used only as described in
-            these terms. See our Privacy Policy for complete details on how we
-            handle your information.
+            these terms. See our{" "}
+            <a
+              href="/privacy"
+              className="underline font-semibold hover:text-neutral-600"
+            >
+              Privacy Policy
+            </a>{" "}
+            for complete details on how we handle your information.
           </Text>
 
           <Text className="font-semibold mt-4">8.8 Carrier Liability</Text>
@@ -213,7 +228,16 @@ export default function TermsPage() {
           Your data is never used for affiliate marketing, lead generation, or
           any third-party marketing purposes.
         </Text>
-        <Text>For complete details, please review our Privacy Policy.</Text>
+        <Text>
+          For complete details, please review our{" "}
+          <a
+            href="/privacy"
+            className="underline font-semibold hover:text-neutral-600"
+          >
+            Privacy Policy
+          </a>
+          .
+        </Text>
       </section>
 
       <section className="flex flex-col gap-3">
