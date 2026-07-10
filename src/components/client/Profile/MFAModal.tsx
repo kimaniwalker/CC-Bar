@@ -43,12 +43,12 @@ export const MFAModal = () => {
   return (
     <div className="rounded-3xl border border-neutral-200 bg-[#F8F5F1] p-5 relative flex flex-col w-full">
       <Text size="md" className="font-semibold text-neutral-900">
-        Enable phone sign in
+        Add Your Mobile Number
       </Text>
 
       <Text size="sm" className="mt-2 text-sm leading-6 text-neutral-500">
-        Rewards await! Add your phone number for faster sign in and order
-        updates.
+        Receive one-time verification codes, reservation updates, and order
+        notifications via SMS.
       </Text>
 
       {step === "add_phone" ? (
@@ -79,10 +79,11 @@ export const MFAModal = () => {
               className="mt-1 h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900 focus:ring-offset-0 cursor-pointer"
             />
             <Text size="xs" className="text-sm text-neutral-500">
-              By continuing, you agree to receive SMS messages for account
-              access and notifications. You may receive up to 5 messages per
-              month. Reply STOP to unsubscribe, HELP for assistance. Message and
-              data rates may apply. See our{" "}
+              By checking this box, you agree to receive SMS messages from
+              Candle Cow Bar regarding account verification, reservations, order
+              updates, and customer support. Message frequency varies. Message
+              and data rates may apply. Reply STOP to opt out and HELP for help.
+              Consent is not a condition of purchase. See our{" "}
               <a href="/terms" className="underline hover:text-neutral-900">
                 Terms of Service
               </a>{" "}

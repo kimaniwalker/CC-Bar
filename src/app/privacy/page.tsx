@@ -1,18 +1,21 @@
 import { Text } from "@/components/ds/Text";
 
-export default function TermsAndPrivacyPage() {
+export default function PrivacyPolicyPage() {
   return (
     <div className="mx-auto flex w-full max-w-4xl flex-col gap-10 px-6 py-16">
       <div className="flex flex-col gap-4">
         <Text size="lg" className="font-semibold md:text-2xl">
-          Terms & Conditions / Privacy Policy
+          Privacy Policy
         </Text>
 
         <Text size="sm">
-          By using our website, creating an account, placing an order, or
-          signing up for communications, you agree to the following terms and
-          privacy practices.
+          Candle Cow Bar respects your privacy and is committed to protecting
+          the personal information you provide. This Privacy Policy explains
+          what information we collect, how we use it, and the choices available
+          to you.
         </Text>
+
+        <Text size="sm">Last Updated: July 2026</Text>
       </div>
 
       <section className="flex flex-col gap-4">
@@ -21,24 +24,31 @@ export default function TermsAndPrivacyPage() {
         </Text>
 
         <Text size="sm">
-          We only collect and store limited user information necessary to
-          provide and improve our services.
+          We collect only the information necessary to provide our products,
+          services, and customer experience.
         </Text>
-
-        <Text size="sm">The information we may collect includes:</Text>
 
         <ul className="flex list-disc flex-col gap-2 pl-5 text-sm text-neutral-700">
           <Text as="li" size="sm">
+            Name (if provided)
+          </Text>
+
+          <Text as="li" size="sm">
             Email address
           </Text>
+
           <Text as="li" size="sm">
-            Phone number (if voluntarily provided)
+            Mobile phone number (when voluntarily provided)
+          </Text>
+
+          <Text as="li" size="sm">
+            Reservation and order information
+          </Text>
+
+          <Text as="li" size="sm">
+            Account preferences and loyalty information
           </Text>
         </ul>
-
-        <Text size="sm">
-          We do not intentionally collect unnecessary personal information.
-        </Text>
       </section>
 
       <section className="flex flex-col gap-4">
@@ -47,92 +57,110 @@ export default function TermsAndPrivacyPage() {
         </Text>
 
         <Text size="sm">
-          Your information is used strictly for business and customer experience
-          purposes, including:
+          We use your information to operate and improve Candle Cow Bar,
+          including to:
         </Text>
 
         <ul className="flex list-disc flex-col gap-2 pl-5 text-sm text-neutral-700">
           <Text as="li" size="sm">
-            Simplifying and securing the login process
+            Create and manage your account
           </Text>
+
           <Text as="li" size="sm">
-            Providing order updates and tracking notifications
+            Authenticate your identity and provide secure account access
           </Text>
+
           <Text as="li" size="sm">
-            Communicating important account or order information
+            Process reservations and purchases
           </Text>
+
           <Text as="li" size="sm">
-            Sending promotional offers, discounts, new product releases, and
-            marketing updates
+            Send order confirmations, reservation confirmations, reminders, and
+            other account-related notifications
+          </Text>
+
+          <Text as="li" size="sm">
+            Respond to customer service requests
+          </Text>
+
+          <Text as="li" size="sm">
+            Improve our products, services, and website
           </Text>
         </ul>
       </section>
 
       <section className="flex flex-col gap-4">
         <Text size="md" className="font-semibold">
-          Marketing Communications
+          SMS Communications
         </Text>
 
         <Text size="sm">
-          By creating an account or providing your contact information, you
-          agree to receive marketing and promotional communications from us.
+          If you voluntarily provide your mobile phone number and explicitly
+          consent to receive SMS messages, we may send transactional text
+          messages related to your account and services.
         </Text>
 
-        <Text size="sm">These communications may include:</Text>
+        <Text size="sm">These messages may include:</Text>
 
         <ul className="flex list-disc flex-col gap-2 pl-5 text-sm text-neutral-700">
           <Text as="li" size="sm">
-            Exclusive discounts and offers
+            One-time verification codes
           </Text>
+
           <Text as="li" size="sm">
-            Product launches and restocks
+            Reservation confirmations and reminders
           </Text>
+
           <Text as="li" size="sm">
-            Event announcements and candle class updates
+            Order confirmations and order status updates
           </Text>
+
           <Text as="li" size="sm">
-            Rewards and loyalty program information
+            Customer support communications
           </Text>
         </ul>
 
         <Text size="sm">
-          Users may opt out of promotional messages at any time by following the
-          unsubscribe instructions included in emails or by replying “STOP” to
-          SMS marketing messages.
+          Promotional SMS messages will only be sent to users who separately opt
+          in to receive marketing communications.
         </Text>
       </section>
 
       <section className="flex flex-col gap-4">
         <Text size="md" className="font-semibold">
-          Data Protection
+          Sharing Your Information
         </Text>
 
         <Text size="sm">
-          We take reasonable measures to protect your information from
-          unauthorized access, misuse, or disclosure.
+          We do not sell, rent, or trade your personal information.
         </Text>
 
         <Text size="sm">
-          While we strive to use commercially acceptable methods to protect your
-          data, no method of electronic storage or transmission over the
-          internet is completely secure.
+          We may share information with trusted service providers that help us
+          operate our business, including payment processing, authentication,
+          messaging delivery, shipping, analytics, and website hosting.
+        </Text>
+
+        <Text size="sm" className="font-medium">
+          Mobile phone numbers and SMS consent are not shared with third parties
+          or affiliates for marketing or promotional purposes.
         </Text>
       </section>
 
       <section className="flex flex-col gap-4">
         <Text size="md" className="font-semibold">
-          Third-Party Services
+          Data Security
         </Text>
 
         <Text size="sm">
-          We may use trusted third-party providers for services such as payment
-          processing, authentication, shipping, analytics, and communication
-          delivery.
+          We implement reasonable administrative, technical, and physical
+          safeguards to help protect your personal information from unauthorized
+          access, disclosure, alteration, or destruction.
         </Text>
 
         <Text size="sm">
-          These providers only receive information necessary to perform their
-          services and are expected to handle user data responsibly.
+          While we strive to protect your information, no method of electronic
+          storage or internet transmission is completely secure.
         </Text>
       </section>
 
@@ -142,44 +170,54 @@ export default function TermsAndPrivacyPage() {
         </Text>
 
         <Text size="sm">
-          Our website may use cookies or analytics tools to improve website
-          functionality, monitor performance, and enhance the customer
+          We use cookies and analytics tools to improve website performance,
+          understand how visitors use our website, and enhance your overall
           experience.
         </Text>
       </section>
 
       <section className="flex flex-col gap-4">
         <Text size="md" className="font-semibold">
-          User Responsibilities
+          Your Choices
         </Text>
 
         <Text size="sm">
-          Users agree not to misuse the website, interfere with platform
-          functionality, attempt unauthorized access, or engage in fraudulent
-          activity.
+          You may update your account information at any time through your
+          account settings.
+        </Text>
+
+        <Text size="sm">
+          You may opt out of promotional emails using the unsubscribe link
+          included in those messages.
+        </Text>
+
+        <Text size="sm">
+          If you have opted in to SMS communications, you may stop receiving SMS
+          messages by replying <strong>STOP</strong>. Reply{" "}
+          <strong>HELP</strong> for assistance.
         </Text>
       </section>
 
       <section className="flex flex-col gap-4">
         <Text size="md" className="font-semibold">
-          Policy Updates
+          Changes to This Policy
         </Text>
 
         <Text size="sm">
-          We reserve the right to update or modify these Terms & Conditions and
-          Privacy Policy at any time. Changes become effective immediately upon
-          being posted to this page.
+          We may update this Privacy Policy from time to time. Any changes will
+          be posted on this page with an updated effective date.
         </Text>
       </section>
 
       <section className="flex flex-col gap-4">
         <Text size="md" className="font-semibold">
-          Contact
+          Contact Us
         </Text>
 
         <Text size="sm">
-          If you have questions regarding these terms or privacy practices,
-          please contact us directly through our website or support channels.
+          If you have questions regarding this Privacy Policy or how your
+          information is handled, please contact Candle Cow Bar through our
+          website.
         </Text>
       </section>
     </div>
