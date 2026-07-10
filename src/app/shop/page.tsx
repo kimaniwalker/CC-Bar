@@ -11,6 +11,12 @@ import ProductGridSkeleton from "@/components/client/Shop/ProductGridSkeleton";
 import { ProductFilters } from "@/components/client/Shop/ProductFilters";
 import { getProducts } from "@/utils/Shop/getProducts";
 import { Suspense } from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Shop",
+  description: "Shop luxury candles, soaps, body care, and home fragrances.",
+};
 
 export default async function Page({
   searchParams,

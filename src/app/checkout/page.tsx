@@ -2,6 +2,14 @@ import { Suspense } from "react";
 import CheckoutWrapper from "@/components/client/Checkout/CheckoutWrapper";
 import { CheckoutLoadingState } from "@/components/client/Checkout/CheckoutLoadingState";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Checkout",
+  description:
+    "Proceed to checkout and complete your purchase of luxury candles, soaps, body care, and home fragrances.",
+};
+
 export default async function CheckoutPage({
   searchParams,
 }: {

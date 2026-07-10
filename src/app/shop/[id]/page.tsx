@@ -12,6 +12,35 @@ import { Suspense } from "react";
 
 import { notFound } from "next/navigation";
 import { ProductDetailsContent } from "@/components/client/Shop/ProductDetailsContent";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { id: product_id } = await params;
+  const productDetails = await getProductDetails(product_id);
+
+  // Handle product not found
+  if (!productDetails || productDetails.length === 0) {
+    notFound();
+  }
+
+  const product = productDetails[0];
+
+  return {
+    title: product.name,
+    description: product.description,
+
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.thumbnail],
+    },
+  };
+}
 
 export default async function ProductDetails({
   params,

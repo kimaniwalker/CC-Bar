@@ -1,14 +1,14 @@
 import { ProductWithOptions } from "@/types/Product";
 import { createClient } from "../supabase/server";
+import { cache } from "react";
 
 // accept a single id or an array of ids
-export const getProductDetails = async (
-  ids: string | string[],
-): Promise<ProductWithOptions[]> => {
-  const supabase = await createClient();
+export const getProductDetails = cache(
+  async (ids: string | string[]): Promise<ProductWithOptions[]> => {
+    const supabase = await createClient();
 
-  // build query depending on whether ids is an array or single value
-  let query = supabase.from("products").select(`
+    // build query depending on whether ids is an array or single value
+    let query = supabase.from("products").select(`
     *,
     product_option_groups (
       *,
@@ -16,18 +16,19 @@ export const getProductDetails = async (
     )
   `);
 
-  if (Array.isArray(ids)) {
-    query = query.in("id", ids);
-  } else {
-    query = query.eq("id", ids);
-  }
+    if (Array.isArray(ids)) {
+      query = query.in("id", ids);
+    } else {
+      query = query.eq("id", ids);
+    }
 
-  const { data, error } = await query;
+    const { data, error } = await query;
 
-  if (error) {
-    console.error("Error fetching products:", error);
-    return [];
-  }
+    if (error) {
+      console.error("Error fetching products:", error);
+      return [];
+    }
 
-  return (data ?? []) as ProductWithOptions[];
-};
+    return (data ?? []) as ProductWithOptions[];
+  },
+);
