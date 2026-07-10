@@ -57,13 +57,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         isSameCartProduct(p, normalizedItem),
       );
 
-      if (existingIndex !== -1) {
-        // Increment quantity of existing item
-        return prev.map((p, idx) =>
-          idx === existingIndex ? { ...p, quantity: p.quantity + 1 } : p,
-        );
-      }
-
       // Handle fragrance - could be string or array
       const fragranceValue = item.selected_options?.fragrance?.optionName;
       const fragrance = Array.isArray(fragranceValue)
@@ -81,6 +74,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         size: item.selected_options?.size?.optionName || null,
         fragrance,
       });
+
+      if (existingIndex !== -1) {
+        // Increment quantity of existing item
+        return prev.map((p, idx) =>
+          idx === existingIndex ? { ...p, quantity: p.quantity + 1 } : p,
+        );
+      }
 
       // Add new item with quantity 1
       return [...prev, { ...normalizedItem, quantity: 1 }];
