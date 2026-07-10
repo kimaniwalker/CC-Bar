@@ -6,7 +6,6 @@ import { useModal } from "../ModalContext";
 import ProductVariationsModal from "./ProductVariationsModal";
 import { Trash2, ShoppingCart } from "lucide-react";
 import { getCartProductKey } from "@/utils/Cart/normalizeCartProduct";
-import { sendGTMEvent } from "@next/third-parties/google";
 
 type QuickAddProps = {
   hideQuickAdd: boolean;
@@ -36,17 +35,6 @@ export default function ProductCardQuickAdd({
       ...product,
       quantity: 1,
       selected_options: undefined,
-    });
-    sendGTMEvent({
-      event: "addToCart",
-      product_id: product.id,
-      sku: product.sku,
-      name: product.name,
-      type: product.type,
-      product_price: product.price,
-      product_category: "fishy test",
-      search_term: "testing this",
-      onSale: product.on_sale,
     });
   };
 

@@ -8,6 +8,7 @@ import {
   isSameCartProduct,
   normalizeCartProduct,
 } from "@/utils/Cart/normalizeCartProduct";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 type CartContextType = {
   cart: CartProduct[];
@@ -62,6 +63,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           idx === existingIndex ? { ...p, quantity: p.quantity + 1 } : p,
         );
       }
+
+      // Handle fragrance - could be string or array
+      const fragranceValue = item.selected_options?.fragrance?.optionName;
+      const fragrance = Array.isArray(fragranceValue)
+        ? fragranceValue.join(", ")
+        : fragranceValue || null;
+
+      sendGTMEvent({
+        event: "addToCart",
+        product_id: item.id,
+        sku: item.sku,
+        name: item.name,
+        type: item.type,
+        product_price: item.price,
+        onSale: item.on_sale,
+        size: item.selected_options?.size.optionName || null,
+        fragrance,
+      });
 
       // Add new item with quantity 1
       return [...prev, { ...normalizedItem, quantity: 1 }];
