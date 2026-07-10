@@ -78,7 +78,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         type: item.type,
         product_price: item.price,
         onSale: item.on_sale,
-        size: item.selected_options?.size.optionName || null,
+        size: item.selected_options?.size?.optionName || null,
         fragrance,
       });
 
