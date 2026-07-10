@@ -379,7 +379,7 @@ export const ReservationsForm = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="bg-linear-to-br from-neutral-900 to-neutral-800 rounded-3xl p-6 sm:p-8 shadow-lg text-white sticky top-4"
+              className="bg-linear-to-br from-neutral-900 to-neutral-800 rounded-3xl p-6 sm:p-8 shadow-lg text-white sm:sticky sm:top-4"
             >
               <Text size="lg" className="font-bold mb-6">
                 Reservation Summary
@@ -515,6 +515,7 @@ export const ReservationsForm = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
+              className="relative z-10"
             >
               <button
                 disabled={!isValid}
