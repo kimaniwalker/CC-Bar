@@ -58,6 +58,14 @@ export default function CartProduct({
     onHandleUpdateProductQuantity?.(cartKey);
   };
 
+  // Helper function to format group names
+  const formatProductName = (name: string): string => {
+    return name
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
   return (
     <Stack className="w-full lg:max-w-lg md:max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 my-4">
       <Stack className="w-full">
@@ -80,7 +88,7 @@ export default function CartProduct({
               size="md"
               className="mb-2 text-lg font-bold tracking-tight text-gray-900"
             >
-              {product.name}
+              {formatProductName(product.name)}
             </Text>
 
             {/* Display selected options */}

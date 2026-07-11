@@ -1,6 +1,5 @@
 import { Text } from "@/components/ds/Text";
 import { ProductOptionGroups, ProductOptions } from "@/types/Product";
-import { capitalize } from "lodash";
 import { Check } from "lucide-react";
 
 type ProductOptionSelectorProps = {
@@ -61,10 +60,18 @@ export const ProductOptionSelector = ({
     return !isSelected(optionId) && selectedIds.length >= maxSelections;
   };
 
+  // Helper function to format group names
+  const formatGroupName = (name: string): string => {
+    return name
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
   return (
     <div>
       <Text size="lg" className="font-semibold mb-2 text-md">
-        {capitalize(group.name)}
+        {formatGroupName(group.name)}
         {isMultiple && (
           <span className="ml-2 text-xs text-gray-500 font-normal">
             {maxSelections

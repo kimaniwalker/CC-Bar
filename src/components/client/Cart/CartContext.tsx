@@ -57,13 +57,16 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         isSameCartProduct(p, normalizedItem),
       );
 
-      // Handle fragrance - could be string or array
-      const fragranceValue = item.selected_options?.fragrance?.optionName;
-      const fragrance = Array.isArray(fragranceValue)
-        ? fragranceValue.join(", ")
-        : fragranceValue || null;
+      // Helper function to format option values (handles arrays and strings)
+      const formatOptionValue = (value: string | string[]): string | null => {
+        if (Array.isArray(value)) {
+          return value.length > 0 ? value.join(", ") : null;
+        }
+        return value || null;
+      };
 
-      sendGTMEvent({
+      // Build dynamic GTM event data
+      const gtmEventData: Record<string, unknown> = {
         event: "addToCart",
         product_id: item.id,
         sku: item.sku,
@@ -71,9 +74,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         type: item.type,
         product_price: item.price,
         onSale: item.on_sale,
-        size: item.selected_options?.size?.optionName || null,
-        fragrance,
-      });
+      };
+
+      // Dynamically add all selected options
+      if (item.selected_options) {
+        Object.entries(item.selected_options).forEach(([key, value]) => {
+          if (value?.optionName) {
+            gtmEventData[key] = formatOptionValue(value.optionName);
+          }
+        });
+      }
+
+      sendGTMEvent(gtmEventData);
 
       if (existingIndex !== -1) {
         // Increment quantity of existing item

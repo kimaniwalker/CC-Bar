@@ -4,7 +4,6 @@ import {
   ProductOptionGroups,
   ProductOptions,
 } from "@/types/Product";
-import { capitalize } from "lodash";
 
 type SelectedOption = {
   groupId: string;
@@ -86,6 +85,14 @@ export const getCartProductKey = (product: CartProduct): string => {
 
 // Helper to format selected options for display
 export const formatSelectedOptions = (product: CartProduct): string => {
+  // Helper function to format group names
+  const formatName = (name: string): string => {
+    return name
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
+
   if (!product.selected_options) {
     return "";
   }
@@ -95,7 +102,7 @@ export const formatSelectedOptions = (product: CartProduct): string => {
       const names = Array.isArray(option.optionName)
         ? option.optionName.join(", ")
         : option.optionName;
-      return `${capitalize(option.groupName)}: ${names}`;
+      return `${formatName(option.groupName)}: ${names}`;
     })
     .join(" • ");
 };
