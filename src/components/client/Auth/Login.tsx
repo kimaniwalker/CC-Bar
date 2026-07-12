@@ -256,20 +256,20 @@ export const Login = () => {
         </div>
 
         {/* Footer Terms */}
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-2">
           <Text size="xs" className="text-xs text-neutral-500 leading-relaxed">
-            By continuing, you agree to receive SMS messages for account access
-            and notifications. You may receive up to 5 messages per month. Reply
-            STOP to unsubscribe, HELP for assistance. Message and data rates may
-            apply. See our{" "}
-            <a href="/privacy" className="underline">
-              Terms of Service
+            By signing in, you agree to our{" "}
+            <a href="/terms" className="underline hover:text-neutral-700">
+              Terms & Conditions
             </a>{" "}
             and{" "}
-            <a href="/privacy" className="underline">
+            <a href="/privacy" className="underline hover:text-neutral-700">
               Privacy Policy
             </a>
             .
+          </Text>
+          <Text size="xs" className="text-xs text-neutral-400">
+            Your data is secure and never shared with third parties.
           </Text>
         </div>
       </div>
