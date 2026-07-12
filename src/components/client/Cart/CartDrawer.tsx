@@ -14,6 +14,7 @@ import { CartBanner } from "./CartBanner";
 import { Subscription } from "@/types/User";
 import { CartBannerSkeleton } from "./CartBannerSkeleton";
 import { getCartProductKey } from "@/utils/Cart/normalizeCartProduct";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const VIP_DISCOUNT = 0.2; // 20% off
 const FREE_SHIPPING_THRESHOLD = 75;
@@ -63,6 +64,11 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
     }
 
     if (valid) {
+      sendGTMEvent({
+        event: "buttonClicked",
+        button_name: "Continue to Checkout",
+        location: "cart_drawer",
+      });
       onClose();
       router.push("/checkout");
     }
@@ -74,6 +80,11 @@ export const CartDrawer = ({ onClose }: { onClose: () => void }) => {
   };
 
   const handleJoinVip = () => {
+    sendGTMEvent({
+      event: "buttonClicked",
+      button_name: "Unlock VIP Savings",
+      location: "cart_drawer",
+    });
     router.push("/checkout?flow=isVipSubscription");
     onClose();
   };

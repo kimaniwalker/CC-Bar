@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { StockError } from "@/types/Product";
 import { handleCheckout } from "@/utils/Checkout/handleCheckout";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export const CheckoutActionButton = ({
   isVipSubscriptionFlow,
@@ -39,6 +40,11 @@ export const CheckoutActionButton = ({
 
   const handlePay = async () => {
     setLoading(true);
+    sendGTMEvent({
+      event: "buttonClicked",
+      button_name: "Pay Now",
+      location: "/checkout",
+    });
 
     if (isVipSubscriptionFlow && !user?.id) {
       router.push(
@@ -108,6 +114,11 @@ export const CheckoutActionButton = ({
   };
 
   const handleOptOut = () => {
+    sendGTMEvent({
+      event: "buttonClicked",
+      button_name: "Continue without VIP",
+      location: "/checkout",
+    });
     router.push("/checkout");
   };
 

@@ -15,6 +15,7 @@ import {
   MailOpen,
 } from "lucide-react";
 import { getDomain } from "@/utils/Formatters/getDomain";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export const Login = () => {
   const supabase = createClient();
@@ -40,6 +41,13 @@ export const Login = () => {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const signInWithEmail = async () => {
+    sendGTMEvent({
+      event: "buttonClicked",
+      button_name: isVipSubscriptionFlow
+        ? "Become a VIP Member"
+        : "Welcome Back",
+      location: "/login",
+    });
     const domain = getDomain();
     setIsSubmitting(true);
     try {

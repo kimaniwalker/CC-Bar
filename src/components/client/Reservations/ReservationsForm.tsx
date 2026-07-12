@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { checkout } from "@/utils/Reservations/checkout";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 export const ReservationsForm = () => {
   const date = useSearchParams().get("date") ?? undefined;
@@ -76,6 +77,11 @@ export const ReservationsForm = () => {
   }, [date]);
 
   const handleCheckout = async (body: Stripe.Checkout.SessionCreateParams) => {
+    sendGTMEvent({
+      event: "buttonClicked",
+      button_name: `Reserve with ${totalDeposit} Deposit`,
+      location: "cart_drawer",
+    });
     const url = await checkout(body);
     if (url) router.push(url);
   };
