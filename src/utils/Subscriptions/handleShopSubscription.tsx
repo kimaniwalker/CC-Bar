@@ -10,7 +10,7 @@ import { ORDER_STATUS } from "@/types/Orders";
 import Stripe from "stripe";
 import { withRewards } from "../Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
-import { retreiveCheckoutSession } from "../Cart/retrieveCheckoutSession";
+import { retrieveCheckoutSession } from "../Cart/retrieveCheckoutSession";
 
 // Extend the Stripe Session type to include invoice
 interface SubscriptionSession extends Stripe.Checkout.Session {
@@ -18,7 +18,7 @@ interface SubscriptionSession extends Stripe.Checkout.Session {
 }
 
 export const handleShopSubscription = async (sessionId: string) => {
-  const { session: rawSession } = await retreiveCheckoutSession(sessionId);
+  const rawSession = await retrieveCheckoutSession(sessionId);
   const session = rawSession as SubscriptionSession;
   const supabase = await createClient();
 

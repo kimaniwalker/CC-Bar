@@ -5,12 +5,12 @@ import { withRewards } from "@/utils/Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
 import type Stripe from "stripe";
 import { handleOrderCheckout } from "./handleOrderCheckout";
-import { retreiveCheckoutSession } from "./retrieveCheckoutSession";
+import { retrieveCheckoutSession } from "./retrieveCheckoutSession";
 
 export async function handleShopCheckout(session: Stripe.Checkout.Session) {
   const supabase = await createClient();
-  const { session: sessionDetails } = await retreiveCheckoutSession(session.id);
-  const lineItems = sessionDetails.line_items.data as Stripe.LineItem[];
+  const sessionDetails = await retrieveCheckoutSession(session.id);
+  const lineItems = sessionDetails?.line_items?.data as Stripe.LineItem[];
 
   // Check if this order has already been processed
   const { data: existingOrder } = await supabase

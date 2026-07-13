@@ -2,7 +2,6 @@
 
 import { Text } from "@/components/ds/Text";
 import { CheckoutType } from "@/types/Reservations";
-import { retreiveCheckoutSession } from "@/utils/Cart/retrieveCheckoutSession";
 import confetti from "canvas-confetti";
 import {
   CalendarDays,
@@ -19,6 +18,7 @@ import Stripe from "stripe";
 
 import Link from "next/link";
 import { SubscriptionSignupInfo } from "@/utils/Subscriptions/SubscriptionSignUpInfo";
+import { retrieveCheckoutSession } from "@/utils/Cart/retrieveCheckoutSession";
 
 export default function SuccessContent() {
   const params = useSearchParams();
@@ -35,7 +35,7 @@ export default function SuccessContent() {
     }
 
     try {
-      const sessionData = await retreiveCheckoutSession(session_id);
+      const sessionData = await retrieveCheckoutSession(session_id);
       setSession(sessionData as Stripe.Checkout.Session);
     } catch (error) {
       console.error("Error fetching session:", error);
