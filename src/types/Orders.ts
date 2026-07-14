@@ -12,6 +12,9 @@ export enum ORDER_STATUS {
   CANCELLED = "Cancelled",
   PARTIALLY_PAID = "Partially Paid",
   PAID = "Paid",
+  PROCESSING = "Processing",
+  RETURNED = "Returned",
+  FAILURE = "Failed",
 }
 
 export interface Order {
@@ -33,6 +36,9 @@ export interface Order {
   };
   created_at: string;
   order_source?: string;
+  tracking_number?: string;
+  carrier_code?: string;
+  shipped_at?: string;
 }
 
 export interface OrderItem {

@@ -11,6 +11,8 @@ import Stripe from "stripe";
 import { withRewards } from "../Rewards/withRewards";
 import { RewardActionKey } from "@/types/Rewards";
 import { retrieveCheckoutSession } from "../Cart/retrieveCheckoutSession";
+import { formatShipStationOrder } from "../ShipStation/formatShipstationOrder";
+import { createShipstationOrder } from "../ShipStation/createShipstationOrder";
 
 // Extend the Stripe Session type to include invoice
 interface SubscriptionSession extends Stripe.Checkout.Session {
@@ -99,7 +101,7 @@ export const handleShopSubscription = async (sessionId: string) => {
         // Create order record
         console.log("✅ Creating new subscription order:", session.invoice);
 
-        await handleAddNewOrder({
+        const { orderId } = await handleAddNewOrder({
           order: {
             id: sessionId,
             user_id: session.client_reference_id ?? "guest",
@@ -112,6 +114,16 @@ export const handleShopSubscription = async (sessionId: string) => {
             lineItems: session?.line_items?.data || [],
           },
         });
+
+        if (session?.metadata?.shippingMethod === "delivery") {
+          console.log("🚚 Delivery order - ShipStation creation");
+          const shipstationOrder = formatShipStationOrder(session, orderId);
+          console.log(
+            "📦 ShipStation Order:",
+            JSON.stringify(shipstationOrder, null, 2),
+          );
+          await createShipstationOrder(shipstationOrder);
+        }
 
         await handleUpdateSubscription({
           user_id: session.client_reference_id ?? "guest",

@@ -1,3 +1,5 @@
+import Stripe from "stripe";
+
 type ShipStationAddress = {
   name: string;
   company?: string | null;
@@ -34,6 +36,22 @@ type ShipStationItem = {
   fulfillmentSku?: string | null;
   adjustment?: boolean;
   upc?: string | null;
+};
+
+// Extended type to include collected_information (not in Stripe's official types)
+export type StripeSessionWithShipping = Stripe.Checkout.Session & {
+  collected_information?: {
+    shipping_details?: {
+      address?: {
+        line1?: string | null;
+        line2?: string | null;
+        city?: string | null;
+        state?: string | null;
+        postal_code?: string | null;
+        country?: string | null;
+      };
+    };
+  };
 };
 
 export type CreateShipStationOrderParams = {

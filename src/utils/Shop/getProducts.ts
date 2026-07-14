@@ -15,7 +15,7 @@ type FilterParams = {
   price?: string;
   scent?: string;
   size?: string;
-  type?: string; // NEW: Add type filter
+  type?: string;
 };
 
 export async function getProducts(
@@ -25,13 +25,18 @@ export async function getProducts(
 ): Promise<ProductWithOptions[]> {
   const supabase = await createClient();
 
-  let queryBuilder = supabase.from("products").select(`
+  let queryBuilder = supabase
+    .from("products")
+    .select(
+      `
       *,
       product_option_groups (
         *,
         product_options (*)
       )
-    `);
+    `,
+    )
+    .neq("type", "subscription"); // Hide subscription products
 
   // Apply search filter
   if (query?.trim()) {
@@ -42,7 +47,7 @@ export async function getProducts(
     );
   }
 
-  // Apply type filter - NEW
+  // Apply type filter
   if (filters?.type) {
     queryBuilder = queryBuilder.eq("type", filters.type);
   }

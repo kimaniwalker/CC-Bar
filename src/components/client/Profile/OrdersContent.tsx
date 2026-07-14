@@ -1,8 +1,9 @@
 "use client";
 import { Text } from "@/components/ds/Text";
-import { ORDER_STATUS, OrdersResponse } from "@/types/Orders";
+import { OrdersResponse } from "@/types/Orders";
 import { useRouter } from "next/navigation";
 import { Package, ChevronRight, Calendar } from "lucide-react";
+import { getStatusStyle } from "@/utils/Orders/getStatusStyle";
 
 export const OrdersContent = ({
   recentOrders,
@@ -20,23 +21,6 @@ export const OrdersContent = ({
       style: "currency",
       currency: "USD",
     }).format(amount / 100);
-  };
-
-  const getStatusColor = (status: ORDER_STATUS) => {
-    const statusLower = status.toLowerCase();
-    if (statusLower === ORDER_STATUS.CONFIRMED.toLowerCase()) {
-      return "bg-green-100 text-green-700";
-    }
-    if (statusLower === ORDER_STATUS.PENDING_PAYMENT.toLowerCase()) {
-      return "bg-yellow-100 text-yellow-700";
-    }
-    if (statusLower === ORDER_STATUS.SHIPPED.toLowerCase()) {
-      return "bg-blue-100 text-blue-700";
-    }
-    if (statusLower === ORDER_STATUS.CANCELLED.toLowerCase()) {
-      return "bg-red-100 text-red-700";
-    }
-    return "bg-neutral-100 text-neutral-700";
   };
 
   if (recentOrders.length === 0) {
@@ -80,54 +64,59 @@ export const OrdersContent = ({
 
       {/* Orders List */}
       <div className="space-y-3">
-        {recentOrders.slice(0, 4).map((order) => (
-          <button
-            key={order.id}
-            onClick={() => handleViewOrderDetails(order.id)}
-            className="group w-full rounded-2xl border border-neutral-200 bg-white p-4 text-left transition hover:border-neutral-300 hover:shadow-md active:scale-[0.99]"
-          >
-            {/* Mobile Layout */}
-            <div className="flex items-start justify-between gap-3">
-              {/* Left: Order Info */}
-              <div className="min-w-0 flex-1">
-                {/* Order Number */}
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <Text
-                    size="lg"
-                    className="font-semibold text-neutral-900 md:text-sm"
-                  >
-                    #{order.id.substring(0, 8).toUpperCase()}
-                  </Text>
-                  <div
-                    className={`inline-flex rounded-full px-2.5 py-1 text-xs uppercase font-medium ${getStatusColor(order.status)}`}
-                  >
-                    {order.status}
+        {recentOrders.slice(0, 4).map((order) => {
+          const statusStyle = getStatusStyle(order.status);
+
+          return (
+            <button
+              key={order.id}
+              onClick={() => handleViewOrderDetails(order.id)}
+              className="group w-full rounded-2xl border border-neutral-200 bg-white p-4 text-left transition hover:border-neutral-300 hover:shadow-md active:scale-[0.99]"
+            >
+              {/* Mobile Layout */}
+              <div className="flex items-start justify-between gap-3">
+                {/* Left: Order Info */}
+                <div className="min-w-0 flex-1">
+                  {/* Order Number */}
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <Text
+                      size="lg"
+                      className="font-semibold text-neutral-900 md:text-sm"
+                    >
+                      #{order.id.substring(0, 8).toUpperCase()}
+                    </Text>
+                    <div
+                      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs uppercase font-medium ${statusStyle.bg} ${statusStyle.text}`}
+                    >
+                      <span>{statusStyle.icon}</span>
+                      <span>{order.status}</span>
+                    </div>
+                  </div>
+
+                  {/* Date & Price */}
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-neutral-600 justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="h-4 w-4 text-neutral-400" />
+                      <span>
+                        {new Date(order.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-medium text-neutral-900">
+                        <Text size="sm">{convertToCurrency(order.total)}</Text>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Date & Price */}
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-neutral-600 justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="h-4 w-4 text-neutral-400" />
-                    <span>
-                      {new Date(order.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-medium text-neutral-900">
-                      <Text size="sm"> {convertToCurrency(order.total)} </Text>
-                    </span>
-                  </div>
+                {/* Right: Arrow */}
+                <div className="flex shrink-0 items-center justify-center">
+                  <ChevronRight className="h-5 w-5 text-neutral-400 transition group-hover:translate-x-1 group-hover:text-neutral-900" />
                 </div>
               </div>
-
-              {/* Right: Arrow */}
-              <div className="flex shrink-0 items-center justify-center">
-                <ChevronRight className="h-5 w-5 text-neutral-400 transition group-hover:translate-x-1 group-hover:text-neutral-900" />
-              </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          );
+        })}
       </div>
     </section>
   );

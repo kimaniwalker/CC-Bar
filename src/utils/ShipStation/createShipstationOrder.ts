@@ -37,6 +37,7 @@ export const createShipstationOrder = async (
     }
 
     const data = await response.json();
+    console.log("ShipStation order created successfully:", data);
 
     return {
       success: true,
