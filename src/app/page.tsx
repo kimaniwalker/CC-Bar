@@ -9,7 +9,7 @@ import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title:
-    "Candle Cow Bar | Custom Candle Making & Handcrafted Candles in Helena, MT",
+    "Candle Cow Bar | Custom Candle Making & Handcrafted Candles in Helena, AL",
   description:
     "Create your own custom candles at Candle Cow Bar in Helena, AL. Shop handcrafted candles, book candle-making classes, or join our VIP membership for exclusive perks and monthly surprises.",
   openGraph: {
