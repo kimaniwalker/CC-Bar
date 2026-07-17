@@ -1,6 +1,6 @@
-import { ReservationsForm } from "@/components/client/Reservations/ReservationsForm";
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { LandingPageForm } from "@/components/client/Reservations/LandingPageForm";
 
 export const metadata: Metadata = {
   title: "Book a Candle-Making Class | Candle Cow Bar Helena, AL",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 export default async function Reservations() {
   return (
     <Suspense>
-      <ReservationsForm />
+      <LandingPageForm theme="" />
     </Suspense>
   );
 }

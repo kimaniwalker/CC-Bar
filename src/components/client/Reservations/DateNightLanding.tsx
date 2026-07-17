@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { LandingPageForm } from "./LandingPageForm";
+import { RESERVATION_THEMES } from "./ThemeMetadata";
 
 type TrackingData = {
   utm_source?: string;
@@ -42,7 +44,7 @@ export default function DateNightLanding({ trackingData }: Props) {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative h-150 bg-linear-to-br from-rose-50 to-amber-50">
-        <div className="container mx-auto px-4 h-full flex items-center">
+        <div className="container mx-auto px-4 lg:px-48 h-full flex items-center">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-bold mb-6">
               The Most Unique Date Night in Helena 💕
@@ -81,7 +83,7 @@ export default function DateNightLanding({ trackingData }: Props) {
 
       {/* Why This Beats Dinner & Movies */}
       <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 lg:px-48">
           <h2 className="text-4xl font-bold text-center mb-12">
             Why Couples Love This Experience
           </h2>
@@ -150,6 +152,20 @@ export default function DateNightLanding({ trackingData }: Props) {
               </div>
               <div>
                 <h3 className="text-xl font-bold mb-2">
+                  Games & Fun While It Cools
+                </h3>
+                <p className="text-neutral-600">
+                  Connection is key! Play fun couple games while your candles
+                  set.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-6">
+              <div className="shrink-0 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold">
+                4
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">
                   Take Home Your Creation
                 </h3>
                 <p className="text-neutral-600">
@@ -211,18 +227,15 @@ export default function DateNightLanding({ trackingData }: Props) {
             Spots fill up fast! Reserve your time now and get ready for the best
             date night in Helena.
           </p>
-          <button
-            onClick={() => handleCTAClick("footer")}
-            className="bg-white text-black px-10 py-5 rounded-full font-bold text-lg hover:bg-neutral-100 transition"
-          >
-            Book Now - $75/couple
-          </button>
-          <p className="mt-6 text-sm text-neutral-400">
-            Classes available Thursday-Sunday • No experience needed • BYOB
-            friendly
-          </p>
         </div>
       </section>
+
+      <div className="container mx-auto sm:px-4 xl:px-48 sm:py-4 md:py-20">
+        <LandingPageForm
+          trackingData={trackingData}
+          theme={RESERVATION_THEMES.DATE_NIGHT}
+        />
+      </div>
     </div>
   );
 }
