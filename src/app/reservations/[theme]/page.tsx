@@ -1,7 +1,6 @@
 import ReservationsContainer from "@/components/client/Reservations/ReservationsContainer";
 import { THEME_METADATA } from "@/components/client/Reservations/ThemeMetadata";
 import { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 type Props = {
@@ -53,13 +52,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const { theme } = await params;
-
-  // Check if theme exists, otherwise 404
-  if (!THEME_METADATA[theme as keyof typeof THEME_METADATA]) {
-    notFound();
-  }
-
   return (
     <Suspense fallback={null}>
       <ReservationsContainer params={params} searchParams={searchParams} />
