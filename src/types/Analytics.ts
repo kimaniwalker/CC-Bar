@@ -75,12 +75,12 @@ export type FormSubmitEvent = BaseGTMEvent & {
  */
 export type CheckoutEvent = BaseGTMEvent & {
   event: "begin_checkout";
-  checkout_type: "reservation" | "shop" | "vip";
+  checkout_type: "reservation" | "shop" | "in-store";
   total_amount: number;
-  currency: string;
   items?: Array<{
     item_name: string;
     item_id: string;
+    sku: string;
     price: number;
     quantity: number;
   }>;

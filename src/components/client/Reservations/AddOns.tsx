@@ -46,7 +46,7 @@ export const AddOns: AddOn[] = [
       "10% off next visit coupon",
     ],
     perPerson: true,
-    bestFor: ["date-night", "girls-night"],
+    bestFor: ["girls-night"],
   },
   {
     label: "Wine & Cheese Pairing",

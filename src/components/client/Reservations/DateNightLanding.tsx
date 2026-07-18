@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { LandingPageForm } from "./LandingPageForm";
 import { RESERVATION_THEMES } from "./ThemeMetadata";
 import { analytics } from "@/utils/Analytics/analytics";
+import { Text } from "@/components/ds/Text";
 
 type TrackingData = {
   utm_source?: string;
@@ -32,7 +33,7 @@ export default function DateNightLanding({ trackingData }: Props) {
     });
   }, [trackingData]);
 
-  const handleCTAClick = () =>
+  const handleCTAClick = () => {
     analytics.trackElementClicked({
       location: "hero",
       event: "element_clicked",
@@ -41,33 +42,45 @@ export default function DateNightLanding({ trackingData }: Props) {
       utm_medium: trackingData.utm_medium || "none",
       utm_campaign: trackingData.utm_campaign || "none",
     });
+
+    // ✅ Smooth scroll to booking form
+    const formSection = document.getElementById("booking-form");
+    if (formSection) {
+      formSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-150 bg-linear-to-br from-rose-50 to-amber-50">
+      <section className="relative bg-linear-to-br from-rose-50 to-amber-50 py-8 md:py-24">
         <div className="container mx-auto px-4 lg:px-48 h-full flex items-center">
-          <div className="max-w-2xl">
-            <h1 className="text-5xl font-bold mb-6">
+          <div className="max-w-4xl">
+            <Text size="xxl" className="text-4xl md:text-7xl font-bold mb-6">
               The Most Unique Date Night in Helena 💕
-            </h1>
-            <p className="text-xl text-neutral-700 mb-8">
+            </Text>
+            <Text size="lg" className="mb-8">
               Skip dinner & a movie. Create custom candles together, laugh, and
               make memories that last forever.
-            </p>
+            </Text>
             <div className="flex flex-col sm:flex-row gap-4">
               <button
                 onClick={handleCTAClick}
                 className="bg-black text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-neutral-800 transition"
               >
-                Book Your Date Night - $85/couple
+                <Text size="md" className="text-sm md:text-lg">
+                  Book Your Date Night - $85/couple
+                </Text>
               </button>
               <button className="border-2 border-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-black hover:text-white transition">
-                Watch How It Works ▶️
+                <Text size="md" className="text-sm md:text-lg">
+                  Watch How It Works ▶️
+                </Text>
               </button>
             </div>
-            <p className="mt-4 text-sm text-neutral-600">
+            <Text size="sm" className="mt-4 text-sm text-neutral-600">
               ⭐️ 5.0 rating • 200+ couples served • BYOB friendly
-            </p>
+            </Text>
 
             {/* Campaign-specific messaging */}
             {trackingData.utm_campaign?.includes("valentines") && (
@@ -231,7 +244,10 @@ export default function DateNightLanding({ trackingData }: Props) {
         </div>
       </section>
 
-      <div className="container mx-auto sm:px-4 xl:px-48 sm:py-4 md:py-20">
+      <div
+        id="booking-form"
+        className="container mx-auto sm:px-4 xl:px-48 sm:py-4 md:py-20"
+      >
         <LandingPageForm
           trackingData={trackingData}
           theme={RESERVATION_THEMES.DATE_NIGHT}

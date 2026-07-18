@@ -34,7 +34,6 @@ import {
 import { motion } from "motion/react";
 import { checkout } from "@/utils/Reservations/checkout";
 import { sendGTMEvent } from "@next/third-parties/google";
-import { RESERVATION_THEMES } from "./ThemeMetadata";
 import { THEME_CONFIGS } from "./ThemeConfigs";
 import { getColorClasses } from "@/utils/Reservations/getColorClasses";
 
@@ -54,8 +53,9 @@ export const LandingPageForm = ({
   trackingData,
   theme,
 }: LandingPageFormProps) => {
-  const themeConfig =
-    THEME_CONFIGS[theme] || THEME_CONFIGS[RESERVATION_THEMES.DATE_NIGHT];
+  const themeConfig = THEME_CONFIGS[theme] ?? {
+    defaultGuests: 1,
+  };
   const date = useSearchParams().get("date") ?? undefined;
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -378,7 +378,7 @@ export const LandingPageForm = ({
               </Text>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 w-full max-w-full">
               <Input
                 hideLabel
                 leadingIcon={Calendar}
@@ -389,7 +389,7 @@ export const LandingPageForm = ({
                 type="date"
                 id="date"
                 required
-                className="pl-12 py-3 rounded-xl border-2 border-neutral-200 focus:border-neutral-900 transition-colors"
+                className="py-3 rounded-xl border-2 border-neutral-200 focus:border-neutral-900 transition-colors w-full"
                 {...register("date", {
                   required: "Date is required",
                   validate: (value) => {
@@ -428,7 +428,7 @@ export const LandingPageForm = ({
                   leadingIcon={Users}
                   errorMessage={errors.guests?.message}
                   defaultValue={themeConfig.defaultGuests}
-                  max={8}
+                  max={20}
                   min={1}
                   type="number"
                   id="guests"
@@ -437,7 +437,7 @@ export const LandingPageForm = ({
                   {...register("guests", {
                     required: "Number of guests is required",
                     min: { value: 1, message: "At least 1 guest required" },
-                    max: { value: 8, message: "Maximum 8 guests" },
+                    max: { value: 20, message: "Maximum 20 guests" },
                   })}
                 />
 
