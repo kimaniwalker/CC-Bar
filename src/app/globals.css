@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+
+/* Fix iOS date input overflow */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  max-width: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Prevent webkit calendar icon from causing overflow */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.6;
+  margin-left: 0;
+  padding: 0;
+}
+
+/* Ensure inner date value doesn't overflow */
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+  padding-right: 8px;
+}
