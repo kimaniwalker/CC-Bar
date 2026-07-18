@@ -1,4 +1,4 @@
-import { Heart, PartyPopper, UtensilsCrossed } from "lucide-react";
+import { Heart } from "lucide-react";
 import { RESERVATION_THEMES } from "./ThemeMetadata";
 
 // ✅ Theme-specific configuration
@@ -33,41 +33,5 @@ export const THEME_CONFIGS: Record<string, ThemeConfig> = {
       ],
     },
     defaultGuests: 2,
-  },
-  [RESERVATION_THEMES.TACO_NIGHT]: {
-    specialRate: {
-      name: "Taco Tuesday Special",
-      price: 75,
-      guestCount: 2,
-      description: "Tacos + Candles = Perfect Tuesday",
-      icon: UtensilsCrossed,
-      color: "amber",
-      includes: [
-        "1 activity per person (candle, soap, or body butter)",
-        "Complimentary street tacos & chips",
-        "Margarita drink specials available",
-        "Fun, casual atmosphere",
-        "Take home your creations",
-      ],
-    },
-    defaultGuests: 2,
-  },
-  [RESERVATION_THEMES.GIRLS_NIGHT]: {
-    specialRate: {
-      name: "Squad Special",
-      price: 55,
-      guestCount: 4,
-      description: "Bring your besties and save",
-      icon: PartyPopper,
-      color: "purple",
-      includes: [
-        "1 activity per person (candle, soap, or body butter)",
-        "2-hour private session for your group",
-        "BYOB friendly - wine & cocktails welcome",
-        "Fun games and photo ops",
-        "Group discount on add-ons",
-      ],
-    },
-    defaultGuests: 4,
   },
 };

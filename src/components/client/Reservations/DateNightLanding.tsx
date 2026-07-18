@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { sendGTMEvent } from "@next/third-parties/google";
 import { LandingPageForm } from "./LandingPageForm";
 import { RESERVATION_THEMES } from "./ThemeMetadata";
+import { analytics } from "@/utils/Analytics/analytics";
 
 type TrackingData = {
   utm_source?: string;
@@ -20,26 +20,27 @@ type Props = {
 
 export default function DateNightLanding({ trackingData }: Props) {
   useEffect(() => {
-    // Track landing page view
-    sendGTMEvent({
-      event: "landing_page_view",
+    analytics.trackElementViewed({
+      event: "element_viewed",
+      name: "Date Night Landing Page",
+      location: "hero",
+      type: "landing_page",
       theme: "date-night",
       utm_source: trackingData.utm_source || "direct",
       utm_medium: trackingData.utm_medium || "none",
       utm_campaign: trackingData.utm_campaign || "none",
-      gclid: trackingData.gclid || null,
     });
   }, [trackingData]);
 
-  const handleCTAClick = (location: string) => {
-    sendGTMEvent({
-      event: "cta_click",
-      theme: "date-night",
-      cta_location: location,
-      utm_campaign: trackingData.utm_campaign,
+  const handleCTAClick = () =>
+    analytics.trackElementClicked({
+      location: "hero",
+      event: "element_clicked",
+      name: "Book Your Date Night - $85/couple",
+      utm_source: trackingData.utm_source || "direct",
+      utm_medium: trackingData.utm_medium || "none",
+      utm_campaign: trackingData.utm_campaign || "none",
     });
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -55,10 +56,10 @@ export default function DateNightLanding({ trackingData }: Props) {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={() => handleCTAClick("hero")}
+                onClick={handleCTAClick}
                 className="bg-black text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-neutral-800 transition"
               >
-                Book Your Date Night - $75/couple
+                Book Your Date Night - $85/couple
               </button>
               <button className="border-2 border-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-black hover:text-white transition">
                 Watch How It Works ▶️

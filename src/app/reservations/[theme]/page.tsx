@@ -61,7 +61,7 @@ export default async function Page({ params, searchParams }: Props) {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={null}>
       <ReservationsContainer params={params} searchParams={searchParams} />
     </Suspense>
   );

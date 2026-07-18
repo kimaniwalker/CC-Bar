@@ -5,7 +5,7 @@ import { Crown, Sparkles, Check, AlertCircle, Pause } from "lucide-react";
 import { SubscriptionStatus } from "@/types/Subscriptions";
 import { Subscription } from "@/types/User";
 import { hasActiveBenefits } from "@/utils/Subscriptions/hasActiveBenefits";
-import { sendGTMEvent } from "@next/third-parties/google";
+import { analytics } from "@/utils/Analytics/analytics";
 
 interface VipLoyaltyCardProps {
   subscription: Subscription | null;
@@ -46,10 +46,11 @@ export const VipLoyaltyCard = ({
   const userHasActiveBenefits = hasActiveBenefits(subscription);
 
   const handleSubscribe = () => {
-    sendGTMEvent({
-      event: "buttonClicked",
-      button_name: "Become a VIP Member - $25/month",
-      location: "/checkout",
+    analytics.trackElementClicked({
+      event: "element_clicked",
+      type: "cta",
+      name: "Become a VIP Member - $25/month",
+      location: "cart_drawer",
     });
     onSubscribe();
   };

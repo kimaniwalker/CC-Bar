@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation";
-
-import { RESERVATION_THEMES, isValidTheme } from "./ThemeMetadata";
+import { RESERVATION_THEMES } from "./ThemeMetadata";
 import DateNightLanding from "./DateNightLanding";
+import { LandingPageForm } from "./LandingPageForm";
 
 type Props = {
   params: Promise<{ theme: string }>;
@@ -23,11 +22,6 @@ export default async function ReservationsContainer({
   const { theme } = await params;
   const search = await searchParams;
 
-  // ✅ Type-safe theme validation
-  if (!isValidTheme(theme)) {
-    notFound();
-  }
-
   const trackingData = {
     utm_source: getParam(search, "utm_source"),
     utm_medium: getParam(search, "utm_medium"),
@@ -37,11 +31,13 @@ export default async function ReservationsContainer({
     fbclid: getParam(search, "fbclid"),
   };
 
+  // ✅ Show specialized landing page for date-night, default form for everything else
   switch (theme) {
     case RESERVATION_THEMES.DATE_NIGHT:
       return <DateNightLanding trackingData={trackingData} />;
 
     default:
-      notFound();
+      // Handles all other themes (valid or invalid) with standard form
+      return <LandingPageForm theme={theme} trackingData={trackingData} />;
   }
 }
