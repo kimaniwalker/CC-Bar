@@ -135,6 +135,16 @@ export const LandingPageForm = ({
       };
     }
 
+    // 2 People
+    if (numberOfGuests === 2) {
+      return {
+        basePrice: 40 * numberOfGuests,
+        pricePerPerson: 40,
+        isSpecial: true,
+        specialName: "Couples Experience",
+      };
+    }
+
     // Group rate (5+ people)
     if (numberOfGuests >= 5) {
       return {

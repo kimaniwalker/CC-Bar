@@ -239,7 +239,7 @@ export default async function Reservations() {
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-400 text-white px-4 py-1 rounded-full text-sm font-bold">
                 POPULAR
               </div>
-              <h3 className="text-2xl font-bold mb-2">Date Night</h3>
+              <h3 className="text-2xl font-bold mb-2">Couples Experience</h3>
               <div className="text-4xl font-bold text-amber-600 mb-4">$85</div>
               <p className="text-neutral-600 mb-4">For 2 people - save $65!</p>
               <ul className="space-y-2 text-sm sm:text-base">
