@@ -21,7 +21,14 @@ export const MFAModal = () => {
       throw new Error("Please agree to receive SMS messages");
     }
 
-    const { data, error } = await supabase.auth.updateUser({ phone });
+    const digits = phone.replace(/\D/g, "");
+    const normalizedPhone = digits.startsWith("1")
+      ? `+${digits}`
+      : `+1${digits}`;
+
+    const { data, error } = await supabase.auth.updateUser({
+      phone: normalizedPhone,
+    });
 
     if (error) {
       setError(error.message);

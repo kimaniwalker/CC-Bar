@@ -194,13 +194,14 @@ export const LandingPageForm = ({
 
   const handleCheckout = async (body: Stripe.Checkout.SessionCreateParams) => {
     sendGTMEvent({
-      event: "reservation_initiated",
+      event: "begin_reservation_checkout",
       theme: theme,
       total_amount: totalAmount,
       guests: numberOfGuests,
       is_special_rate: pricing.isSpecial,
       special_name: pricing.specialName || "standard",
-      add_ons_selected: selectedAddOns,
+      add_ons: selectedAddOns.join(", "),
+      activities: selectedActivities.join(", "),
       utm_source: trackingData?.utm_source || "direct",
       utm_campaign: trackingData?.utm_campaign || "none",
       gclid: trackingData?.gclid || null,

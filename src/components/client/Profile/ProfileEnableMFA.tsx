@@ -40,7 +40,7 @@ export const ProfileEnableMFA = async ({
       )}
 
       <Text size="lg" className="text-sm font-medium text-neutral-900">
-        Enable phone sign in
+        Get text alerts
       </Text>
 
       <Text size="sm" className="mt-2 text-sm leading-6 text-neutral-500">
