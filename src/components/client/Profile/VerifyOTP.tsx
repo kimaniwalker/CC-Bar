@@ -40,6 +40,10 @@ export default function VerifyOTP({ phone }: { phone: string }) {
 
       try {
         setIsSubmitting(true);
+        const digits = phone.replace(/\D/g, "");
+        const normalizedPhone = digits.startsWith("1")
+          ? `+${digits}`
+          : `+1${digits}`;
 
         const rewardsData = await withRewards(
           RewardActionKey.ADD_PHONE,
@@ -47,7 +51,7 @@ export default function VerifyOTP({ phone }: { phone: string }) {
             const { error } = await supabase.auth.verifyOtp({
               token: verification_code,
               type: "phone_change",
-              phone,
+              phone: normalizedPhone,
             });
 
             if (error) {

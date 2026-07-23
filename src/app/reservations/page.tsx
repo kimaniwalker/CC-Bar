@@ -240,8 +240,8 @@ export default async function Reservations() {
                 POPULAR
               </div>
               <h3 className="text-2xl font-bold mb-2">Date Night</h3>
-              <div className="text-4xl font-bold text-amber-600 mb-4">$75</div>
-              <p className="text-neutral-600 mb-4">For 2 people - save $55!</p>
+              <div className="text-4xl font-bold text-amber-600 mb-4">$85</div>
+              <p className="text-neutral-600 mb-4">For 2 people - save $65!</p>
               <ul className="space-y-2 text-sm sm:text-base">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
@@ -261,9 +261,9 @@ export default async function Reservations() {
             <div className="border-2 border-neutral-200 rounded-xl p-6 sm:p-8 hover:border-amber-400 transition sm:col-span-2 lg:col-span-1">
               <h3 className="text-2xl font-bold mb-2">Group Event</h3>
               <div className="text-4xl font-bold text-amber-600 mb-4">
-                $65<span className="text-xl text-neutral-600">/person</span>
+                $50<span className="text-xl text-neutral-600">/person</span>
               </div>
-              <p className="text-neutral-600 mb-4">3+ guests</p>
+              <p className="text-neutral-600 mb-4">5+ guests</p>
               <ul className="space-y-2 text-sm sm:text-base">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
