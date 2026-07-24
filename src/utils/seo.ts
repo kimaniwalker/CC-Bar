@@ -10,6 +10,9 @@ export const defaultMetadata: Metadata = {
     default: "Candle Cow Bar",
     template: "%s | Candle Cow Bar",
   },
+  alternates: {
+    canonical: "https://www.candlecowbar.com",
+  },
   description:
     "Create custom candles, soaps, body butters, perfumes, and home fragrances at Candle Cow Bar.",
 

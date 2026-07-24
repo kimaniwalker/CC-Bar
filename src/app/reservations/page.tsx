@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     siteName: "Candle Cow Bar",
     images: [
       {
-        url: "https://www.candlecowbar.com/ccbarlogo.svg",
+        url: "https://www.candlecowbar.com/ccbarlogo.png",
         width: 1200,
         height: 630,
         alt: "Candle Cow Bar - Book Your Candle-Making Class",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     title: "Book a Candle-Making Class | Candle Cow Bar",
     description:
       "Reserve your spot for a hands-on candle-making experience in Helena, Alabama. Perfect for groups, date nights, or solo fun!",
-    images: ["https://www.candlecowbar.com/ccbarlogo.svg"],
+    images: ["https://www.candlecowbar.com/ccbarlogo.png"],
   },
   keywords: [
     "candle making class",

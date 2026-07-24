@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     siteName: "Candle Cow Bar",
     images: [
       {
-        url: "https://www.candlecowbar.com/ccbarlogo.svg",
+        url: "https://www.candlecowbar.com/ccbarlogo.png",
         width: 1200,
         height: 630,
         alt: "Candle Cow Bar - Custom Candle Making in Helena, AL",
@@ -34,12 +34,12 @@ export const metadata: Metadata = {
     title: "Candle Cow Bar | Custom Candle Making in Helena, AL",
     description:
       "Create custom candles, shop handcrafted products, and join candle-making classes in Helena, Alabama.",
-    images: ["https://www.candlecowbar.com/ccbarlogo.svg"],
+    images: ["https://www.candlecowbar.com/ccbarlogo.png"],
   },
   keywords: [
     "candle making",
     "custom candles",
-    "Helena Montana",
+    "Helena Alabama",
     "candle classes",
     "handcrafted candles",
     "DIY candles",
