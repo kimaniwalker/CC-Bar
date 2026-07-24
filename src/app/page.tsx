@@ -8,6 +8,9 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: "https://www.candlecowbar.com",
+  },
   title:
     "Candle Cow Bar | Custom Candle Making & Handcrafted Candles in Helena, AL",
   description:
