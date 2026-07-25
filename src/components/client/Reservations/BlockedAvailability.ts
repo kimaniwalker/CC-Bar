@@ -13,6 +13,7 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   // Full day blocks
   { type: "date", date: "2026-08-22", reason: "Vacation" },
   { type: "date", date: "2026-08-15", reason: "Personal Day" },
+  { type: "date", date: "2026-09-29", reason: "Lanier Private Bday Booking" },
 
   // Date range blocks (vacation week)
   {
