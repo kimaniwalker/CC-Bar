@@ -612,7 +612,7 @@ export const LandingPageForm = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="bg-linear-to-br from-neutral-900 to-neutral-800 rounded-2xl p-6 shadow-lg text-white sticky top-4"
+            className="bg-linear-to-br from-neutral-900 to-neutral-800 rounded-2xl p-6 shadow-lg text-white"
           >
             <Text size="lg" className="font-bold mb-6">
               Reservation Summary
