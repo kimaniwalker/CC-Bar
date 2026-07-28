@@ -57,8 +57,8 @@ function formatReservationsLineItems(
       currency: "usd",
       unit_amount: basePrice * 100,
       product_data: {
-        name: "CC BAR Creative Experience - Base Package",
-        description: `${data.guests} ${data.guests > 1 ? "guests" : "guest"} • ${data.date} at ${data.time} • Includes 1 activity per person`,
+        name: "CC BAR Creative Experience",
+        description: `${data.guests} ${data.guests > 1 ? "guests" : "guest"} • ${data.date} at ${data.time} • Includes 2 activities per person`,
       },
     },
     quantity: 1,
@@ -72,7 +72,7 @@ function formatReservationsLineItems(
         unit_amount: additionalActivitiesCost * 100,
         product_data: {
           name: "Additional Activities",
-          description: activities.slice(1).join(", "),
+          description: activities.slice(2).join(", "),
         },
       },
       quantity: 1,

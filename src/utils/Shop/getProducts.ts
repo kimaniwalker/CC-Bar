@@ -16,6 +16,7 @@ type FilterParams = {
   scent?: string;
   size?: string;
   type?: string;
+  excludeTypes?: string[];
 };
 
 export async function getProducts(
@@ -52,6 +53,13 @@ export async function getProducts(
     queryBuilder = queryBuilder.eq("type", filters.type);
   }
 
+  if (filters?.excludeTypes && filters.excludeTypes.length > 0) {
+    queryBuilder = queryBuilder.not(
+      "type",
+      "in",
+      `(${filters.excludeTypes.join(",")})`,
+    );
+  }
   // Apply sorting
   if (sort) {
     switch (sort as SortOption) {

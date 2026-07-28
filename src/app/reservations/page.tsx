@@ -85,6 +85,10 @@ export default async function Reservations() {
                 <span className="text-2xl">🎨</span>
                 <span>50+ Scents</span>
               </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🧁</span>
+                <span>Light Refreshments Included</span>
+              </div>
             </div>
           </div>
         </div>
@@ -215,14 +219,14 @@ export default async function Reservations() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
             <div className="border-2 border-neutral-200 rounded-xl p-6 sm:p-8 hover:border-amber-400 transition">
               <h3 className="text-2xl font-bold mb-2">Solo Experience</h3>
-              <div className="text-4xl font-bold text-amber-600 mb-4">$65</div>
+              <div className="text-4xl font-bold text-amber-600 mb-4">$55</div>
               <p className="text-neutral-600 mb-4">
                 Perfect for treating yourself!
               </p>
               <ul className="space-y-2 text-sm sm:text-base">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <span>16oz custom candle</span>
+                  <span>16oz custom candle + 1 additional activity</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
@@ -241,11 +245,11 @@ export default async function Reservations() {
               </div>
               <h3 className="text-2xl font-bold mb-2">Couples Experience</h3>
               <div className="text-4xl font-bold text-amber-600 mb-4">$85</div>
-              <p className="text-neutral-600 mb-4">For 2 people - save $65!</p>
+              <p className="text-neutral-600 mb-4">For 2 people - save $25!</p>
               <ul className="space-y-2 text-sm sm:text-base">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <span>2 custom 16oz candles</span>
+                  <span>2 custom 16oz candles + 1 additional activity</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
@@ -283,7 +287,16 @@ export default async function Reservations() {
 
           <div className="mt-8 sm:mt-12 text-center">
             <p className="text-sm sm:text-base text-neutral-600 mb-4">
-              ✨ Add additional activities or refreshments during booking
+              ✨ Add additional activities or add ons during booking
+            </p>
+            <p className="text-sm sm:text-base text-neutral-600 mb-4">
+              Additional inquiries can be made via email at{" "}
+              <a
+                href="mailto:support@candlecowbar.com"
+                className="text-amber-600 hover:underline"
+              >
+                support@candlecowbar.com
+              </a>
             </p>
           </div>
         </div>
@@ -320,7 +333,8 @@ export default async function Reservations() {
               </summary>
               <p className="text-sm sm:text-base text-neutral-600">
                 Cancel or reschedule up to 48 hours before your session for a
-                full refund. Within 48 hours, we offer store credit.
+                full refund. Within 48 hours, we reserve the right to forfeit
+                your reservation.
               </p>
             </details>
             <details className="bg-white rounded-lg p-4 sm:p-6 cursor-pointer">

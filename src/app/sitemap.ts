@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Add dynamic product pages (if you have individual product routes)
   const productRoutes: MetadataRoute.Sitemap =
     products?.map((product) => ({
-      url: `https://www.candlecowbar.com/products/${product.id}`,
+      url: `https://www.candlecowbar.com/shop/${product.id}`,
       changeFrequency: "weekly",
       priority: 0.7,
     })) ?? [];

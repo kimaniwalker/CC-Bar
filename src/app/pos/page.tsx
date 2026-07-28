@@ -3,7 +3,9 @@ import { getProducts } from "@/utils/Shop/getProducts";
 import { Suspense } from "react";
 
 async function PosData() {
-  const products = await getProducts();
+  const products = await getProducts(undefined, undefined, {
+    excludeTypes: ["byo"],
+  });
   return <PosContent products={products} />;
 }
 

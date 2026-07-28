@@ -56,10 +56,16 @@ export const LandingPageForm = ({
   const themeConfig = THEME_CONFIGS[theme] ?? {
     defaultGuests: 1,
   };
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [timeSlots, setTimeSlots] = React.useState<Timeslot[]>([]);
+  const [isLoadingSlots, setIsLoadingSlots] = React.useState(false);
+
+  const router = useRouter();
+  const { user } = useUser();
+  const { formatReservationsData } = useHandlePayment();
   const date = useSearchParams().get("date") ?? undefined;
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const methods = useForm<ReservationsFormInputs>({
     mode: "onBlur",
@@ -83,21 +89,15 @@ export const LandingPageForm = ({
     useWatch({
       control: methods.control,
       name: "activities",
-      defaultValue: [], // ✅ Fallback to empty array
+      defaultValue: [],
     }) ?? [];
 
   const selectedAddOns =
     useWatch({
       control: methods.control,
       name: "addOns",
-      defaultValue: [], // ✅ Fallback to empty array
+      defaultValue: [],
     }) ?? [];
-
-  const router = useRouter();
-  const { formatReservationsData } = useHandlePayment();
-  const [timeSlots, setTimeSlots] = React.useState<Timeslot[]>([]);
-  const [isLoadingSlots, setIsLoadingSlots] = React.useState(false);
-  const { user } = useUser();
 
   const getAvailableTimeslots = async (date: string) => {
     setIsLoadingSlots(true);
@@ -106,6 +106,11 @@ export const LandingPageForm = ({
     setIsLoadingSlots(false);
   };
 
+  const guestsCount =
+    useWatch({ control: methods.control, name: "guests" }) ??
+    themeConfig.defaultGuests;
+  const numberOfGuests = Number(guestsCount);
+
   useEffect(() => {
     if (date) getAvailableTimeslots(date);
     else {
@@ -113,11 +118,6 @@ export const LandingPageForm = ({
       setIsLoadingSlots(false);
     }
   }, [date]);
-
-  const guestsCount =
-    useWatch({ control: methods.control, name: "guests" }) ??
-    themeConfig.defaultGuests;
-  const numberOfGuests = Number(guestsCount);
 
   // ✅ UNIVERSAL PRICING LOGIC
   const calculatePricing = () => {
@@ -157,8 +157,8 @@ export const LandingPageForm = ({
 
     // Standard rate
     return {
-      basePrice: 65 * numberOfGuests,
-      pricePerPerson: 65,
+      basePrice: 55 * numberOfGuests,
+      pricePerPerson: 55,
       isSpecial: false,
       specialName: null,
     };
@@ -174,7 +174,7 @@ export const LandingPageForm = ({
     }
 
     // Exclude first activity (always included)
-    const additionalActivities = selectedActivities.slice(1);
+    const additionalActivities = selectedActivities.slice(2);
 
     return additionalActivities.reduce((total, activity) => {
       const activityInfo = Activities.find((a) => a.label === activity);
@@ -490,7 +490,7 @@ export const LandingPageForm = ({
                   <div className="mt-2 flex items-center gap-2 text-sm text-yellow-600 bg-yellow-50 rounded-lg p-3 border border-yellow-200">
                     <Sparkles className="w-4 h-4" />
                     <span className="font-semibold">
-                      Group Rate Applied! Save ${(65 - 50) * numberOfGuests}
+                      Group Rate Applied! Save ${(55 - 50) * numberOfGuests}
                     </span>
                   </div>
                 )}
@@ -521,7 +521,7 @@ export const LandingPageForm = ({
                     Select Activities
                   </Text>
                   <span className="text-xs font-semibold text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                    1st activity always included ✨
+                    First 2 activities included ✨
                   </span>
                 </div>
                 <MultiSelectField
@@ -651,7 +651,7 @@ export const LandingPageForm = ({
                     </Text>
                   </div>
                   <Text size="xs" className="text-white/70">
-                    Save ${(65 - 50) * numberOfGuests} with $50/person pricing
+                    Save ${(55 - 50) * numberOfGuests} with $50/person pricing
                   </Text>
                 </div>
               )}
@@ -685,7 +685,7 @@ export const LandingPageForm = ({
                     const activityInfo = Activities.find(
                       (a) => a.label === activity,
                     );
-                    const isIncluded = index === 0; // First activity always included
+                    const isIncluded = index === 0 || index === 1; // First activity always included
                     return (
                       <div
                         key={activity}
@@ -754,7 +754,10 @@ export const LandingPageForm = ({
                         Full payment • No surprise charges
                       </Text>
                     </div>
-                    <Text size="xxl" className="font-bold text-yellow-300">
+                    <Text
+                      size="xxl"
+                      className="font-bold text-yellow-300 text-2xl"
+                    >
                       ${totalAmount}
                     </Text>
                   </div>
@@ -786,7 +789,7 @@ export const LandingPageForm = ({
                 "Processing..."
               ) : (
                 <>
-                  Complete Booking - ${totalAmount}
+                  Complete Reservation - ${totalAmount}
                   {hasActiveSpecial && ` (${pricing.specialName})`}
                 </>
               )}

@@ -46,7 +46,8 @@ export default function PosContent({
     loading: reservationLoading,
   } = useReservationContext(reservation_id);
 
-  const { checkout } = usePosCheckout();
+  const { checkout, isReaderConnected, readerError, isConnecting } =
+    usePosCheckout();
   const { open } = useModal();
 
   const handleCheckout = async () => {
@@ -117,7 +118,22 @@ export default function PosContent({
       { maxWidth: "2xl" },
     );
   };
-
+  if (isConnecting || !isReaderConnected || readerError) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Text
+          size="md"
+          className={readerError ? "text-red-600" : "text-neutral-700"}
+        >
+          {isConnecting
+            ? "Connecting to the card reader..."
+            : readerError
+              ? `Error connecting to the card reader: ${readerError}`
+              : "Card reader not connected. Please check the connection."}
+        </Text>
+      </div>
+    );
+  }
   return (
     <div className="grid min-h-screen grid-cols-1 bg-neutral-100 lg:grid-cols-[1fr_400px]">
       {/* Products Section */}
