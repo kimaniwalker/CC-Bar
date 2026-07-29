@@ -1,6 +1,7 @@
 "use client";
 
 import { montserrat } from "@/components/ds/Fonts";
+import { Text } from "@/components/ds/Text";
 import { Timeslot } from "@/types/Reservations";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -63,12 +64,12 @@ export const TimeslotSelector = ({
   if (available_timeslots.length === 0) {
     return (
       <div className="rounded-xl border-2 border-gray-200 bg-gray-50 px-4 py-6 text-center">
-        <p className="text-md font-semibold text-gray-700">
-          This date is fully reserved
-        </p>
-        <p className="text-xs text-gray-400 mt-1">
-          This date may have a private booking. Please select another date.
-        </p>
+        <Text className="text-md font-semibold text-gray-700">
+          No available timeslots for this date.
+        </Text>
+        <Text className="text-xs text-gray-400 mt-1">
+          Please try selecting a different date to see available timeslots.
+        </Text>
       </div>
     );
   }

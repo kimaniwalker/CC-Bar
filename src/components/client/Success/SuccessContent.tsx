@@ -134,19 +134,22 @@ const ReservationSuccess = ({
             </b>{" "}
             so you can settle in and fully enjoy your experience.
           </Text>
+          <Text size="md" className="text-md mb-2">
+            Parking is available in the parking lot adjacent to the building, or
+            you are welcome to park on the street.
+          </Text>
         </Section>
 
         {/* What to Expect Section */}
         <Section icon={<Sparkles className="mr-2" />} title="What to Expect">
           <Text size="md" className="text-md mb-2">
-            Your reservation includes a <b>$25 deposit</b>, which will be
-            applied toward your experience. Depending on the activities
-            you&apos;ve selected, there may be an additional balance due at the
-            time of your visit.
+            Your reservation is fully paid and your spot is confirmed. Our team
+            will guide you through your experience from start to finish to
+            ensure a seamless and memorable visit.
           </Text>
-          <Text size="md">
-            Our team will guide you through your chosen activities to ensure a
-            seamless and memorable experience.
+          <Text size="md" className="text-md mb-2">
+            Come ready to have fun, get creative, and leave with something
+            handcrafted just by you.
           </Text>
         </Section>
 

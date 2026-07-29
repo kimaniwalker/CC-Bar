@@ -159,7 +159,7 @@ function formatReservationsData({
     custom_text: {
       terms_of_service_acceptance: {
         message:
-          "Your reservation includes a $25 deposit, which will be applied toward your experience. Additional services or selected activities may result in a remaining balance due upon arrival. Late arrivals may result in a shortened experience or forfeiture of your reservation without refund. Cancellations or rescheduling requests must be made in advance and are subject to availability. By completing your booking, you acknowledge and agree to these terms.",
+          "Late arrivals may result in a shortened experience or forfeiture of your reservation without refund. Cancellations or rescheduling requests must be made in advance and are subject to availability. By completing your booking, you acknowledge and agree to these terms.",
       },
     },
   };

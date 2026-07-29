@@ -7,7 +7,7 @@ import useHandlePayment from "@/hooks/useHandleCheckout";
 import { ReservationsFormInputs, Timeslot } from "@/types/Reservations";
 import Stripe from "stripe";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   SubmitHandler,
   useForm,
@@ -15,7 +15,6 @@ import {
   useWatch,
 } from "react-hook-form";
 import { TimeslotSelectorLoadingSkeleton } from "./TimeslotSelectorLoadingSkeleton";
-import fetchAvailableTimeSlots from "@/utils/Reservations/fetchAvailableTimeSlots";
 import { TimeslotSelector } from "./TimeslotSelector";
 import { useUser } from "../Auth/AuthContext";
 import { Activities } from "./Activities";
@@ -36,6 +35,8 @@ import { checkout } from "@/utils/Reservations/checkout";
 import { sendGTMEvent } from "@next/third-parties/google";
 import { THEME_CONFIGS } from "./ThemeConfigs";
 import { getColorClasses } from "@/utils/Reservations/getColorClasses";
+import { RESERVATION_THEMES } from "./ThemeMetadata";
+import { DatePicker } from "./DatePicker";
 
 type LandingPageFormProps = {
   trackingData?: {
@@ -56,14 +57,18 @@ export const LandingPageForm = ({
   const themeConfig = THEME_CONFIGS[theme] ?? {
     defaultGuests: 1,
   };
+  const datePickerConfig: Record<string, { allowedDays?: number[] }> = {
+    [RESERVATION_THEMES.DATE_NIGHT]: { allowedDays: [5] }, // Fridays only                             // All days
+  };
+  const config = datePickerConfig[theme] ?? {};
+
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [timeSlots, setTimeSlots] = React.useState<Timeslot[]>([]);
-  const [isLoadingSlots, setIsLoadingSlots] = React.useState(false);
+  const [isLoadingSlots, _setIsLoadingSlots] = React.useState(false);
 
   const router = useRouter();
   const { user } = useUser();
   const { formatReservationsData } = useHandlePayment();
-  const date = useSearchParams().get("date") ?? undefined;
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -99,25 +104,10 @@ export const LandingPageForm = ({
       defaultValue: [],
     }) ?? [];
 
-  const getAvailableTimeslots = async (date: string) => {
-    setIsLoadingSlots(true);
-    const slots = await fetchAvailableTimeSlots({ date });
-    setTimeSlots(slots ?? []);
-    setIsLoadingSlots(false);
-  };
-
   const guestsCount =
     useWatch({ control: methods.control, name: "guests" }) ??
     themeConfig.defaultGuests;
   const numberOfGuests = Number(guestsCount);
-
-  useEffect(() => {
-    if (date) getAvailableTimeslots(date);
-    else {
-      setTimeSlots([]);
-      setIsLoadingSlots(false);
-    }
-  }, [date]);
 
   // ✅ UNIVERSAL PRICING LOGIC
   const calculatePricing = () => {
@@ -258,27 +248,6 @@ export const LandingPageForm = ({
     handleCheckout(reservationsData);
   };
 
-  const handleSelectDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDate = e.target.value;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("date", selectedDate);
-    router.push(`?${params.toString()}`, { scroll: false });
-  };
-
-  const today = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-
-  const maxDate = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000));
-
   // ✅ Watch only required fields to trigger re-render
   const [name, email, phone, selectedDate, dateTime] = watch([
     "name",
@@ -390,39 +359,14 @@ export const LandingPageForm = ({
             </div>
 
             <div className="space-y-6 w-full max-w-full">
-              <Input
-                hideLabel
-                leadingIcon={Calendar}
-                errorMessage={errors.date?.message}
-                defaultValue={date}
-                min={today}
-                max={maxDate}
-                type="date"
-                id="date"
-                required
-                className="py-3 rounded-xl border-2 border-neutral-200 focus:border-neutral-900 transition-colors w-full"
-                {...register("date", {
-                  required: "Date is required",
-                  validate: (value) => {
-                    if (value < today) return "Date cannot be in the past";
-                    if (value > maxDate) return "Date must be within 30 days";
-                    return true;
-                  },
-                })}
-                onChange={handleSelectDate}
+              <DatePicker
+                allowedDays={config.allowedDays}
+                onSlotsChange={setTimeSlots}
               />
-
               <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <Clock className="w-5 h-5 text-neutral-700" />
-                  <Text size="sm" className="font-medium text-neutral-700">
-                    Available Time Slots
-                  </Text>
-                </div>
-
                 {isLoadingSlots ? (
                   <TimeslotSelectorLoadingSkeleton />
-                ) : date ? (
+                ) : selectedDate ? (
                   <TimeslotSelector available_timeslots={timeSlots} />
                 ) : (
                   <div className="bg-neutral-50 rounded-xl p-6 text-center border-2 border-dashed border-neutral-200">
