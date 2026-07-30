@@ -15,7 +15,6 @@ import { getSubscriptionUserId } from "@/utils/Subscriptions/getSubscriptionUser
 
 // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(req: Request) {
   const body = await req.text();
   const sig = (await headers()).get("stripe-signature");
@@ -42,6 +41,7 @@ export async function POST(req: Request) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const { type } = session.metadata || {};
+        console.log("Checkout session completed:", session.id, "Type:", type);
 
         if (type === CheckoutType.RESERVATION) {
           await handleReservationCheckout(session);

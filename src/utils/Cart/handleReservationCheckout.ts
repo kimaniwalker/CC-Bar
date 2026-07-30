@@ -8,6 +8,8 @@ import Stripe from "stripe";
 import { ORDER_STATUS } from "@/types/Orders";
 import { CheckoutType } from "@/types/Reservations";
 import { handleUpdateOrder } from "../Orders/handleUpdateOrder";
+import { sendEmail } from "../Notifications/sendEmail";
+import { reservationEmailTemplate } from "../Notifications/reservationEmailTemplate";
 
 export async function handleReservationCheckout(
   session: Stripe.Checkout.Session & {
@@ -77,6 +79,19 @@ export async function handleReservationCheckout(
           console.error("❌ Failed to create reservation:", reservationError);
           throw reservationError;
         }
+
+        await sendEmail({
+          to: email,
+          subject: "Your Reservation is Confirmed — Candle Cowbar",
+          html: reservationEmailTemplate({
+            name: "Kimani",
+            date: "Friday, August 1, 2026",
+            time: "3:00 PM",
+            guests: 2,
+            isReminder: false, // true for reminder emails
+          }),
+        });
+
         console.log(
           "✅ Reservation created successfully for session:",
           session.id,
