@@ -167,7 +167,7 @@ export default function PosContent({
         </div>
 
         {/* Scrollable Products Grid */}
-        <div className="overflow-auto p-6 pt-2">
+        <div className="flex-1 overflow-y-auto p-6 pt-2">
           <ProductGrid
             products={filteredProducts}
             loading={loading}

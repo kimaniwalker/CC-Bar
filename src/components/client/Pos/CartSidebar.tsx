@@ -31,7 +31,7 @@ export const CartSidebar = ({
   onOpenAddressCollector,
 }: CartSidebarProps) => {
   return (
-    <div className="fixed right-0 top-0 z-50 flex h-dvh w-full flex-col border-l border-neutral-200 bg-white lg:w-100">
+    <div className="flex h-dvh w-full flex-col border-l border-neutral-200 bg-white lg:fixed lg:right-0 lg:top-0 lg:w-100">
       {/* Cart Header */}
       <div className="border-b border-neutral-200 p-6">
         <Text size="md">Current Order</Text>
