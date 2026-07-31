@@ -33,8 +33,11 @@ export function useStripeTerminal() {
 
   const discoverReaders = useCallback(async (terminal: Terminal) => {
     const discoverResult = await terminal.discoverReaders({
-      simulated: true,
+      simulated: false,
+      location: process.env.NEXT_PUBLIC_STRIPE_TERMINAL_LOCATION_ID,
     });
+
+    console.log("Discover result:", discoverResult);
 
     if ("error" in discoverResult) {
       console.error("Failed to discover readers:", discoverResult.error);
@@ -102,9 +105,9 @@ export function useStripeTerminal() {
         throw new Error("Missing client secret");
       }
 
-      await terminal.setSimulatorConfiguration({
+      /* await terminal.setSimulatorConfiguration({
         testCardNumber: "4242424242424242",
-      });
+      }); */
 
       setPaymentStatus("awaiting_payment");
       const collectResult = await terminal.collectPaymentMethod(clientSecret);

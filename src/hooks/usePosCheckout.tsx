@@ -14,11 +14,17 @@ export const usePosCheckout = () => {
   const [isConnecting, setIsConnecting] = useState(false);
 
   useEffect(() => {
+    let cancelled = false; // ✅ prevent double-invoke in StrictMode
+
     async function connectOnMount() {
+      if (terminalRef.current) return; // ✅ already initialized, skip
+
       setIsConnecting(true);
       try {
         const instance = await initialize();
         if (!instance) throw new Error("Failed to initialize terminal");
+        if (cancelled) return; // ✅ StrictMode cleanup ran, bail out
+
         terminalRef.current = instance;
 
         const readers = await discoverReaders(instance);
@@ -38,15 +44,22 @@ export const usePosCheckout = () => {
           });
         }
 
-        setIsReaderConnected(true);
+        if (!cancelled) setIsReaderConnected(true);
       } catch (err: unknown) {
-        setReaderError(err instanceof Error ? err.message : "Unknown error");
+        if (!cancelled) {
+          setReaderError(err instanceof Error ? err.message : "Unknown error");
+        }
       } finally {
-        setIsConnecting(false);
+        if (!cancelled) setIsConnecting(false);
       }
     }
 
     connectOnMount();
+
+    return () => {
+      cancelled = true; // ✅ cleanup on StrictMode remount
+      terminalRef.current = null;
+    };
   }, [connectReader, discoverReaders, initialize]);
 
   async function checkout({
