@@ -58,7 +58,7 @@ const FILTER_CATEGORIES: FilterCategory[] = [
     options: [
       { label: "Small (4oz)", value: "4oz" },
       { label: "Medium (8oz)", value: "8oz" },
-      { label: "Large (14oz)", value: "14oz" },
+      { label: "Large (17oz)", value: "17oz" },
     ],
   },
 ];

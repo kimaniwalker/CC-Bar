@@ -30,7 +30,7 @@ export default function HomePageBanner() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-white pt-8">
+    <div className="relative min-h-screen overflow-hidden bg-white pt-4">
       {/* Simple gradient background */}
       <div className="absolute inset-0 bg-linear-to-b from-neutral-50 via-white to-neutral-50" />
 
