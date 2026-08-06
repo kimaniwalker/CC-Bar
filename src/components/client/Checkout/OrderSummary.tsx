@@ -2,7 +2,7 @@ import { Text } from "@/components/ds/Text";
 import { VipLoyaltyCard } from "../Cart/VipLoyaltyCard";
 import { useRouter } from "next/navigation";
 import { type User } from "@supabase/supabase-js";
-import { Cart, ShippingMethod } from "@/types/Cart";
+import { Cart, ShippingMethod, ShippingRate } from "@/types/Cart";
 import React from "react";
 import { StockError } from "@/types/Product";
 import { handleCalculateCartTotal } from "@/utils/Checkout/handleCalculateCartTotal";
@@ -31,9 +31,45 @@ export const OrderSummary = ({
     : false;
   const [shippingMethod, setShippingMethod] =
     React.useState<ShippingMethod>("delivery");
+  const [selectedRate, setSelectedRate] = React.useState<ShippingRate | null>(
+    null,
+  );
   const router = useRouter();
 
   const showSubscriptionOffer = isVipSubscriptionFlow || hasActiveSubscription;
+
+  // Estimated weight: 8 oz per item unit
+  const totalWeightOunces = Math.max(
+    cart.reduce((acc, item) => acc + item.quantity * 8, 0),
+    8,
+  );
+
+  const displayTotal = (() => {
+    const base = handleCalculateCartTotal(
+      cart,
+      shippingMethod,
+      showSubscriptionOffer,
+    );
+
+    if (!selectedRate || shippingMethod !== "delivery") return base;
+
+    const selectedRateCost = selectedRate.shipmentCost + selectedRate.otherCost;
+
+    if (showSubscriptionOffer) {
+      // VIP: ground is free, anything else adds the full rate cost
+      if (selectedRate.serviceCode !== "usps_ground_advantage") {
+        return base + selectedRateCost;
+      }
+      return base; // ground stays free
+    }
+
+    if (cartSubtotal < 75) {
+      // Non-VIP: swap out the hardcoded $9 for the actual rate
+      return base - 9 + selectedRateCost;
+    }
+
+    return base;
+  })();
 
   const onSubscribeToVip = () => {
     if (!user) {
@@ -58,6 +94,10 @@ export const OrderSummary = ({
           setShippingMethod={setShippingMethod}
           isVipSubscriptionFlow={isVipSubscriptionFlow}
           cartSubtotal={cartSubtotal}
+          weightOunces={totalWeightOunces}
+          selectedRate={selectedRate}
+          onRateSelect={setSelectedRate}
+          isVip={hasActiveSubscription || isVipSubscriptionFlow}
         />
 
         <hr />
@@ -77,12 +117,7 @@ export const OrderSummary = ({
             Total
           </Text>
           <Text size="md" className="font-semibold">
-            $
-            {handleCalculateCartTotal(
-              cart,
-              shippingMethod,
-              showSubscriptionOffer,
-            ).toFixed(2)}
+            ${displayTotal.toFixed(2)}
           </Text>
         </div>
 
@@ -94,6 +129,7 @@ export const OrderSummary = ({
           subscription={subscription}
           shipping_method={shippingMethod}
           cartSubtotal={cartSubtotal}
+          selectedRate={selectedRate}
         />
       </div>
     </aside>

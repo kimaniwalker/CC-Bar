@@ -15,6 +15,7 @@ export const handleCheckout = async ({
   line_items,
   redirect_url,
   metadata,
+  shipping_options: shippingOptions,
 }: CheckoutSessionParams) => {
   // @ts-expect-error - The stripe terminal library expects a config param here which we can ignore.
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -59,30 +60,26 @@ export const handleCheckout = async ({
         },
       },
     }),
-    ...(metadata?.includes_shipping === "false" && {
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: "fixed_amount",
-            fixed_amount: {
-              amount: 900, // $9 delivery fee
-              currency: "usd",
-            },
-            display_name: "Delivery",
-            delivery_estimate: {
-              minimum: {
-                unit: "business_day",
-                value: 2,
-              },
-              maximum: {
-                unit: "business_day",
-                value: 5,
+    ...(shippingOptions
+      ? { shipping_options: shippingOptions }
+      : metadata?.includes_shipping === "false" && {
+          shipping_options: [
+            {
+              shipping_rate_data: {
+                type: "fixed_amount",
+                fixed_amount: {
+                  amount: 900, // $9 delivery fee fallback
+                  currency: "usd",
+                },
+                display_name: "Ground Delivery",
+                delivery_estimate: {
+                  minimum: { unit: "business_day", value: 2 },
+                  maximum: { unit: "business_day", value: 5 },
+                },
               },
             },
-          },
-        },
-      ],
-    }),
+          ],
+        }),
   });
 
   return session.url;

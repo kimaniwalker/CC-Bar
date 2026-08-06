@@ -109,10 +109,10 @@ export const VipLoyaltyCard = ({
               <div className="flex-1">
                 <div className="flex justify-between items-center">
                   <Text size="sm" className="text-emerald-700">
-                    Free Shipping
+                    Free Ground Shipping
                   </Text>
                   <Text size="sm" className="font-semibold text-emerald-900">
-                    -${shippingCost.toFixed(2)}
+                    ~${shippingCost.toFixed(2)}
                   </Text>
                 </div>
               </div>
@@ -190,10 +190,10 @@ export const VipLoyaltyCard = ({
           {!isPickup && shippingCost > 0 && (
             <div className="flex justify-between items-center opacity-50">
               <Text size="sm" className="text-amber-600">
-                Potential Free Shipping
+                Potential Free Ground Shipping
               </Text>
               <Text size="sm" className="text-amber-600">
-                -${shippingCost.toFixed(2)}
+                ~${shippingCost.toFixed(2)}
               </Text>
             </div>
           )}
@@ -259,10 +259,10 @@ export const VipLoyaltyCard = ({
           {!isPickup && shippingCost > 0 && (
             <div className="flex justify-between items-center opacity-50">
               <Text size="sm" className="text-rose-600 line-through">
-                Free Shipping
+                Free Ground Shipping
               </Text>
               <Text size="sm" className="text-rose-600 line-through">
-                -${shippingCost.toFixed(2)}
+                ~${shippingCost.toFixed(2)}
               </Text>
             </div>
           )}
@@ -314,10 +314,10 @@ export const VipLoyaltyCard = ({
         {!isPickup && shippingCost > 0 && (
           <div className="flex justify-between items-center">
             <Text size="sm" className="text-purple-700">
-              With Free Shipping
+              With Free Ground Shipping
             </Text>
             <Text size="sm" className="font-semibold text-purple-900">
-              -${shippingCost.toFixed(2)}
+              ~${shippingCost.toFixed(2)}
             </Text>
           </div>
         )}

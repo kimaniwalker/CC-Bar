@@ -84,11 +84,11 @@ export async function handleReservationCheckout(
           to: email,
           subject: "Your Reservation is Confirmed — Candle Cowbar",
           html: reservationEmailTemplate({
-            name: "Kimani",
-            date: "Friday, August 1, 2026",
-            time: "3:00 PM",
-            guests: 2,
-            isReminder: false, // true for reminder emails
+            name,
+            date: metadata.date,
+            time: metadata.time,
+            guests: Number(guests),
+            isReminder: false,
           }),
         });
 
