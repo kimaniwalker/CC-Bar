@@ -66,14 +66,6 @@ export function Navbar({
             </Link>
 
             <Link
-              href="/rewards"
-              onClick={onClose}
-              className="transition hover:text-black"
-            >
-              Rewards
-            </Link>
-
-            <Link
               href="/about"
               onClick={onClose}
               className="transition hover:text-black"
