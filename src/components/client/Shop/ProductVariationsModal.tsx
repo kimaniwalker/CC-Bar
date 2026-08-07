@@ -111,68 +111,71 @@ export default function ProductVariationsModal({
   };
 
   return (
-    <div className="w-full">
-      {/* Header Section */}
-      <div className="mb-6">
-        <div className="flex items-start gap-4 mb-4">
-          {/* Product Image */}
-          {product.thumbnail && (
-            <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border border-gray-200">
-              <Image
-                src={product.thumbnail}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
+    <div className="w-full flex flex-col max-h-[80vh]">
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto pb-4">
+        {/* Header Section */}
+        <div className="mb-6">
+          <div className="flex items-start gap-4 mb-4">
+            {/* Product Image */}
+            {product.thumbnail && (
+              <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border border-gray-200">
+                <Image
+                  src={product.thumbnail}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            )}
 
-          {/* Product Info */}
-          <div className="flex-1">
-            <Text
-              size="xl"
-              className={`font-bold mb-1 ${montserrat.className}`}
-            >
-              {product.name}
-            </Text>
-            <div className="flex items-baseline gap-2">
-              {product.brand && (
-                <Text size="sm" className="text-gray-600">
-                  {product.brand}
-                </Text>
-              )}
-              <Text size="lg" className={`font-bold ${montserrat.className}`}>
-                ${currentPrice.toFixed(2)}
+            {/* Product Info */}
+            <div className="flex-1">
+              <Text
+                size="xl"
+                className={`font-bold mb-1 ${montserrat.className}`}
+              >
+                {product.name}
               </Text>
+              <div className="flex items-baseline gap-2">
+                {product.brand && (
+                  <Text size="sm" className="text-gray-600">
+                    {product.brand}
+                  </Text>
+                )}
+                <Text size="lg" className={`font-bold ${montserrat.className}`}>
+                  ${currentPrice.toFixed(2)}
+                </Text>
+              </div>
             </div>
+          </div>
+
+          {/* Modal Title */}
+          <div className="border-b border-gray-200 pb-3">
+            <Text
+              size="lg"
+              className={`font-semibold text-gray-900 ${montserrat.className}`}
+            >
+              {getModalHeading()}
+            </Text>
           </div>
         </div>
 
-        {/* Modal Title */}
-        <div className="border-b border-gray-200 pb-3">
-          <Text
-            size="lg"
-            className={`font-semibold text-gray-900 ${montserrat.className}`}
-          >
-            {getModalHeading()}
-          </Text>
-        </div>
+        {/* Options Section */}
+        <Stack direction="col" gap="lg" justify="start" className="w-full mb-2">
+          {optionGroups.map((group) => (
+            <ProductOptionSelector
+              key={group.id}
+              group={group}
+              selectedOptionId={selectedOptions[group.id]}
+              onSelect={handleOptionSelect}
+            />
+          ))}
+        </Stack>
       </div>
 
-      {/* Options Section */}
-      <Stack direction="col" gap="lg" justify="start" className="w-full mb-6">
-        {optionGroups.map((group) => (
-          <ProductOptionSelector
-            key={group.id}
-            group={group}
-            selectedOptionId={selectedOptions[group.id]}
-            onSelect={handleOptionSelect}
-          />
-        ))}
-      </Stack>
-
-      {/* Add to Cart Button - Sticky at bottom */}
-      <div className="sticky bottom-0 -mx-6 -mb-6 p-6 bg-white border-t border-gray-200 rounded-b-3xl">
+      {/* Add to Cart Button - pinned footer */}
+      <div className="-mx-6 -mb-6 p-6 bg-white border-t border-gray-200 rounded-b-3xl shrink-0">
         <AddToCartButton
           product={product}
           selectedOptions={selectedOptions}

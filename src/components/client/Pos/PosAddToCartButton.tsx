@@ -43,6 +43,7 @@ export const PosAddToCartButton = ({
   const { close } = useModal();
 
   const hasRequiredSelections = optionGroups.every((group) => {
+    if (group.required === false) return true;
     const selection = selectedOptions[group.id];
     if (group.selection_type === "single") {
       return typeof selection === "string" && selection.length > 0;

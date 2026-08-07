@@ -49,8 +49,9 @@ export const ProductOptionSelector = ({
         : [...selectedIds, optionId];
       onSelect(group.id, newSelection);
     } else {
-      // Single selection
-      onSelect(group.id, optionId);
+      // Single selection — toggle off if already selected
+      const newValue = selectedIds.includes(optionId) ? "" : optionId;
+      onSelect(group.id, newValue);
     }
   };
 
