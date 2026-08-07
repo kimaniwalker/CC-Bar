@@ -22,7 +22,11 @@ export async function sendEmail({
   try {
     await sgMail.send({
       to,
-      cc: ["kimaniwalker@gmail.com", "support@candlecowbar.com"],
+      cc: [
+        "kimaniwalker@gmail.com",
+        "support@candlecowbar.com",
+        "candlecow@outlook.com",
+      ],
       from,
       subject,
       html,
