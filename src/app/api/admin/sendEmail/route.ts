@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/utils/Notifications/sendEmail";
 import { reservationEmailTemplate } from "@/utils/Notifications/reservationEmailTemplate";
+import { orderReadyEmailTemplate } from "@/utils/Notifications/orderReadyEmailTemplate";
 
 export async function POST(request: NextRequest) {
   const adminSecret = request.headers.get("x-admin-secret");
@@ -10,10 +11,24 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { to, subject, from, text, type, reservation } = body;
+  const { to, subject, from, text, type, reservation, order } = body;
 
   // Build HTML from template or accept raw html
   let html: string = body.html;
+
+  if (type === "order_ready") {
+    if (!order?.name || !order?.orderNumber) {
+      return NextResponse.json(
+        { error: "Missing order fields: name, orderNumber" },
+        { status: 400 },
+      );
+    }
+    html = orderReadyEmailTemplate({
+      name: order.name,
+      orderNumber: order.orderNumber,
+      pickupLocation: order.pickupLocation,
+    });
+  }
 
   if (type === "reservation") {
     if (

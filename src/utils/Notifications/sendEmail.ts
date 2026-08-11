@@ -20,13 +20,15 @@ export async function sendEmail({
   from = "support@candlecowbar.com",
 }: SendEmailParams) {
   try {
+    const ccList = [
+      "kimaniwalker@gmail.com",
+      "support@candlecowbar.com",
+      "candlecow@outlook.com",
+    ].filter((email) => email !== to);
+
     await sgMail.send({
       to,
-      cc: [
-        "kimaniwalker@gmail.com",
-        "support@candlecowbar.com",
-        "candlecow@outlook.com",
-      ],
+      ...(ccList.length > 0 && { cc: ccList }),
       from,
       subject,
       html,
@@ -36,7 +38,11 @@ export async function sendEmail({
     console.log(`Email sent to ${to} with subject "${subject}"`);
     return { success: true };
   } catch (err: unknown) {
-    console.error("Failed to send email:", err);
+    const sgError = err as { response?: { body?: { errors?: unknown[] } } };
+    console.error(
+      "Failed to send email:",
+      JSON.stringify(sgError?.response?.body?.errors ?? err, null, 2),
+    );
     return {
       success: false,
       error: err instanceof Error ? err.message : "Unknown error",
