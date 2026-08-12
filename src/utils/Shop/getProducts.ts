@@ -85,7 +85,7 @@ export async function getProducts(
         queryBuilder = queryBuilder.order("created_at", { ascending: false });
     }
   } else {
-    queryBuilder = queryBuilder.order("created_at", { ascending: false });
+    queryBuilder = queryBuilder.order("display_order", { ascending: true });
   }
 
   const { data, error } = await queryBuilder;

@@ -14,6 +14,7 @@ export type Product = {
   type?: ProductType;
   thumbnail: string;
   images?: string[];
+  display_order: number | null;
 };
 
 //product_id uuid not null references products(id)
