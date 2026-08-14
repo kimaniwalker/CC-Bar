@@ -44,12 +44,12 @@ const FILTER_CATEGORIES: FilterCategory[] = [
     name: "Scent Family",
     key: "scent",
     options: [
-      { label: "Floral", value: "floral" },
-      { label: "Fresh", value: "fresh" },
-      { label: "Woody", value: "woody" },
+      { label: "Spring", value: "spring" },
+      { label: "Summer", value: "summer" },
+      { label: "Fall", value: "fall" },
       { label: "Citrus", value: "citrus" },
-      { label: "Spicy", value: "spicy" },
-      { label: "Sweet", value: "sweet" },
+      { label: "Masculine", value: "men" },
+      { label: "Feminine", value: "women" },
     ],
   },
   {
