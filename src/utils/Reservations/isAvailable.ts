@@ -85,7 +85,12 @@ export function isBlocked(
     }
 
     // Recurring weekly block (entire day - e.g., all Sundays)
-    if (block.type === "time" && block.dayOfWeek === dayOfWeek && !block.time) {
+    if (
+      block.type === "time" &&
+      block.dayOfWeek === dayOfWeek &&
+      !block.time &&
+      !block.beforeTime
+    ) {
       return true;
     }
 
@@ -94,6 +99,19 @@ export function isBlocked(
       const normalizedBlockTime = normalizeTime(block.time);
 
       if (normalizedBlockTime === normalizedTime) {
+        return true;
+      }
+    }
+
+    // Recurring weekly "before time" block (e.g., Mon–Thu before 5 PM)
+    if (
+      block.type === "time" &&
+      block.dayOfWeek === dayOfWeek &&
+      block.beforeTime
+    ) {
+      const normalizedBeforeTime = normalizeTime(block.beforeTime);
+
+      if (normalizedTime < normalizedBeforeTime) {
         return true;
       }
     }
@@ -125,7 +143,12 @@ export function isDateBlocked(
     }
 
     // Recurring weekly block (entire day)
-    if (block.type === "time" && block.dayOfWeek === dayOfWeek && !block.time) {
+    if (
+      block.type === "time" &&
+      block.dayOfWeek === dayOfWeek &&
+      !block.time &&
+      !block.beforeTime
+    ) {
       return true;
     }
   }
