@@ -35,7 +35,7 @@ export const THEME_METADATA: Record<ReservationThemeType, ThemeMetadata> = {
       title: "Kids Night: Candle Making for Kids in Helena, AL",
       description:
         "Give your kids a one-of-a-kind creative experience! They'll mix scents, pour candles, and take home something they made themselves.",
-      images: "https://www.candlecowbar.com/images/kids-night-og.jpg",
+      images: "https://www.candlecowbar.com/kids-night.png",
     },
     keywords: [
       "kids night Helena AL",
