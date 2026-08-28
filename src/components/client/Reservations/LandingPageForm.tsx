@@ -59,11 +59,16 @@ export const LandingPageForm = ({
   };
   const datePickerConfig: Record<
     string,
-    { allowedDays?: number[]; allowedDates?: string[] }
+    {
+      allowedDays?: number[];
+      allowedDates?: string[];
+      allowedSlotLabel?: string;
+    }
   > = {
     [RESERVATION_THEMES.DATE_NIGHT]: { allowedDays: [5] }, // Fridays only
     [RESERVATION_THEMES.KIDS_NIGHT]: {
       allowedDates: ["2026-09-05", "2026-10-03", "2026-11-07", "2026-12-05"],
+      allowedSlotLabel: "12:00 PM",
     },
   };
   const config = datePickerConfig[theme] ?? {};
@@ -368,7 +373,12 @@ export const LandingPageForm = ({
               <DatePicker
                 allowedDays={config.allowedDays}
                 allowedDates={config.allowedDates}
-                onSlotsChange={setTimeSlots}
+                onSlotsChange={(slots) => {
+                  const filtered = config.allowedSlotLabel
+                    ? slots.filter((s) => s.label === config.allowedSlotLabel)
+                    : slots;
+                  setTimeSlots(filtered);
+                }}
               />
               <div>
                 {isLoadingSlots ? (
