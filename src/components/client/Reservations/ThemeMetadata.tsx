@@ -56,7 +56,7 @@ export const THEME_METADATA: Record<ReservationThemeType, ThemeMetadata> = {
       title: "Perfect Date Night: Candle Making for Couples",
       description:
         "Ditch dinner & a movie. Create something together at Helena's premier candle-making experience. Romantic, fun, and BYOB friendly!",
-      images: "https://www.candlecowbar.com/images/date-night-og.jpg",
+      images: "https://www.candlecowbar.com/date-night.png",
     },
     keywords: [
       "date night Helena AL",
