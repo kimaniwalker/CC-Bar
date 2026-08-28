@@ -1,11 +1,13 @@
 // ✅ Define enum for theme values
 export enum ReservationTheme {
   DateNight = "date-night",
+  KidsNight = "kids-night",
 }
 
 // ✅ Or use const assertion (more modern approach)
 export const RESERVATION_THEMES = {
   DATE_NIGHT: "date-night",
+  KIDS_NIGHT: "kids-night",
 } as const;
 
 // ✅ Extract type from the values
@@ -25,6 +27,27 @@ type ThemeMetadata = {
 
 // ✅ Use the const values as keys
 export const THEME_METADATA: Record<ReservationThemeType, ThemeMetadata> = {
+  [RESERVATION_THEMES.KIDS_NIGHT]: {
+    title: "Kids Night Candle Making | Candle Cow Bar Helena, AL",
+    description:
+      "A fun, hands-on candle and soap making experience for kids in Helena! Let their creativity shine. Perfect for birthdays, family nights, and more. Book your kids night today!",
+    openGraph: {
+      title: "Kids Night: Candle Making for Kids in Helena, AL",
+      description:
+        "Give your kids a one-of-a-kind creative experience! They'll mix scents, pour candles, and take home something they made themselves.",
+      images: "https://www.candlecowbar.com/images/kids-night-og.jpg",
+    },
+    keywords: [
+      "kids night Helena AL",
+      "kids activity Helena",
+      "candle making for kids",
+      "kids workshop Helena",
+      "family night Helena",
+      "birthday party Helena AL",
+      "creative kids activity",
+      "things to do with kids Helena",
+    ],
+  },
   [RESERVATION_THEMES.DATE_NIGHT]: {
     title: "Date Night Candle Making | Candle Cow Bar Helena, AL",
     description:

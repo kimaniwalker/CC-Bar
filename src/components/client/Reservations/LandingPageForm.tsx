@@ -57,8 +57,14 @@ export const LandingPageForm = ({
   const themeConfig = THEME_CONFIGS[theme] ?? {
     defaultGuests: 1,
   };
-  const datePickerConfig: Record<string, { allowedDays?: number[] }> = {
-    [RESERVATION_THEMES.DATE_NIGHT]: { allowedDays: [5] }, // Fridays only                             // All days
+  const datePickerConfig: Record<
+    string,
+    { allowedDays?: number[]; allowedDates?: string[] }
+  > = {
+    [RESERVATION_THEMES.DATE_NIGHT]: { allowedDays: [5] }, // Fridays only
+    [RESERVATION_THEMES.KIDS_NIGHT]: {
+      allowedDates: ["2026-09-05", "2026-10-03", "2026-11-07", "2026-12-05"],
+    },
   };
   const config = datePickerConfig[theme] ?? {};
 
@@ -361,6 +367,7 @@ export const LandingPageForm = ({
             <div className="space-y-6 w-full max-w-full">
               <DatePicker
                 allowedDays={config.allowedDays}
+                allowedDates={config.allowedDates}
                 onSlotsChange={setTimeSlots}
               />
               <div>

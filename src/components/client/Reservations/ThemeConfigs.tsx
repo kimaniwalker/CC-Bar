@@ -1,4 +1,4 @@
-import { Heart } from "lucide-react";
+import { Heart, Star } from "lucide-react";
 import { RESERVATION_THEMES } from "./ThemeMetadata";
 
 // ✅ Theme-specific configuration
@@ -16,6 +16,24 @@ type ThemeConfig = {
 };
 
 export const THEME_CONFIGS: Record<string, ThemeConfig> = {
+  [RESERVATION_THEMES.KIDS_NIGHT]: {
+    specialRate: {
+      name: "Kids Special",
+      price: 35,
+      guestCount: 1,
+      description: "Fun hands-on candle or soap making for kids",
+      icon: Star,
+      color: "amber",
+      includes: [
+        "1 activity per child (candle, soap, or body butter)",
+        "90-minute guided session",
+        "All materials included",
+        "Fun games while creations cool",
+        "Take home your handmade creation",
+      ],
+    },
+    defaultGuests: 1,
+  },
   [RESERVATION_THEMES.DATE_NIGHT]: {
     specialRate: {
       name: "Couples Special",

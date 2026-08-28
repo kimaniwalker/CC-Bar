@@ -1,5 +1,6 @@
 import { RESERVATION_THEMES } from "./ThemeMetadata";
 import DateNightLanding from "./DateNightLanding";
+import KidsNightLanding from "./KidsNightLanding";
 import { LandingPageForm } from "./LandingPageForm";
 
 type Props = {
@@ -35,6 +36,9 @@ export default async function ReservationsContainer({
   switch (theme) {
     case RESERVATION_THEMES.DATE_NIGHT:
       return <DateNightLanding trackingData={trackingData} />;
+
+    case RESERVATION_THEMES.KIDS_NIGHT:
+      return <KidsNightLanding trackingData={trackingData} />;
 
     default:
       // Handles all other themes (valid or invalid) with standard form

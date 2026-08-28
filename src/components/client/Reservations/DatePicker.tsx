@@ -10,6 +10,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 type DatePickerProps = {
   allowedDays?: number[];
+  allowedDates?: string[]; // specific dates in YYYY-MM-DD format
   onSlotsChange: (slots: Timeslot[]) => void;
 };
 
@@ -29,7 +30,11 @@ const MONTHS = [
   "December",
 ];
 
-export const DatePicker = ({ allowedDays, onSlotsChange }: DatePickerProps) => {
+export const DatePicker = ({
+  allowedDays,
+  allowedDates,
+  onSlotsChange,
+}: DatePickerProps) => {
   const { setValue, watch } = useFormContext<ReservationsFormInputs>();
   const selectedDate = watch("date");
   const dateParam = useSearchParams().get("date");
@@ -77,6 +82,7 @@ export const DatePicker = ({ allowedDays, onSlotsChange }: DatePickerProps) => {
 
   const isDateDisabled = (date: Date) => {
     if (date < today) return true;
+    if (allowedDates) return !allowedDates.includes(formatDate(date));
     if (allowedDays && !allowedDays.includes(date.getDay())) return true;
     return false;
   };
