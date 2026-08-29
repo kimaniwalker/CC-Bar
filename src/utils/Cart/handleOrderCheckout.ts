@@ -34,7 +34,9 @@ export async function handleOrderCheckout(
 
   if (session?.metadata?.shippingMethod === "delivery") {
     console.log("🚚 Delivery order - ShipStation creation");
-    const shipstationOrder = formatShipStationOrder(session, orderId);
+    // guest checkouts return null — fall back to a unique ID derived from the session
+    const resolvedOrderId = orderId ?? `guest-${session.id}-${Date.now()}`;
+    const shipstationOrder = formatShipStationOrder(session, resolvedOrderId);
     console.log(
       "📦 ShipStation Order:",
       JSON.stringify(shipstationOrder, null, 2),
