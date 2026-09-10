@@ -490,7 +490,7 @@ export const LandingPageForm = ({
                   options={Activities.map((activity) => activity.label)}
                 />
                 <p className="mt-2 text-xs text-neutral-500">
-                  Choose candle making, body butter, or soap making
+                  Choose candle making, body butter, or room spray
                 </p>
               </div>
 

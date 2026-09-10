@@ -12,8 +12,12 @@ export type BlockedAvailability = {
 
 export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   // Full day blocks
-  { type: "date", date: "2026-11-06", reason: "Traveling" },
-  { type: "date", date: "2026-11-07", reason: "Traveling" },
+  {
+    type: "dateRange",
+    startDate: "2026-11-06",
+    endDate: "2026-11-14",
+    reason: "Traveling",
+  },
 
   // Block all Sundays (dayOfWeek 0 = Sunday)
   { type: "time", dayOfWeek: 0, reason: "Closed Sundays" },
