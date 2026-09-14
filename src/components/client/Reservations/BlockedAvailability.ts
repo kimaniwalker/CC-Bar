@@ -19,6 +19,13 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
     reason: "Traveling",
   },
 
+  {
+    type: "date",
+    date: "2026-10-10",
+    beforeTime: "17:00:00",
+    reason: "Private Booking before 5 PM",
+  },
+
   // Block all Sundays (dayOfWeek 0 = Sunday)
   { type: "time", dayOfWeek: 0, reason: "Closed Sundays" },
 

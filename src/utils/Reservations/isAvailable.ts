@@ -63,8 +63,17 @@ export function isBlocked(
 
   for (const block of blockedList) {
     // Full day block
-    if (block.type === "date" && block.date === date) {
+    if (block.type === "date" && block.date === date && !block.beforeTime) {
       return true;
+    }
+
+    // Specific date before a given time
+    if (block.type === "date" && block.date === date && block.beforeTime) {
+      const normalizedBeforeTime = normalizeTime(block.beforeTime);
+
+      if (normalizedTime < normalizedBeforeTime) {
+        return true;
+      }
     }
 
     // Date range block
