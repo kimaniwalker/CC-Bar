@@ -104,11 +104,11 @@ export default async function Reservations() {
             <div className="text-center p-6 rounded-xl bg-amber-50">
               <div className="text-4xl sm:text-5xl mb-4">🕯️</div>
               <h3 className="text-lg sm:text-xl font-bold mb-2">
-                16oz Custom Candle
+                8oz Custom Candle
               </h3>
               <p className="text-sm sm:text-base text-neutral-600">
                 Each person creates their own signature scent and takes home a
-                premium 16oz candle
+                premium 8oz candle
               </p>
             </div>
             <div className="text-center p-6 rounded-xl bg-rose-50">
@@ -226,7 +226,7 @@ export default async function Reservations() {
               <ul className="space-y-2 text-sm sm:text-base">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <span>16oz custom candle + 1 additional activity</span>
+                  <span>8oz custom candle + 1 additional activity</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
@@ -249,7 +249,7 @@ export default async function Reservations() {
               <ul className="space-y-2 text-sm sm:text-base">
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <span>2 custom 16oz candles + 1 additional activity</span>
+                  <span>2 custom 8oz candles + 1 additional activity</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
@@ -353,6 +353,28 @@ export default async function Reservations() {
               <p className="text-sm sm:text-base text-neutral-600">
                 Perfect! No experience needed. Our friendly staff guides you
                 through every step. First-timers are our specialty!
+              </p>
+            </details>
+            <details className="bg-white rounded-lg p-4 sm:p-6 cursor-pointer">
+              <summary className="font-bold text-base sm:text-lg mb-2">
+                Who can I contact with questions?
+              </summary>
+              <p className="text-sm sm:text-base text-neutral-600">
+                You can reach our team by email at{" "}
+                <a
+                  href="mailto:support@candlecowbar.com"
+                  className="text-amber-600 hover:underline"
+                >
+                  support@candlecowbar.com
+                </a>{" "}
+                or call us at{" "}
+                <a
+                  href="tel:+12056038724"
+                  className="text-amber-600 hover:underline"
+                >
+                  (205) 603-8724
+                </a>
+                .
               </p>
             </details>
           </div>

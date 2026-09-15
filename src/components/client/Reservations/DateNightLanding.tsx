@@ -183,7 +183,7 @@ export default function DateNightLanding({ trackingData }: Props) {
                   Take Home Your Creation
                 </h3>
                 <p className="text-neutral-600">
-                  Each person leaves with a 16oz candle (60+ hour burn time).
+                  Each person leaves with a 8oz candle (60+ hour burn time).
                   Perfect keepsake!
                 </p>
               </div>
