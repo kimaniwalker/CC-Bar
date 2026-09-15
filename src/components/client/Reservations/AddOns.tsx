@@ -99,6 +99,7 @@ export const AddOns: AddOn[] = [
       "Step-by-step instruction booklet",
       "Access to online tutorial video",
     ],
+    bestFor: ["date-night", "girls-night"],
   },
   {
     label: "Catering Package",
