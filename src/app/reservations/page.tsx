@@ -104,7 +104,7 @@ export default async function Reservations() {
             <div className="text-center p-6 rounded-xl bg-amber-50">
               <div className="text-4xl sm:text-5xl mb-4">🕯️</div>
               <h3 className="text-lg sm:text-xl font-bold mb-2">
-                8oz Custom Candle
+                Custom Candle & More
               </h3>
               <p className="text-sm sm:text-base text-neutral-600">
                 Each person creates their own signature scent and takes home a
@@ -324,7 +324,7 @@ export default async function Reservations() {
               </summary>
               <p className="text-sm sm:text-base text-neutral-600">
                 Yes! We&apos;re BYOB friendly. Bring your favorite wine, beer,
-                or beverages. We provide glasses and ice.
+                or beverages.
               </p>
             </details>
             <details className="bg-white rounded-lg p-4 sm:p-6 cursor-pointer">

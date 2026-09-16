@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { Text } from "../ds/Text";
-import React from "react";
 import { Logout } from "./Auth/Logout";
 export function Navbar({
   isOpen,
@@ -99,6 +98,33 @@ export function Navbar({
 
         {/* Footer */}
         <div className="border-t border-neutral-200 px-6 py-5 text-sm text-neutral-500">
+          <div className="mb-4 rounded-lg border border-neutral-200 bg-neutral-50 p-3">
+            <Text
+              size="sm"
+              className="mb-2 font-semibold uppercase tracking-[0.12em] text-neutral-700"
+            >
+              Store Hours
+            </Text>
+            <div className="space-y-1 text-xs text-neutral-600">
+              <div className="flex justify-between gap-3">
+                <span>Mon–Thu</span>
+                <span>5:00 PM–8:00 PM</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span>Fri</span>
+                <span>12:00 PM–8:00 PM</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span>Sat</span>
+                <span>12:00 PM–8:00 PM</span>
+              </div>
+              <div className="flex justify-between gap-3">
+                <span>Sun</span>
+                <span>Closed</span>
+              </div>
+            </div>
+          </div>
+
           <Text size="sm" className="my-2">
             Hand-poured luxury candles & fragrance experiences.{" "}
           </Text>
