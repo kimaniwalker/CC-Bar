@@ -164,9 +164,12 @@ const ReservationSuccess = ({
             will forfeit the deposit.
           </Text>
           <Text size="md">
-            If you need to reschedule, please contact us at least 24 hours in
-            advance, and we will do our best to accommodate your request based
-            on availability.
+            If you need to reschedule, please{" "}
+            <Link href="/contact" className="underline hover:no-underline">
+              contact us
+            </Link>{" "}
+            at least 24 hours in advance, and we will do our best to accommodate
+            your request based on availability.
           </Text>
         </Section>
 
