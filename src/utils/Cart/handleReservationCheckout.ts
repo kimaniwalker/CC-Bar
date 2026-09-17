@@ -11,6 +11,14 @@ import { handleUpdateOrder } from "../Orders/handleUpdateOrder";
 import { sendEmail } from "../Notifications/sendEmail";
 import { reservationEmailTemplate } from "../Notifications/reservationEmailTemplate";
 
+const parseMetadataList = (value?: string) =>
+  value
+    ? value
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean)
+    : [];
+
 export async function handleReservationCheckout(
   session: Stripe.Checkout.Session & {
     custom_fields?: { key: string; text?: { value: string } }[];
@@ -23,8 +31,21 @@ export async function handleReservationCheckout(
     throw new Error("No metadata found in session");
   }
 
-  const { name, email, guests, activities, phone, dateTime, add_ons } =
-    metadata;
+  const {
+    name,
+    email,
+    guests,
+    activities,
+    phone,
+    dateTime,
+    add_ons,
+    catering_requested,
+    catering_preferences,
+    catering_notes,
+    catering_menu_preferences,
+    catering_dietary_restrictions,
+    catering_budget,
+  } = metadata;
 
   // Extract special requests from custom fields, type mismatch in Stripe types, so we need to do some manual parsing
   const special_requests = session.custom_fields?.find(
@@ -57,11 +78,17 @@ export async function handleReservationCheckout(
             email,
             datetime: dateTime,
             guest: Number(guests),
-            activities: activities?.split(",")?.map((a) => a.trim()),
+            activities: parseMetadataList(activities),
             phone,
             payment_intent_id: session.payment_intent as string,
-            add_ons: add_ons?.split(",")?.map((a) => a.trim()),
+            add_ons: parseMetadataList(add_ons),
             special_requests,
+            catering_requested: catering_requested === "true",
+            catering_preferences: parseMetadataList(catering_preferences),
+            catering_notes,
+            catering_menu_preferences,
+            catering_dietary_restrictions,
+            catering_budget,
           });
 
         if (reservationError) {

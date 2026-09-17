@@ -101,18 +101,4 @@ export const AddOns: AddOn[] = [
     ],
     bestFor: ["date-night", "girls-night"],
   },
-  {
-    label: "Catering Package",
-    price: 0,
-    description:
-      "Enjoy delicious food and refreshments during your candle-making experience. We offer a variety of catering options to suit your preferences and dietary needs. We will reach out to you after your reservation to discuss your catering needs and provide a menu for you to choose from.",
-    icon: "🍽️",
-    includes: [
-      "Freshly prepared catering",
-      "Choice of menu options",
-      "Plates, utensils, and napkins",
-      "Setup before your reservation",
-      "Cleanup after your event",
-    ],
-  },
 ];

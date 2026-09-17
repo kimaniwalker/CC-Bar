@@ -15,6 +15,12 @@ export type ReservationsFormInputs = {
   addOns: string[];
   phone: string;
   special_requests?: string;
+  cateringRequested?: boolean;
+  cateringPreferences?: string[];
+  cateringMenuPreferences?: string;
+  cateringDietaryRestrictions?: string;
+  cateringBudget?: string;
+  cateringNotes?: string;
 };
 
 export enum CheckoutType {

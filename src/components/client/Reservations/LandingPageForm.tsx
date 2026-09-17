@@ -37,6 +37,7 @@ import { THEME_CONFIGS } from "./ThemeConfigs";
 import { getColorClasses } from "@/utils/Reservations/getColorClasses";
 import { RESERVATION_THEMES } from "./ThemeMetadata";
 import { DatePicker } from "./DatePicker";
+import { cateringCategories } from "./CateringOptions";
 
 type LandingPageFormProps = {
   trackingData?: {
@@ -114,6 +115,12 @@ export const LandingPageForm = ({
       name: "addOns",
       defaultValue: [],
     }) ?? [];
+
+  const cateringRequested = useWatch({
+    control: methods.control,
+    name: "cateringRequested",
+    defaultValue: false,
+  });
 
   const guestsCount =
     useWatch({ control: methods.control, name: "guests" }) ??
@@ -492,6 +499,148 @@ export const LandingPageForm = ({
                 <p className="mt-2 text-xs text-neutral-500">
                   Choose candle making, body butter, or room spray
                 </p>
+              </div>
+
+              {/* Catering Request Section */}
+              <div className="rounded-xl border-2 border-neutral-200 p-4">
+                <label className="flex cursor-pointer items-start gap-3">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-5 w-5 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
+                    {...register("cateringRequested")}
+                  />
+                  <span>
+                    <span className="block font-semibold text-neutral-900">
+                      I&apos;d like catering options
+                    </span>
+                    <span className="mt-1 block text-sm text-neutral-600">
+                      Tell us what you&apos;re looking for and our chef will
+                      help create a menu for your experience.
+                    </span>
+                  </span>
+                </label>
+
+                {cateringRequested && (
+                  <div className="mt-4 space-y-4 border-t border-neutral-200 pt-4">
+                    <div>
+                      <p className="text-sm font-semibold text-neutral-900">
+                        Catering inspiration
+                      </p>
+                      <p className="mt-1 text-sm text-neutral-600">
+                        Select anything that sounds good. These are ideas for
+                        the chef, not a final order.
+                      </p>
+                      <p className="mt-2 text-sm text-neutral-600">
+                        Our chef specializes in elevated comfort food, brunch
+                        spreads, grazing tables, and shareable bites for group
+                        experiences.
+                      </p>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {cateringCategories.map((category) => (
+                        <fieldset
+                          key={category.name}
+                          className="rounded-xl border border-neutral-200 p-4"
+                        >
+                          <legend className="px-1 text-sm font-semibold text-neutral-900">
+                            {category.name}
+                          </legend>
+                          <div className="mt-2 space-y-2">
+                            {category.options.map((option) => (
+                              <label
+                                key={option}
+                                className="flex cursor-pointer items-start gap-2 text-sm text-neutral-700"
+                              >
+                                <input
+                                  type="checkbox"
+                                  value={option}
+                                  className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-neutral-900 focus:ring-neutral-900"
+                                  {...register("cateringPreferences")}
+                                />
+                                <span>{option}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </fieldset>
+                      ))}
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="cateringMenuPreferences"
+                        className="block text-sm font-medium text-neutral-700"
+                      >
+                        What would you like on the menu?
+                      </label>
+                      <textarea
+                        id="cateringMenuPreferences"
+                        rows={3}
+                        placeholder="Examples: brunch, small bites, desserts, drinks"
+                        className="mt-1 block w-full rounded-xl border-2 border-neutral-200 px-3 py-3 text-sm focus:border-neutral-900 focus:outline-none"
+                        {...register("cateringMenuPreferences")}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="cateringDietaryRestrictions"
+                        className="block text-sm font-medium text-neutral-700"
+                      >
+                        Dietary restrictions or allergies
+                      </label>
+                      <textarea
+                        id="cateringDietaryRestrictions"
+                        rows={2}
+                        placeholder="Please include any allergies or dietary preferences"
+                        className="mt-1 block w-full rounded-xl border-2 border-neutral-200 px-3 py-3 text-sm focus:border-neutral-900 focus:outline-none"
+                        {...register("cateringDietaryRestrictions")}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="cateringBudget"
+                        className="block text-sm font-medium text-neutral-700"
+                      >
+                        Estimated catering budget
+                      </label>
+                      <select
+                        id="cateringBudget"
+                        className="mt-1 block w-full rounded-xl border-2 border-neutral-200 bg-white px-3 py-3 text-sm focus:border-neutral-900 focus:outline-none"
+                        {...register("cateringBudget")}
+                      >
+                        <option value="">Select a budget range</option>
+                        <option value="under-15-per-person">
+                          Under $15 per person
+                        </option>
+                        <option value="15-30-per-person">
+                          $15-$30 per person
+                        </option>
+                        <option value="30-plus-per-person">
+                          $30+ per person
+                        </option>
+                        <option value="not-sure">I&apos;m not sure yet</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="cateringNotes"
+                        className="block text-sm font-medium text-neutral-700"
+                      >
+                        Anything else we should know?
+                      </label>
+                      <textarea
+                        id="cateringNotes"
+                        rows={2}
+                        placeholder="Share timing, serving preferences, or other details"
+                        className="mt-1 block w-full rounded-xl border-2 border-neutral-200 px-3 py-3 text-sm focus:border-neutral-900 focus:outline-none"
+                        {...register("cateringNotes")}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Add-Ons Section */}

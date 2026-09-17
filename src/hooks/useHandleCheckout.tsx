@@ -33,6 +33,12 @@ function formatReservationsMetadata(data: ReservationsFormInputs) {
     guests: data.guests.toString(),
     activities: data.activities?.join(", ") || "",
     add_ons: data.addOns?.join(", ") || "",
+    catering_requested: data.cateringRequested ? "true" : "false",
+    catering_preferences: data.cateringPreferences?.join(", ") || "",
+    catering_menu_preferences: data.cateringMenuPreferences || "",
+    catering_dietary_restrictions: data.cateringDietaryRestrictions || "",
+    catering_budget: data.cateringBudget || "",
+    catering_notes: data.cateringNotes || "",
   };
 
   if (data.special_requests) {

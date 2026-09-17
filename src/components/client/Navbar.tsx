@@ -108,7 +108,7 @@ export function Navbar({
             <div className="space-y-1 text-xs text-neutral-600">
               <div className="flex justify-between gap-3">
                 <span>Mon–Thu</span>
-                <span>5:00 PM–8:00 PM</span>
+                <span>Reservations & Pickup only</span>
               </div>
               <div className="flex justify-between gap-3">
                 <span>Fri</span>

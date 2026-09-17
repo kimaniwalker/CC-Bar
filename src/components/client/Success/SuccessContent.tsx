@@ -111,13 +111,54 @@ const ReservationSuccess = ({
   return (
     <div className="flex w-full justify-center py-8">
       <div className="flex w-full max-w-3xl flex-col justify-center p-4">
-        <Text size="xxl" className="mb-4 text-center text-2xl font-bold">
+        <Text size="xxl" className="mb-4 text-center text-3xl font-bold">
           Reservation Confirmed
         </Text>
         <Text size="md" className="text-md">
           Thank you {orderInfo?.name}. Your Candle Cow Bar experience has been
           reserved, and we look forward to welcoming you.
         </Text>
+
+        {/* What to Expect Section */}
+        <Section icon={<Sparkles className="mr-2" />} title="What to Expect">
+          <Text size="md" className="text-md mb-2">
+            Your reservation is fully paid and your spot is confirmed. Our team
+            will guide you through your experience from start to finish to
+            ensure a seamless and memorable visit.
+          </Text>
+          <Text size="md" className="text-md mb-2">
+            Come ready to have fun, get creative, and leave with something
+            handcrafted just by you.
+          </Text>
+          <Text size="md" className="text-md mb-2">
+            Please keep in mind that your candles need time to cool before they
+            can be safely taken home. Cooling is usually the longest part of the
+            process and typically takes about 30–90 minutes.
+          </Text>
+          <Text size="md" className="text-md mb-2">
+            You are welcome to stay and wait for your candles to cool. If you
+            are in a hurry, pickup & shipping options are also available.
+          </Text>
+        </Section>
+
+        {orderInfo?.catering_requested === "true" && (
+          <Section
+            icon={<Sparkles className="mr-2" />}
+            title="Catering Request"
+          >
+            <Text size="md" className="text-md mb-2">
+              We&apos;ve received your catering request. Our chef will review
+              your preferences and follow up with menu recommendations and
+              pricing. Please allow up to 24 hours for our response.
+            </Text>
+            {orderInfo.catering_preferences && (
+              <DetailRow
+                label="Catering Ideas"
+                value={orderInfo.catering_preferences}
+              />
+            )}
+          </Section>
+        )}
 
         {/* Location Section */}
         <Section icon={<MapPin className="mr-2" />} title="Location">
@@ -137,51 +178,6 @@ const ReservationSuccess = ({
           <Text size="md" className="text-md mb-2">
             Parking is available in the parking lot adjacent to the building, or
             you are welcome to park on the street.
-          </Text>
-        </Section>
-
-        {/* What to Expect Section */}
-        <Section icon={<Sparkles className="mr-2" />} title="What to Expect">
-          <Text size="md" className="text-md mb-2">
-            Your reservation is fully paid and your spot is confirmed. Our team
-            will guide you through your experience from start to finish to
-            ensure a seamless and memorable visit.
-          </Text>
-          <Text size="md" className="text-md mb-2">
-            Come ready to have fun, get creative, and leave with something
-            handcrafted just by you.
-          </Text>
-        </Section>
-
-        {/* Cancellation Policy Section */}
-        <Section
-          icon={<TriangleAlert className="mr-2" />}
-          title="Cancellation Policy"
-        >
-          <Text size="md" className="text-md mb-2">
-            Cancellations made at least 24 hours in advance will receive a full
-            refund. Cancellations made within 24 hours of the scheduled time
-            will forfeit the deposit.
-          </Text>
-          <Text size="md">
-            If you need to reschedule, please{" "}
-            <Link href="/contact" className="underline hover:no-underline">
-              contact us
-            </Link>{" "}
-            at least 24 hours in advance, and we will do our best to accommodate
-            your request based on availability.
-          </Text>
-        </Section>
-
-        {/* Final Note Section */}
-        <Section icon={<NotebookPen className="mr-2" />} title="A Final Note">
-          <Text size="md" className="text-md mb-2">
-            We&apos;ve thoughtfully prepared your session, and your time has
-            been set aside just for you. Arriving early helps us begin your
-            experience smoothly and without interruption.
-          </Text>
-          <Text size="md" className="text-md mb-2">
-            We look forward to hosting you.
           </Text>
         </Section>
 
@@ -206,6 +202,38 @@ const ReservationSuccess = ({
               value={orderInfo.special_requests}
             />
           )}
+        </Section>
+
+        {/* Cancellation Policy Section */}
+        <Section
+          icon={<TriangleAlert className="mr-2" />}
+          title="Cancellation Policy"
+        >
+          <Text size="md" className="text-md mb-2">
+            Cancellations made at least 24 hours in advance will receive a full
+            refund. Cancellations made within 24 hours of the scheduled time
+            will forfeit the deposit.
+          </Text>
+          <Text size="md" className="text-md mb-2">
+            If you need to reschedule, please{" "}
+            <Link href="/contact" className="underline hover:no-underline">
+              contact us
+            </Link>{" "}
+            at least 24 hours in advance, and we will do our best to accommodate
+            your request based on availability.
+          </Text>
+        </Section>
+
+        {/* Final Note Section */}
+        <Section icon={<NotebookPen className="mr-2" />} title="A Final Note">
+          <Text size="md" className="text-md mb-2">
+            We&apos;ve thoughtfully prepared your session, and your time has
+            been set aside just for you. Arriving early helps us begin your
+            experience smoothly and without interruption.
+          </Text>
+          <Text size="md" className="text-md mb-2">
+            We look forward to hosting you.
+          </Text>
         </Section>
       </div>
     </div>
