@@ -173,10 +173,29 @@ function formatReservationsData({
 
 // ==================== SHOP ====================
 
+const formatStripeImageUrl = (url?: string) => {
+  if (!url) return undefined;
+
+  try {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:"
+      ? parsedUrl.toString()
+      : undefined;
+  } catch {
+    try {
+      return new URL(url, "https://candlecowbar.com").toString();
+    } catch {
+      return undefined;
+    }
+  }
+};
+
 function formatLineItems(cart: Cart) {
   return cart.map((item) => {
     const itemPrice = calculateProductPrice(item);
     const selectedOptionsText = formatSelectedOptions(item);
+    const imageUrl = formatStripeImageUrl(item.thumbnail);
+    const images = imageUrl ? [imageUrl] : undefined;
 
     const metadata: Record<string, string> = {
       product_id: String(item.id),
@@ -205,7 +224,7 @@ function formatLineItems(cart: Cart) {
         product_data: {
           name: item.name,
           description: selectedOptionsText || undefined,
-          images: [item.thumbnail],
+          ...(images && { images }),
           metadata,
         },
       },
