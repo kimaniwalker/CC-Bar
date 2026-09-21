@@ -148,11 +148,34 @@ export function useStripeTerminal() {
     [],
   );
 
+  const cancelCollectPayment = useCallback(
+    async (terminal: Terminal): Promise<CollectPaymentResult> => {
+      const cancelResult = await terminal.cancelCollectPaymentMethod();
+
+      if (cancelResult.error) {
+        return {
+          success: false,
+          error:
+            cancelResult.error.message ?? "Failed to cancel payment collection",
+        };
+      }
+
+      setPaymentStatus("idle");
+
+      return {
+        success: false,
+        error: "Payment collection was cancelled.",
+      };
+    },
+    [],
+  );
+
   return {
     initialize,
     discoverReaders,
     connectReader,
     collectPayment,
     paymentStatus,
+    cancelCollectPayment,
   };
 }
