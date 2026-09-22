@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const storeHours = [
   { day: "Monday - Thursday", hours: "Reservations & Pickup only" },
   { day: "Friday", hours: "12:00 PM - 8:00 PM" },
-  { day: "Saturday", hours: "12:00 AM - 8:00 PM" },
+  { day: "Saturday", hours: "12:00 PM - 8:00 PM" },
   { day: "Sunday", hours: "Closed" },
 ];
 
