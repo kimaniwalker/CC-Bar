@@ -26,8 +26,8 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   },
 
   {
-    type: "date",
-    date: "2026-09-26",
+    type: "datetime",
+    datetime: "2026-10-30 20:00:00",
     reason: "Private Booking",
   },
 
