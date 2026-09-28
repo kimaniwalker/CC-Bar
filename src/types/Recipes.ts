@@ -1,18 +1,8 @@
 export type Ingredients = {
   id: string;
   name: string;
-  ingredient_type:
-    | "fragrance"
-    | "colorant"
-    | "oil"
-    | "body_butter"
-    | "wax"
-    | "extract"
-    | "vitamin"
-    | "essential_oil"
-    | "salt"
-    | "sugar";
-  stock: string;
+  ingredient_type: "fragrance" | "colorant" | "carrier_oil" | "sugar";
+  stock: number;
   unit: string;
   cost: number;
   active: boolean;
