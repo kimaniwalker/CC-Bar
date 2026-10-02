@@ -76,6 +76,15 @@ export function isBlocked(
       }
     }
 
+    // Specific date after a given time
+    if (block.type === "date" && block.date === date && block.afterTime) {
+      const normalizedAfterTime = normalizeTime(block.afterTime);
+
+      if (normalizedTime >= normalizedAfterTime) {
+        return true;
+      }
+    }
+
     // Date range block
     if (block.type === "dateRange" && block.startDate && block.endDate) {
       if (date >= block.startDate && date <= block.endDate) {
@@ -93,12 +102,38 @@ export function isBlocked(
       }
     }
 
+    // One-off date-specific time block (e.g., only 2026-11-06 after 5 PM)
+    if (block.type === "time" && block.date === date && block.afterTime) {
+      const normalizedAfterTime = normalizeTime(block.afterTime);
+
+      if (normalizedTime >= normalizedAfterTime) {
+        return true;
+      }
+    }
+
+    if (block.type === "time" && block.date === date && block.beforeTime) {
+      const normalizedBeforeTime = normalizeTime(block.beforeTime);
+
+      if (normalizedTime < normalizedBeforeTime) {
+        return true;
+      }
+    }
+
+    if (block.type === "time" && block.date === date && block.time) {
+      const normalizedBlockTime = normalizeTime(block.time);
+
+      if (normalizedBlockTime === normalizedTime) {
+        return true;
+      }
+    }
+
     // Recurring weekly block (entire day - e.g., all Sundays)
     if (
       block.type === "time" &&
       block.dayOfWeek === dayOfWeek &&
       !block.time &&
-      !block.beforeTime
+      !block.beforeTime &&
+      !block.afterTime
     ) {
       return true;
     }
@@ -121,6 +156,19 @@ export function isBlocked(
       const normalizedBeforeTime = normalizeTime(block.beforeTime);
 
       if (normalizedTime < normalizedBeforeTime) {
+        return true;
+      }
+    }
+
+    // Recurring weekly "after time" block
+    if (
+      block.type === "time" &&
+      block.dayOfWeek === dayOfWeek &&
+      block.afterTime
+    ) {
+      const normalizedAfterTime = normalizeTime(block.afterTime);
+
+      if (normalizedTime >= normalizedAfterTime) {
         return true;
       }
     }
