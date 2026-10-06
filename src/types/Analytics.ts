@@ -57,7 +57,12 @@ export type ElementViewedEvent = BaseGTMEvent & {
   name: string;
   location?: string;
   type: "landing_page" | "section" | "banner" | "form" | "product";
-  theme?: "date-night" | "galentines" | "birthday" | "custom";
+  theme?:
+    | "date-night"
+    | "galentines"
+    | "birthday"
+    | "custom"
+    | "coffee-with-joe";
 };
 
 /**

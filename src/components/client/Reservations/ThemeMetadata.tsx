@@ -2,12 +2,14 @@
 export enum ReservationTheme {
   DateNight = "date-night",
   KidsNight = "kids-night",
+  CoffeeWithJoe = "coffee-with-joe",
 }
 
 // ✅ Or use const assertion (more modern approach)
 export const RESERVATION_THEMES = {
   DATE_NIGHT: "date-night",
   KIDS_NIGHT: "kids-night",
+  COFFEE_WITH_JOE: "coffee-with-joe",
 } as const;
 
 // ✅ Extract type from the values
@@ -67,6 +69,25 @@ export const THEME_METADATA: Record<ReservationThemeType, ThemeMetadata> = {
       "BYOB date night",
       "couples workshop Helena",
       "romantic things to do Helena",
+    ],
+  },
+  [RESERVATION_THEMES.COFFEE_WITH_JOE]: {
+    title: "Coffee with Joe | Candle Cow Bar Helena, AL",
+    description:
+      "Coffee with Joe is a ticketed reservation event featuring candle-making, coffee, and refreshments in a relaxed social setting. Book your ticket today.",
+    openGraph: {
+      title: "Coffee with Joe | Ticketed Reservation Event",
+      description:
+        "Kick back, relax, and mingle at our reservation-only coffee and candle event. Includes candle-making and refreshments.",
+      images: "https://www.candlecowbar.com/joe-lockett.png",
+    },
+    keywords: [
+      "Coffee with Joe",
+      "coffee event Helena AL",
+      "reservation ticket event",
+      "candle and coffee event",
+      "relax and mingle Helena",
+      "ticketed candle event",
     ],
   },
 };

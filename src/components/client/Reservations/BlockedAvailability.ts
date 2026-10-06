@@ -49,7 +49,7 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
     type: "time",
     date: "2026-10-23",
     afterTime: "18:00:00",
-    reason: "Unavailable after 6 PM",
+    reason: "Coffe w Joe",
   },
 
   // Block all Sundays (dayOfWeek 0 = Sunday)

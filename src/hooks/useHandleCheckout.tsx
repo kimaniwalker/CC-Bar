@@ -21,9 +21,12 @@ export default function useHandlePayment() {
 
 // ==================== RESERVATIONS ====================
 
-function formatReservationsMetadata(data: ReservationsFormInputs) {
+function formatReservationsMetadata(
+  data: ReservationsFormInputs,
+  eventType: CheckoutType = CheckoutType.RESERVATION,
+) {
   const metaData: Record<string, string> = {
-    type: CheckoutType.RESERVATION,
+    type: eventType,
     name: data.name,
     email: data.email,
     phone: data.phone,
@@ -54,8 +57,15 @@ function formatReservationsLineItems(
   additionalActivitiesCost: number,
   activities: string[],
   addOns: string[],
+  eventName = "CC BAR Creative Experience",
+  eventType: CheckoutType = CheckoutType.RESERVATION,
 ) {
   const lineItems = [];
+
+  const description =
+    eventType === CheckoutType.COFFEE_WITH_JOE
+      ? `${data.guests} ${data.guests > 1 ? "guests" : "guest"} • ${data.date} at ${data.time}`
+      : `${data.guests} ${data.guests > 1 ? "guests" : "guest"} • ${data.date} at ${data.time} • Includes 2 activities per person`;
 
   // Base Package
   lineItems.push({
@@ -63,8 +73,8 @@ function formatReservationsLineItems(
       currency: "usd",
       unit_amount: basePrice * 100,
       product_data: {
-        name: "CC BAR Creative Experience",
-        description: `${data.guests} ${data.guests > 1 ? "guests" : "guest"} • ${data.date} at ${data.time} • Includes 2 activities per person`,
+        name: eventName,
+        description,
       },
     },
     quantity: 1,
@@ -116,6 +126,8 @@ function formatReservationsData({
   user_id,
   basePrice,
   additionalActivitiesCost,
+  eventName,
+  eventType = CheckoutType.RESERVATION,
 }: {
   redirect_url: string;
   ReservationsFormData: ReservationsFormInputs;
@@ -124,6 +136,8 @@ function formatReservationsData({
   additionalActivitiesCost: number;
   addOnsCost: number; // ✅ Keep for future use but not needed now
   total: number; // ✅ Keep for future use but not needed now
+  eventName?: string;
+  eventType?: CheckoutType;
 }) {
   const domain = getDomain();
 
@@ -134,13 +148,15 @@ function formatReservationsData({
       additionalActivitiesCost,
       ReservationsFormData.activities || [],
       ReservationsFormData.addOns || [],
+      eventName || "CC BAR Creative Experience",
+      eventType,
     ),
     mode: "payment" as Stripe.Checkout.SessionCreateParams.Mode,
-    metadata: formatReservationsMetadata(ReservationsFormData),
+    metadata: formatReservationsMetadata(ReservationsFormData, eventType),
     customer_email: ReservationsFormData.email,
     client_reference_id: user_id ?? "guest",
     submit_type: "pay" as Stripe.Checkout.SessionCreateParams.SubmitType,
-    success_url: `${domain}/success?session_id={CHECKOUT_SESSION_ID}&type=reservation`,
+    success_url: `${domain}/success?session_id={CHECKOUT_SESSION_ID}&type=${eventType}`,
     cancel_url: `${domain}${redirect_url}`,
     allow_promotion_codes: true,
     payment_method_types: [

@@ -72,7 +72,10 @@ export default function SuccessContent() {
   }, []);
 
   useEffect(() => {
-    if (type === CheckoutType.RESERVATION) {
+    if (
+      type === CheckoutType.RESERVATION ||
+      type === CheckoutType.COFFEE_WITH_JOE
+    ) {
       handleConfetti();
     }
   }, [type, handleConfetti]);
@@ -91,6 +94,8 @@ export default function SuccessContent() {
   switch (type) {
     case CheckoutType.RESERVATION:
       return <ReservationSuccess orderInfo={orderInfo} />;
+    case CheckoutType.COFFEE_WITH_JOE:
+      return <CoffeeWithJoeSuccess orderInfo={orderInfo} />;
     case CheckoutType.SUBSCRIPTION:
       return <SubscriptionSuccess />;
     case CheckoutType.SHOP:
@@ -101,6 +106,76 @@ export default function SuccessContent() {
       return <DefaultSuccess />;
   }
 }
+
+const CoffeeWithJoeSuccess = ({
+  orderInfo,
+}: {
+  orderInfo: Record<string, string>;
+}) => {
+  return (
+    <div className="flex w-full justify-center py-8">
+      <div className="flex w-full max-w-3xl flex-col justify-center p-4">
+        <div className="rounded-[2rem] border border-amber-200 bg-[radial-gradient(circle_at_top,_rgba(255,196,101,0.25),transparent_35%),linear-gradient(135deg,#fffaf3_0%,#fff7ed_35%,#f7efe7_100%)] p-6 shadow-lg sm:p-8">
+          <div className="mb-6 flex items-center justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-3xl">
+              ☕
+            </div>
+          </div>
+
+          <Text
+            size="xxl"
+            className="mb-3 text-center text-3xl font-black text-neutral-900"
+          >
+            Ticket Confirmed
+          </Text>
+
+          <Text size="md" className="mb-6 text-center text-neutral-700">
+            Thank you {orderInfo?.name}. Your Coffee with Joe ticket is reserved
+            and your spot is secured.
+          </Text>
+
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-5 shadow-sm">
+            <div className="flex items-center justify-between gap-4 border-b border-neutral-200 pb-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-700">
+                  Event ticket
+                </p>
+                <p className="mt-2 text-2xl font-black text-neutral-900">
+                  Coffee with Joe
+                </p>
+              </div>
+              <div className="rounded-full bg-amber-100 px-3 py-1 text-sm font-bold text-amber-900">
+                $55
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3 text-sm text-neutral-700">
+              <DetailRow label="Guest" value={orderInfo?.name} />
+              <DetailRow label="Email" value={orderInfo?.email} />
+              <DetailRow label="Phone" value={orderInfo?.phone} />
+              <DetailRow label="Date" value={orderInfo?.date || "10/23"} />
+              <DetailRow
+                label="Time"
+                value={orderInfo?.time || "7:00 PM - 9:00 PM"}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-neutral-200 bg-white/80 p-5">
+            <Text size="md" className="mb-2 font-bold text-neutral-900">
+              What to expect
+            </Text>
+            <Text size="md" className="text-neutral-700">
+              A relaxed evening of coffee, candle-making, and good conversation.
+              You&apos;ll receive a confirmation email and we look forward to
+              welcoming you at 7:00 PM - 9:00 PM on 10/23.
+            </Text>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Reservation Success Component
 const ReservationSuccess = ({

@@ -28,4 +28,5 @@ export enum CheckoutType {
   SHOP = "shop",
   IN_STORE = "in_store",
   SUBSCRIPTION = "subscription",
+  COFFEE_WITH_JOE = "coffee-with-joe",
 }

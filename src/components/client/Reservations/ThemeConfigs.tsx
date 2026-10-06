@@ -52,4 +52,22 @@ export const THEME_CONFIGS: Record<string, ThemeConfig> = {
     },
     defaultGuests: 2,
   },
+  [RESERVATION_THEMES.COFFEE_WITH_JOE]: {
+    specialRate: {
+      name: "Coffee with Joe Ticket",
+      price: 55,
+      guestCount: 1,
+      description:
+        "Candle-making, coffee, and light refreshments in a relaxed social setting",
+      icon: Heart,
+      color: "amber",
+      includes: [
+        "One ticketed reservation entry",
+        "Candle-making experience",
+        "Coffee and refreshments included",
+        "Time to relax and mingle",
+      ],
+    },
+    defaultGuests: 1,
+  },
 };

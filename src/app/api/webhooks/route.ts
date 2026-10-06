@@ -43,7 +43,10 @@ export async function POST(req: Request) {
         const { type } = session.metadata || {};
         console.log("Checkout session completed:", session.id, "Type:", type);
 
-        if (type === CheckoutType.RESERVATION) {
+        if (
+          type === CheckoutType.RESERVATION ||
+          type === CheckoutType.COFFEE_WITH_JOE
+        ) {
           await handleReservationCheckout(session);
           break;
         }

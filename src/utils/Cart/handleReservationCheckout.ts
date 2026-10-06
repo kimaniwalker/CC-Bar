@@ -9,7 +9,10 @@ import { ORDER_STATUS } from "@/types/Orders";
 import { CheckoutType } from "@/types/Reservations";
 import { handleUpdateOrder } from "../Orders/handleUpdateOrder";
 import { sendEmail } from "../Notifications/sendEmail";
-import { reservationEmailTemplate } from "../Notifications/reservationEmailTemplate";
+import {
+  coffeeWithJoeEmailTemplate,
+  reservationEmailTemplate,
+} from "../Notifications/reservationEmailTemplate";
 
 const parseMetadataList = (value?: string) =>
   value
@@ -107,16 +110,30 @@ export async function handleReservationCheckout(
           throw reservationError;
         }
 
+        const eventType = metadata.type ?? CheckoutType.RESERVATION;
+        const emailTemplate =
+          eventType === CheckoutType.COFFEE_WITH_JOE
+            ? coffeeWithJoeEmailTemplate({
+                name,
+                date: metadata.date || "10/23",
+                time: metadata.time || "7:00 PM - 9:00 PM",
+                guests: Number(guests || 1),
+              })
+            : reservationEmailTemplate({
+                name,
+                date: metadata.date,
+                time: metadata.time,
+                guests: Number(guests),
+                isReminder: false,
+              });
+
         await sendEmail({
           to: email,
-          subject: "Your Reservation is Confirmed — Candle Cowbar",
-          html: reservationEmailTemplate({
-            name,
-            date: metadata.date,
-            time: metadata.time,
-            guests: Number(guests),
-            isReminder: false,
-          }),
+          subject:
+            eventType === CheckoutType.COFFEE_WITH_JOE
+              ? "Your Coffee with Joe Ticket is Confirmed"
+              : "Your Reservation is Confirmed — Candle Cowbar",
+          html: emailTemplate,
         });
 
         console.log(
