@@ -45,6 +45,12 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
     afterTime: "20:00:00",
     reason: "Unavailable after 8 PM",
   },
+  {
+    type: "time",
+    date: "2026-10-23",
+    afterTime: "18:00:00",
+    reason: "Unavailable after 6 PM",
+  },
 
   // Block all Sundays (dayOfWeek 0 = Sunday)
   { type: "time", dayOfWeek: 0, reason: "Closed Sundays" },
