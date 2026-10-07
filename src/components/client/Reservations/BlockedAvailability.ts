@@ -42,8 +42,8 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   {
     type: "time",
     date: "2026-10-09",
-    afterTime: "20:00:00",
-    reason: "Unavailable after 8 PM",
+    afterTime: "19:00:00",
+    reason: "Unavailable after 7 PM",
   },
   {
     type: "time",
