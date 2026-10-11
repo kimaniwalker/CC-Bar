@@ -107,7 +107,7 @@ export function CoffeeWithJoeForm({
       additionalActivitiesCost: 0,
       addOnsCost: 0,
       basePrice: EVENT_PRICE,
-      eventName: "Coffee with Joe @ CC BAR",
+      eventName: "Coffee, No Suga! with Joe @ CC BAR",
       eventType: CheckoutType.COFFEE_WITH_JOE,
     });
 

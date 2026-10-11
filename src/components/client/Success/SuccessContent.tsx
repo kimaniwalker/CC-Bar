@@ -130,7 +130,7 @@ const CoffeeWithJoeSuccess = ({
           </Text>
 
           <Text size="md" className="mb-6 text-center text-neutral-700">
-            Thank you {orderInfo?.name}. Your Coffee with Joe ticket is reserved
+            Thank you {orderInfo?.name}. Your Coffee, No Suga ticket is reserved
             and your spot is secured.
           </Text>
 
@@ -141,7 +141,7 @@ const CoffeeWithJoeSuccess = ({
                   Event ticket
                 </p>
                 <p className="mt-2 text-2xl font-black text-neutral-900">
-                  Coffee with Joe
+                  Coffee, No Suga!
                 </p>
               </div>
               <div className="rounded-full bg-amber-100 px-3 py-1 text-sm font-bold text-amber-900">
@@ -166,9 +166,10 @@ const CoffeeWithJoeSuccess = ({
               What to expect
             </Text>
             <Text size="md" className="text-neutral-700">
-              A relaxed evening of coffee, candle-making, and good conversation.
-              You&apos;ll receive a confirmation email and we look forward to
-              welcoming you at 7:00 PM - 9:00 PM on 10/23.
+              Real Conversations with Joe: honest lessons about love, dating,
+              and becoming your best self after 50. You&apos;ll also create and
+              name your candle, connect with others, and enjoy coffee,
+              refreshments, laughter, and a memorable evening.
             </Text>
           </div>
         </div>

@@ -72,22 +72,24 @@ export const THEME_METADATA: Record<ReservationThemeType, ThemeMetadata> = {
     ],
   },
   [RESERVATION_THEMES.COFFEE_WITH_JOE]: {
-    title: "Coffee with Joe | Candle Cow Bar Helena, AL",
+    title: "Join Joe Lockett for Coffee, No Suga! | Candle Cow Bar Helena, AL",
     description:
-      "Coffee with Joe is a ticketed reservation event featuring candle-making, coffee, and refreshments in a relaxed social setting. Book your ticket today.",
+      "Join Joe Lockett for Coffee, No Suga! An intimate evening of candle-making, honest conversations about love, dating after 50, and new beginnings. Create a candle and name your next chapter.",
     openGraph: {
-      title: "Coffee with Joe | Ticketed Reservation Event",
+      title: "Coffee, No Suga! with Joe Lockett",
       description:
-        "Kick back, relax, and mingle at our reservation-only coffee and candle event. Includes candle-making and refreshments.",
+        "An intimate evening of candle-making, honest conversations about love, dating after 50, and new beginnings. Create a candle and name your next chapter.",
       images: "https://www.candlecowbar.com/joe-lockett.png",
     },
     keywords: [
-      "Coffee with Joe",
-      "coffee event Helena AL",
-      "reservation ticket event",
-      "candle and coffee event",
-      "relax and mingle Helena",
+      "Coffee, No Suga!",
+      "Joe Lockett",
+      "dating after 50",
+      "love and dating conversations",
+      "candle making event Helena AL",
+      "intimate evening event",
       "ticketed candle event",
+      "new beginnings event",
     ],
   },
 };

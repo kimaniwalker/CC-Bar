@@ -63,15 +63,16 @@ export default function CoffeeWithJoeLanding({ trackingData }: Props) {
                 size="xxl"
                 className="mt-6 text-4xl font-black tracking-tight sm:text-5xl lg:text-7xl"
               >
-                Coffee with Joe ☕
+                Join Joe Lockett for Coffee, No Suga!
               </Text>
 
               <Text
                 size="lg"
                 className="mt-5 max-w-xl text-base text-neutral-700 sm:text-lg"
               >
-                Kick back, relax, and mingle in a cozy, candle-lit setting with
-                great coffee, good conversation, and a welcoming community vibe.
+                An intimate evening of candle-making, honest conversations about
+                love, dating after 50, and new beginnings. Create a candle and
+                name your next chapter.
               </Text>
 
               <div className="mt-6 flex flex-wrap gap-3 text-sm font-medium text-neutral-800">
@@ -161,35 +162,34 @@ export default function CoffeeWithJoeLanding({ trackingData }: Props) {
               What&apos;s included
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-              Candle & refreshments
+              Real Conversations with Joe
             </h2>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-6">
-              <div className="mb-4 text-4xl">🕯️</div>
-              <h3 className="text-xl font-bold">Craft a candle</h3>
+              <div className="mb-4 text-4xl">💬</div>
+              <h3 className="text-xl font-bold">Real Conversations with Joe</h3>
               <p className="mt-2 text-sm leading-6 text-neutral-600">
-                Enjoy a relaxed candle-making experience and leave with a custom
-                creation of your own.
+                Honest lessons about love, dating, and becoming your best self
+                after 50.
+              </p>
+            </div>
+
+            <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-6">
+              <div className="mb-4 text-4xl">🕯️</div>
+              <h3 className="text-xl font-bold">Create and Name your Candle</h3>
+              <p className="mt-2 text-sm leading-6 text-neutral-600">
+                Craft a signature candle representing your next chapter.
               </p>
             </div>
 
             <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-6">
               <div className="mb-4 text-4xl">☕</div>
-              <h3 className="text-xl font-bold">Coffee & refreshments</h3>
+              <h3 className="text-xl font-bold">Connect and Celebrate</h3>
               <p className="mt-2 text-sm leading-6 text-neutral-600">
-                Sit back, sip something warm, and settle in for a laid-back
-                social event built for conversation.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-neutral-200 bg-neutral-50 p-6">
-              <div className="mb-4 text-4xl">💬</div>
-              <h3 className="text-xl font-bold">Relax & mingle</h3>
-              <p className="mt-2 text-sm leading-6 text-neutral-600">
-                A great opportunity to kick back, relax, and mingle with good
-                company in a welcoming atmosphere.
+                Coffee, refreshments, laughter, new connections, and a memorable
+                evening.
               </p>
             </div>
           </div>
@@ -202,12 +202,11 @@ export default function CoffeeWithJoeLanding({ trackingData }: Props) {
             Your experience
           </p>
           <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
-            A great opportunity to kick back, relax, and mingle.
+            Real Conversations with Joe
           </h2>
           <p className="mx-auto mt-5 max-w-2xl text-base text-neutral-300 sm:text-lg">
-            This is a ticketed reservation experience designed for a
-            comfortable, social, low-pressure setting where you can enjoy your
-            time at your own pace.
+            Honest lessons about love, dating, and becoming your best self after
+            50.
           </p>
         </div>
       </section>

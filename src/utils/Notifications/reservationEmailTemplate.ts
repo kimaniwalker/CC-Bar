@@ -12,7 +12,7 @@ export function coffeeWithJoeEmailTemplate({
   time,
   guests,
 }: ReservationEmailParams): string {
-  const subject = "Your Coffee with Joe Ticket is Confirmed";
+  const subject = "Your Coffee, No Suga! Ticket is Confirmed";
   const headline = `Your ticket is confirmed, ${name}! ☕`;
 
   return `
@@ -30,11 +30,11 @@ export function coffeeWithJoeEmailTemplate({
                 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
                   <tr>
                     <td align="center" style="background-color:#111111;padding:36px 40px;border-radius:12px 12px 0 0;">
-                      <p style="margin:0;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:#fbbf24;">Coffee with Joe</p>
+                      <p style="margin:0;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:#fbbf24;">Coffee, No Suga!</p>
                       <h1 style="margin:12px 0 0;font-size:28px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">
                         ${headline}
                       </h1>
-                      <p style="margin:10px 0 0;font-size:15px;color:#d6d3d1;">Your reservation is secured and we can't wait to see you.</p>
+                      <p style="margin:10px 0 0;font-size:15px;color:#d6d3d1;">Your reservation is secured, and we can't wait to share an evening of honest conversation, candle-making, and connection.</p>
                     </td>
                   </tr>
 
@@ -80,9 +80,9 @@ export function coffeeWithJoeEmailTemplate({
                           <td>
                             <p style="margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#999999;">Included</p>
                             <p style="margin:0;font-size:15px;color:#444444;line-height:1.8;">
-                              ☕ Coffee & refreshments<br />
-                              🕯️ Candle-making experience<br />
-                              💬 Relaxed time to kick back, mingle, and enjoy the evening
+                              💬 Real Conversations with Joe: honest lessons about love, dating, and becoming your best self after 50<br />
+                              🕯️ Create and Name your Candle: craft a signature candle representing your next chapter<br />
+                              ☕ Connect and Celebrate: coffee, refreshments, laughter, new connections, and a memorable evening
                             </p>
                           </td>
                         </tr>
@@ -93,7 +93,7 @@ export function coffeeWithJoeEmailTemplate({
                           <td style="padding:16px 20px;">
                             <p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#d97706;">Event Details</p>
                             <p style="margin:0;font-size:13px;color:#666666;line-height:1.6;">
-                              Arrive 10–15 minutes early and plan to settle in, grab a refreshment, and enjoy the evening at a relaxed pace.
+                              Arrive 10–15 minutes early, grab a cup of coffee, and get ready for an intimate evening of candle-making, honest conversation, and new beginnings with Joe.
                             </p>
                           </td>
                         </tr>
