@@ -27,13 +27,8 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   },
 
   {
-    type: "datetime",
-    datetime: "2026-10-30 20:00:00",
-    reason: "Private Booking",
-  },
-  {
-    type: "datetime",
-    datetime: "2026-10-10 17:00:00",
+    type: "date",
+    date: "2026-10-30",
     reason: "Private Booking",
   },
 
@@ -45,23 +40,9 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   },
 
   {
-    type: "time",
-    date: "2026-10-09",
-    afterTime: "19:00:00",
-    reason: "Unavailable after 7 PM",
-  },
-  {
-    type: "time",
-    date: "2026-10-23",
-    afterTime: "18:00:00",
-    reason: "Coffe w Joe",
-  },
-
-  {
-    type: "time",
-    date: "2026-10-10",
-    beforeTime: "15:00:00",
-    reason: "Unavailable before 3 PM",
+    type: "datetime",
+    datetime: "2026-10-31 14:00:00",
+    reason: "Private Booking",
   },
 
   // Block all Sundays (dayOfWeek 0 = Sunday)
