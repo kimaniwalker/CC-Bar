@@ -26,17 +26,6 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
     reason: "Private Booking",
   },
 
-  {
-    type: "date",
-    date: "2026-10-30",
-    reason: "Private Booking",
-  },
-  {
-    type: "datetime",
-    datetime: "2026-10-31 14:00:00",
-    reason: "Private Booking",
-  },
-
   // Block all Sundays (dayOfWeek 0 = Sunday)
   { type: "time", dayOfWeek: 0, reason: "Closed Sundays" },
 
