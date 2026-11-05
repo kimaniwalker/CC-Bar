@@ -15,7 +15,7 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   // Full day blocks
   {
     type: "dateRange",
-    startDate: "2026-11-07",
+    startDate: "2026-11-06",
     endDate: "2026-11-14",
     reason: "Traveling",
   },
@@ -31,14 +31,6 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
     date: "2026-10-30",
     reason: "Private Booking",
   },
-
-  {
-    type: "time",
-    date: "2026-11-06",
-    afterTime: "18:00:00",
-    reason: "Unavailable after 6 PM",
-  },
-
   {
     type: "datetime",
     datetime: "2026-10-31 14:00:00",
