@@ -1,7 +1,9 @@
 export type BlockedAvailability = {
-  type: "date" | "time" | "datetime" | "dateRange";
+  type: "date" | "time" | "datetime" | "dateRange" | "timeRange";
   date?: string; // 'YYYY-MM-DD'
   time?: string; // 'HH:mm:ss' in America/Chicago timezone
+  startTime?: string; // Inclusive start of a time range, 'HH:mm:ss'
+  endTime?: string; // Exclusive end of a time range, 'HH:mm:ss'
   beforeTime?: string; // block all slots strictly before this time 'HH:mm:ss'
   afterTime?: string; // block all slots at or after this time 'HH:mm:ss'
   datetime?: string; // 'YYYY-MM-DD HH:mm:ss' in America/Chicago timezone
@@ -13,17 +15,33 @@ export type BlockedAvailability = {
 
 export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
   // Full day blocks
-  {
-    type: "dateRange",
-    startDate: "2026-11-06",
-    endDate: "2026-11-14",
-    reason: "Traveling",
-  },
 
   {
     type: "date",
     date: "2026-12-19",
     reason: "Private Booking",
+  },
+
+  {
+    type: "timeRange",
+    date: "2026-12-17",
+    startTime: "17:00:00",
+    endTime: "19:00:00",
+    reason: "Shemekia Bday",
+  },
+  {
+    type: "timeRange",
+    date: "2027-01-08",
+    startTime: "12:00:00",
+    endTime: "16:00:00",
+    reason: "A Collins Law",
+  },
+  {
+    type: "timeRange",
+    date: "2027-01-09",
+    startTime: "12:00:00",
+    endTime: "17:00:00",
+    reason: "Jonquil Private Booking",
   },
 
   // Block all Sundays (dayOfWeek 0 = Sunday)

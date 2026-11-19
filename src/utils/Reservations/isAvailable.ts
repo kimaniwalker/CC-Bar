@@ -62,6 +62,24 @@ export function isBlocked(
   const normalizedTime = normalizeTime(time);
 
   for (const block of blockedList) {
+    // One-off date-specific time range (start inclusive, end exclusive)
+    if (
+      block.type === "timeRange" &&
+      block.date === date &&
+      block.startTime &&
+      block.endTime
+    ) {
+      const normalizedStartTime = normalizeTime(block.startTime);
+      const normalizedEndTime = normalizeTime(block.endTime);
+
+      if (
+        normalizedTime >= normalizedStartTime &&
+        normalizedTime < normalizedEndTime
+      ) {
+        return true;
+      }
+    }
+
     // Full day block
     if (block.type === "date" && block.date === date && !block.beforeTime) {
       return true;
