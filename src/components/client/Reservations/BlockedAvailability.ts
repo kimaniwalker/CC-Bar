@@ -21,6 +21,18 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
     date: "2026-12-19",
     reason: "Private Booking",
   },
+  {
+    type: "time",
+    date: "2026-12-12",
+    afterTime: "16:00:00",
+    reason: "Angel Graduation Party",
+  },
+  {
+    type: "time",
+    date: "2026-12-11",
+    afterTime: "16:00:00",
+    reason: "Angel Graduation",
+  },
 
   {
     type: "timeRange",
