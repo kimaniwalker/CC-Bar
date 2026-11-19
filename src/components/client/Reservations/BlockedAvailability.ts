@@ -24,6 +24,13 @@ export const BLOCKED_AVAILABILITY: BlockedAvailability[] = [
 
   {
     type: "timeRange",
+    date: "2026-11-21",
+    startTime: "12:00:00",
+    endTime: "16:00:00",
+    reason: "Unavailable",
+  },
+  {
+    type: "timeRange",
     date: "2026-12-17",
     startTime: "17:00:00",
     endTime: "19:00:00",
